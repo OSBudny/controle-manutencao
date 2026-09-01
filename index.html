@@ -1,81 +1,482 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Controle da Manutenção</title>
 
 <style>
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
-    background: #202124;
-    color: white;
     font-family: Arial, sans-serif;
+    background: #252525;
+    color: #fff;
+}
+
+header {
+    background: #f57c00;
+    padding: 18px;
     text-align: center;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 .container {
-    max-width: 700px;
-    margin: 80px auto;
-    padding: 30px;
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
 }
 
-h1 {
-    color: #f57c00;
+.menu {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.menu button {
+    flex: 1;
+    min-width: 130px;
+}
+
+button {
+    border: none;
+    border-radius: 7px;
+    padding: 12px 16px;
+    background: #f57c00;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #ff9800;
+}
+
+button.secundario {
+    background: #444;
+}
+
+button.perigo {
+    background: #c0392b;
+}
+
+.secao {
+    display: none;
+}
+
+.secao.ativa {
+    display: block;
 }
 
 .card {
-    background: #2d2f31;
-    padding: 25px;
-    border-radius: 12px;
-    margin-top: 25px;
+    background: #333;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
 }
 
-.status {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 8px;
-    background: #3a3c3f;
+h2 {
+    color: #ff9800;
+    margin-top: 0;
 }
 
-.ok {
-    color: #2ecc71;
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: #ddd;
+}
+
+input, select {
+    width: 100%;
+    padding: 11px;
+    border-radius: 6px;
+    border: 1px solid #666;
+    background: #222;
+    color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #555;
+    text-align: left;
+}
+
+th {
+    color: #ff9800;
+}
+
+.mensagem {
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 6px;
+    background: #444;
+}
+
+.sucesso {
+    background: #1e5631;
 }
 
 .erro {
-    color: #e74c3c;
+    background: #702c2c;
 }
 
+.indicadores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.indicador {
+    background: #3b3b3b;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.indicador .numero {
+    font-size: 28px;
+    color: #ff9800;
+    font-weight: bold;
+}
+
+.pequeno {
+    color: #bbb;
+    font-size: 13px;
+}
 </style>
-
 </head>
-
 
 <body>
 
+<header>
+    🟠 CONTROLE DA MANUTENÇÃO
+</header>
+
 <div class="container">
 
-<h1>🟠 CONTROLE DA MANUTENÇÃO</h1>
+    <div class="menu">
+        <button onclick="mostrar('dashboard')">📊 Indicadores</button>
+        <button onclick="mostrar('funcionarios')">👷 Funcionários</button>
+        <button onclick="mostrar('setores')">🏭 Setores</button>
+        <button onclick="mostrar('registro')">📝 Registrar OS</button>
+        <button onclick="mostrar('registros')">📋 Registros</button>
+    </div>
 
-<div class="card">
 
-<h2>Conexão com o banco de dados</h2>
+    <!-- INDICADORES -->
 
-<div
-    id="status"
-    class="status">
+    <section id="dashboard" class="secao ativa">
 
-    Testando conexão...
+        <div class="card">
 
-</div>
+            <h2>Indicadores da Manutenção</h2>
 
-</div>
+            <div class="indicadores">
+
+                <div class="indicador">
+                    <div class="numero" id="totalFuncionarios">0</div>
+                    Funcionários
+                </div>
+
+                <div class="indicador">
+                    <div class="numero" id="totalRegistros">0</div>
+                    Registros
+                </div>
+
+                <div class="indicador">
+                    <div class="numero" id="horasTrabalhadas">0h 00min</div>
+                    Horas trabalhadas
+                </div>
+
+                <div class="indicador">
+                    <div class="numero" id="produtividade">0%</div>
+                    Produtividade
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Produtividade por funcionário</h2>
+
+            <div id="tabelaProdutividade">
+                Carregando...
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FUNCIONÁRIOS -->
+
+    <section id="funcionarios" class="secao">
+
+        <div class="card">
+
+            <h2>Cadastro de Funcionário</h2>
+
+            <div class="grid">
+
+                <div>
+                    <label>Nome</label>
+                    <input id="nomeFuncionario" type="text"
+                           placeholder="Nome do funcionário">
+                </div>
+
+                <div>
+                    <label>Função</label>
+                    <input id="funcaoFuncionario" type="text"
+                           placeholder="Ex.: Mecânico">
+                </div>
+
+                <div>
+                    <label>Jornada diária</label>
+                    <input id="jornadaFuncionario" type="time"
+                           value="08:48">
+                </div>
+
+            </div>
+
+            <br>
+
+            <button onclick="cadastrarFuncionario()">
+                Cadastrar funcionário
+            </button>
+
+            <div id="msgFuncionario"></div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Funcionários cadastrados</h2>
+
+            <div id="listaFuncionarios">
+                Carregando...
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- SETORES -->
+
+    <section id="setores" class="secao">
+
+        <div class="card">
+
+            <h2>Cadastro de Setor</h2>
+
+            <div class="grid">
+
+                <div>
+                    <label>Nome do setor</label>
+                    <input id="nomeSetor"
+                           type="text"
+                           placeholder="Ex.: Mecânica">
+                </div>
+
+            </div>
+
+            <br>
+
+            <button onclick="cadastrarSetor()">
+                Cadastrar setor
+            </button>
+
+            <div id="msgSetor"></div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>Setores cadastrados</h2>
+
+            <div id="listaSetores">
+                Carregando...
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- REGISTRO -->
+
+    <section id="registro" class="secao">
+
+        <div class="card">
+
+            <h2>Registrar Ordem de Serviço</h2>
+
+            <div class="grid">
+
+                <div>
+                    <label>Funcionário</label>
+
+                    <select id="funcionarioRegistro">
+                        <option value="">
+                            Selecione
+                        </option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <label>Número da OS</label>
+
+                    <input id="osRegistro"
+                           type="text"
+                           placeholder="Ex.: OS-1234">
+                </div>
+
+
+                <div>
+                    <label>Data</label>
+
+                    <input id="dataRegistro"
+                           type="date">
+                </div>
+
+
+                <div>
+                    <label>Setor</label>
+
+                    <select id="setorRegistro">
+                        <option value="">
+                            Selecione
+                        </option>
+                    </select>
+                </div>
+
+
+                <div>
+                    <label>Início</label>
+
+                    <input id="inicioRegistro"
+                           type="time">
+                </div>
+
+
+                <div>
+                    <label>Fim</label>
+
+                    <input id="fimRegistro"
+                           type="time">
+                </div>
+
+
+                <div>
+                    <label>Tipo de serviço</label>
+
+                    <select id="tipoRegistro">
+
+                        <option value="Preventiva">
+                            Preventiva
+                        </option>
+
+                        <option value="Corretiva">
+                            Corretiva
+                        </option>
+
+                        <option value="Inspeção">
+                            Inspeção
+                        </option>
+
+                        <option value="Melhoria">
+                            Melhoria
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div>
+                    <label>Tempo de espera</label>
+
+                    <select id="esperaRegistro">
+
+                        <option value="Nenhum">
+                            Nenhum
+                        </option>
+
+                        <option value="Aguardando peça">
+                            Aguardando peça
+                        </option>
+
+                        <option value="Aguardando produção">
+                            Aguardando produção
+                        </option>
+
+                        <option value="Aguardando equipamento">
+                            Aguardando equipamento
+                        </option>
+
+                        <option value="Outro">
+                            Outro
+                        </option>
+
+                    </select>
+                </div>
+
+            </div>
+
+            <br>
+
+            <button onclick="registrarOS()">
+                Registrar OS
+            </button>
+
+            <div id="msgRegistro"></div>
+
+        </div>
+
+    </section>
+
+
+    <!-- REGISTROS -->
+
+    <section id="registros" class="secao">
+
+        <div class="card">
+
+            <h2>Registros realizados</h2>
+
+            <div id="listaRegistros">
+                Carregando...
+            </div>
+
+        </div>
+
+    </section>
 
 </div>
 
@@ -89,19 +490,16 @@ from
 "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
 
-/*
-==================================================
-CONFIGURAÇÃO DO SUPABASE
-==================================================
-*/
-
+/* ==================================================
+   CONFIGURAÇÃO
+================================================== */
 
 const SUPABASE_URL =
 "https://qwaibjzdpwebddvbfkoj.supabase.co";
 
+
 const SUPABASE_KEY =
 "sb_publishable_oIe4-XsdKOYhvPFdkAnPrw_wzAA95rG";
-
 
 
 const supabase =
@@ -111,61 +509,899 @@ createClient(
 );
 
 
-/*
-==================================================
-TESTAR CONEXÃO
-==================================================
-*/
+/* ==================================================
+   NAVEGAÇÃO
+================================================== */
+
+window.mostrar = function(id) {
+
+    document
+        .querySelectorAll(".secao")
+        .forEach(secao => {
+
+            secao.classList.remove("ativa");
+
+        });
+
+    document
+        .getElementById(id)
+        .classList.add("ativa");
+
+    if(id === "dashboard") {
+        carregarDashboard();
+    }
+
+    if(id === "funcionarios") {
+        carregarFuncionarios();
+    }
+
+    if(id === "setores") {
+        carregarSetores();
+    }
+
+    if(id === "registro") {
+        carregarFuncionariosSelect();
+        carregarSetoresSelect();
+    }
+
+    if(id === "registros") {
+        carregarRegistros();
+    }
+
+};
 
 
-async function testarConexao() {
+/* ==================================================
+   FUNCIONÁRIOS
+================================================== */
 
-    const status =
+async function cadastrarFuncionario() {
+
+    const nome =
         document.getElementById(
-            "status"
+            "nomeFuncionario"
+        ).value.trim();
+
+    const funcao =
+        document.getElementById(
+            "funcaoFuncionario"
+        ).value.trim();
+
+    const jornada =
+        document.getElementById(
+            "jornadaFuncionario"
+        ).value;
+
+
+    if(!nome) {
+
+        mostrarMensagem(
+            "msgFuncionario",
+            "Digite o nome do funcionário.",
+            false
         );
 
-
-    const {
-        data,
-        error
-    } =
-        await supabase
-            .from("funcionarios")
-            .select("id")
-            .limit(1);
-
-
-    if(error) {
-
-        status.innerHTML =
-            "❌ Erro na conexão:<br><br>" +
-            error.message;
-
-        status.className =
-            "status erro";
-
-        console.error(error);
-
         return;
+    }
+
+
+    let minutos = 528;
+
+    if(jornada) {
+
+        const partes =
+            jornada.split(":");
+
+        minutos =
+            Number(partes[0]) * 60 +
+            Number(partes[1]);
 
     }
 
 
-    status.innerHTML =
-        "✓ Conexão funcionando!<br><br>" +
-        "O sistema já consegue acessar o banco de dados.";
+    const { error } =
+        await supabase
+        .from("funcionarios")
+        .insert({
 
-    status.className =
-        "status ok";
+            nome: nome,
+
+            funcao: funcao,
+
+            jornada_minutos: minutos
+
+        });
+
+
+    if(error) {
+
+        mostrarMensagem(
+            "msgFuncionario",
+            error.message,
+            false
+        );
+
+        return;
+    }
+
+
+    document.getElementById(
+        "nomeFuncionario"
+    ).value = "";
+
+    document.getElementById(
+        "funcaoFuncionario"
+    ).value = "";
+
+
+    mostrarMensagem(
+        "msgFuncionario",
+        "Funcionário cadastrado com sucesso!",
+        true
+    );
+
+
+    carregarFuncionarios();
 
 }
 
 
-testarConexao();
+window.cadastrarFuncionario =
+cadastrarFuncionario;
+
+
+/* ==================================================
+   LISTAR FUNCIONÁRIOS
+================================================== */
+
+async function carregarFuncionarios() {
+
+    const { data, error } =
+        await supabase
+        .from("funcionarios")
+        .select("*")
+        .order("nome");
+
+
+    if(error) {
+
+        document.getElementById(
+            "listaFuncionarios"
+        ).innerHTML =
+            "Erro: " + error.message;
+
+        return;
+    }
+
+
+    let html = "<table>";
+
+    html += `
+        <tr>
+            <th>Nome</th>
+            <th>Função</th>
+            <th>Jornada</th>
+            <th>Status</th>
+        </tr>
+    `;
+
+
+    data.forEach(f => {
+
+        html += `
+            <tr>
+
+                <td>${f.nome}</td>
+
+                <td>${f.funcao || "-"}</td>
+
+                <td>${formatarMinutos(f.jornada_minutos)}</td>
+
+                <td>
+                    ${f.ativo ? "Ativo" : "Inativo"}
+                </td>
+
+            </tr>
+        `;
+
+    });
+
+
+    html += "</table>";
+
+
+    document.getElementById(
+        "listaFuncionarios"
+    ).innerHTML = html;
+
+}
+
+
+/* ==================================================
+   SETORES
+================================================== */
+
+async function cadastrarSetor() {
+
+    const nome =
+        document.getElementById(
+            "nomeSetor"
+        ).value.trim();
+
+
+    if(!nome) {
+
+        mostrarMensagem(
+            "msgSetor",
+            "Digite o nome do setor.",
+            false
+        );
+
+        return;
+    }
+
+
+    const { error } =
+        await supabase
+        .from("setores")
+        .insert({
+            nome: nome
+        });
+
+
+    if(error) {
+
+        mostrarMensagem(
+            "msgSetor",
+            error.message,
+            false
+        );
+
+        return;
+    }
+
+
+    document.getElementById(
+        "nomeSetor"
+    ).value = "";
+
+
+    mostrarMensagem(
+        "msgSetor",
+        "Setor cadastrado com sucesso!",
+        true
+    );
+
+
+    carregarSetores();
+
+}
+
+
+window.cadastrarSetor =
+cadastrarSetor;
+
+
+/* ==================================================
+   LISTAR SETORES
+================================================== */
+
+async function carregarSetores() {
+
+    const { data, error } =
+        await supabase
+        .from("setores")
+        .select("*")
+        .order("nome");
+
+
+    if(error) {
+
+        document.getElementById(
+            "listaSetores"
+        ).innerHTML =
+            "Erro: " + error.message;
+
+        return;
+    }
+
+
+    let html = "<table>";
+
+    html += `
+        <tr>
+            <th>Setor</th>
+            <th>Status</th>
+        </tr>
+    `;
+
+
+    data.forEach(s => {
+
+        html += `
+            <tr>
+
+                <td>${s.nome}</td>
+
+                <td>
+                    ${s.ativo ? "Ativo" : "Inativo"}
+                </td>
+
+            </tr>
+        `;
+
+    });
+
+
+    html += "</table>";
+
+
+    document.getElementById(
+        "listaSetores"
+    ).innerHTML = html;
+
+}
+
+
+/* ==================================================
+   SELECT FUNCIONÁRIOS
+================================================== */
+
+async function carregarFuncionariosSelect() {
+
+    const { data } =
+        await supabase
+        .from("funcionarios")
+        .select("*")
+        .eq("ativo", true)
+        .order("nome");
+
+
+    const select =
+        document.getElementById(
+            "funcionarioRegistro"
+        );
+
+
+    select.innerHTML =
+        '<option value="">Selecione</option>';
+
+
+    data.forEach(f => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = f.id;
+
+        option.textContent =
+            f.nome;
+
+        select.appendChild(option);
+
+    });
+
+}
+
+
+/* ==================================================
+   SELECT SETORES
+================================================== */
+
+async function carregarSetoresSelect() {
+
+    const { data } =
+        await supabase
+        .from("setores")
+        .select("*")
+        .eq("ativo", true)
+        .order("nome");
+
+
+    const select =
+        document.getElementById(
+            "setorRegistro"
+        );
+
+
+    select.innerHTML =
+        '<option value="">Selecione</option>';
+
+
+    data.forEach(s => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = s.id;
+
+        option.textContent =
+            s.nome;
+
+        select.appendChild(option);
+
+    });
+
+}
+
+
+/* ==================================================
+   REGISTRAR OS
+================================================== */
+
+async function registrarOS() {
+
+    const funcionario =
+        document.getElementById(
+            "funcionarioRegistro"
+        ).value;
+
+    const os =
+        document.getElementById(
+            "osRegistro"
+        ).value.trim();
+
+    const data =
+        document.getElementById(
+            "dataRegistro"
+        ).value;
+
+    const setor =
+        document.getElementById(
+            "setorRegistro"
+        ).value;
+
+    const inicio =
+        document.getElementById(
+            "inicioRegistro"
+        ).value;
+
+    const fim =
+        document.getElementById(
+            "fimRegistro"
+        ).value;
+
+    const tipo =
+        document.getElementById(
+            "tipoRegistro"
+        ).value;
+
+    const espera =
+        document.getElementById(
+            "esperaRegistro"
+        ).value;
+
+
+    if(
+        !funcionario ||
+        !os ||
+        !data ||
+        !setor ||
+        !inicio ||
+        !fim
+    ) {
+
+        mostrarMensagem(
+            "msgRegistro",
+            "Preencha todos os campos obrigatórios.",
+            false
+        );
+
+        return;
+    }
+
+
+    const inicioMin =
+        converterHora(inicio);
+
+    const fimMin =
+        converterHora(fim);
+
+
+    let minutos =
+        fimMin - inicioMin;
+
+
+    if(minutos < 0) {
+
+        minutos += 1440;
+
+    }
+
+
+    const { error } =
+        await supabase
+        .from("registros")
+        .insert({
+
+            funcionario_id:
+                Number(funcionario),
+
+            os: os,
+
+            data: data,
+
+            setor_id:
+                Number(setor),
+
+            inicio: inicio,
+
+            fim: fim,
+
+            minutos_trabalhados:
+                minutos,
+
+            tipo: tipo,
+
+            espera: espera
+
+        });
+
+
+    if(error) {
+
+        mostrarMensagem(
+            "msgRegistro",
+            error.message,
+            false
+        );
+
+        return;
+    }
+
+
+    mostrarMensagem(
+        "msgRegistro",
+        "OS registrada com sucesso!",
+        true
+    );
+
+
+    document.getElementById(
+        "osRegistro"
+    ).value = "";
+
+    document.getElementById(
+        "inicioRegistro"
+    ).value = "";
+
+    document.getElementById(
+        "fimRegistro"
+    ).value = "";
+
+}
+
+
+window.registrarOS =
+registrarOS;
+
+
+/* ==================================================
+   REGISTROS
+================================================== */
+
+async function carregarRegistros() {
+
+    const { data, error } =
+        await supabase
+        .from("registros")
+        .select(`
+            *,
+            funcionarios(nome),
+            setores(nome)
+        `)
+        .order("data", {
+            ascending: false
+        });
+
+
+    if(error) {
+
+        document.getElementById(
+            "listaRegistros"
+        ).innerHTML =
+            "Erro: " + error.message;
+
+        return;
+    }
+
+
+    let html = "<table>";
+
+    html += `
+        <tr>
+            <th>Data</th>
+            <th>OS</th>
+            <th>Funcionário</th>
+            <th>Setor</th>
+            <th>Horário</th>
+            <th>Tempo</th>
+            <th>Tipo</th>
+        </tr>
+    `;
+
+
+    data.forEach(r => {
+
+        html += `
+            <tr>
+
+                <td>${formatarData(r.data)}</td>
+
+                <td>${r.os}</td>
+
+                <td>${r.funcionarios?.nome || "-"}</td>
+
+                <td>${r.setores?.nome || "-"}</td>
+
+                <td>${r.inicio} - ${r.fim}</td>
+
+                <td>
+                    ${formatarMinutos(r.minutos_trabalhados)}
+                </td>
+
+                <td>${r.tipo}</td>
+
+            </tr>
+        `;
+
+    });
+
+
+    html += "</table>";
+
+
+    document.getElementById(
+        "listaRegistros"
+    ).innerHTML = html;
+
+}
+
+
+/* ==================================================
+   DASHBOARD
+================================================== */
+
+async function carregarDashboard() {
+
+    const { data: funcionarios } =
+        await supabase
+        .from("funcionarios")
+        .select("*")
+        .eq("ativo", true);
+
+
+    const { data: registros } =
+        await supabase
+        .from("registros")
+        .select("*");
+
+
+    document.getElementById(
+        "totalFuncionarios"
+    ).textContent =
+        funcionarios?.length || 0;
+
+
+    document.getElementById(
+        "totalRegistros"
+    ).textContent =
+        registros?.length || 0;
+
+
+    let trabalhado = 0;
+
+    registros?.forEach(r => {
+
+        trabalhado +=
+            Number(r.minutos_trabalhados) || 0;
+
+    });
+
+
+    document.getElementById(
+        "horasTrabalhadas"
+    ).textContent =
+        formatarMinutos(trabalhado);
+
+
+    let disponivel = 0;
+
+    funcionarios?.forEach(f => {
+
+        disponivel +=
+            Number(f.jornada_minutos) || 0;
+
+    });
+
+
+    let produtividade = 0;
+
+    if(disponivel > 0) {
+
+        produtividade =
+            (trabalhado / disponivel) * 100;
+
+    }
+
+
+    document.getElementById(
+        "produtividade"
+    ).textContent =
+        produtividade.toFixed(1) + "%";
+
+
+    montarProdutividade(
+        funcionarios || [],
+        registros || []
+    );
+
+}
+
+
+function montarProdutividade(
+    funcionarios,
+    registros
+) {
+
+    let html = "<table>";
+
+    html += `
+        <tr>
+            <th>Funcionário</th>
+            <th>Horas trabalhadas</th>
+            <th>Jornada</th>
+            <th>Produtividade</th>
+        </tr>
+    `;
+
+
+    funcionarios.forEach(f => {
+
+        let trabalhado = 0;
+
+        registros.forEach(r => {
+
+            if(
+                Number(r.funcionario_id) ===
+                Number(f.id)
+            ) {
+
+                trabalhado +=
+                    Number(
+                        r.minutos_trabalhados
+                    ) || 0;
+
+            }
+
+        });
+
+
+        let produtividade = 0;
+
+        if(f.jornada_minutos > 0) {
+
+            produtividade =
+                (trabalhado /
+                f.jornada_minutos) * 100;
+
+        }
+
+
+        html += `
+            <tr>
+
+                <td>${f.nome}</td>
+
+                <td>
+                    ${formatarMinutos(trabalhado)}
+                </td>
+
+                <td>
+                    ${formatarMinutos(f.jornada_minutos)}
+                </td>
+
+                <td>
+                    ${produtividade.toFixed(1)}%
+                </td>
+
+            </tr>
+        `;
+
+    });
+
+
+    html += "</table>";
+
+
+    document.getElementById(
+        "tabelaProdutividade"
+    ).innerHTML = html;
+
+}
+
+
+/* ==================================================
+   FUNÇÕES AUXILIARES
+================================================== */
+
+function converterHora(hora) {
+
+    const partes =
+        hora.split(":");
+
+    return (
+        Number(partes[0]) * 60 +
+        Number(partes[1])
+    );
+
+}
+
+
+function formatarMinutos(minutos) {
+
+    minutos =
+        Number(minutos) || 0;
+
+    const horas =
+        Math.floor(minutos / 60);
+
+    const mins =
+        minutos % 60;
+
+    return `${horas}h ${String(mins).padStart(2, "0")}min`;
+
+}
+
+
+function formatarData(data) {
+
+    if(!data) return "";
+
+    const partes =
+        data.split("-");
+
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+}
+
+
+function mostrarMensagem(
+    elemento,
+    texto,
+    sucesso
+) {
+
+    const div =
+        document.getElementById(
+            elemento
+        );
+
+    div.textContent = texto;
+
+    div.className =
+        sucesso
+        ? "mensagem sucesso"
+        : "mensagem erro";
+
+}
+
+
+/* ==================================================
+   INICIALIZAÇÃO
+================================================== */
+
+document.getElementById(
+    "dataRegistro"
+).value =
+    new Date()
+    .toISOString()
+    .split("T")[0];
+
+
+carregarDashboard();
 
 </script>
 
 </body>
-
 </html>
