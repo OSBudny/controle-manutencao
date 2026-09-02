@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gestão da Manutenção</title>
+
 <style>
 :root{
 --laranja:#f57c00;
@@ -18,15 +19,18 @@
 --verde:#2ecc71;
 --vermelho:#e74c3c;
 }
+
 *{
 box-sizing:border-box;
 font-family:Arial,sans-serif;
 }
+
 body{
 margin:0;
 background:var(--fundo);
 color:var(--texto);
 }
+
 header{
 background:var(--fundo2);
 border-bottom:3px solid var(--laranja);
@@ -35,20 +39,35 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 }
+
 header h1{
 margin:0;
 font-size:21px;
 }
+
 header span{
 color:var(--laranja);
 font-weight:bold;
 }
+
+/* LOGO DA BUDNY */
+header .logo-empresa{
+height:52px;
+width:225px;
+object-fit:contain;
+object-position:center;
+background:#fff;
+border-radius:6px;
+padding:4px;
+}
+
 nav{
 background:#252627;
 padding:12px 25px;
 display:flex;
 gap:8px;
 }
+
 nav button{
 border:none;
 background:var(--campo);
@@ -58,21 +77,26 @@ border-radius:7px;
 cursor:pointer;
 font-weight:bold;
 }
+
 nav button:hover,
 nav button.ativo{
 background:var(--laranja);
 }
+
 main{
 max-width:1200px;
 margin:auto;
 padding:25px;
 }
+
 .tela{
 display:none;
 }
+
 .tela.ativa{
 display:block;
 }
+
 .card{
 background:var(--card);
 border-radius:10px;
@@ -80,30 +104,36 @@ padding:20px;
 margin-bottom:20px;
 box-shadow:0 3px 12px rgba(0,0,0,.20);
 }
+
 .card h2{
 margin-top:0;
 border-left:4px solid var(--laranja);
 padding-left:10px;
 }
+
 .formulario{
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:14px;
 }
+
 .campo{
 display:flex;
 flex-direction:column;
 }
+
 .campo label{
 color:var(--cinza);
 font-size:13px;
 margin-bottom:6px;
 }
+
 .campo .ajuda{
 color:#888;
 font-size:11px;
 margin-top:5px;
 }
+
 input,
 select{
 width:100%;
@@ -114,10 +144,12 @@ padding:11px;
 border-radius:6px;
 outline:none;
 }
+
 input:focus,
 select:focus{
 border-color:var(--laranja);
 }
+
 .botao{
 background:var(--laranja);
 border:none;
@@ -128,73 +160,90 @@ cursor:pointer;
 font-weight:bold;
 margin-top:20px;
 }
+
 .botao:hover{
 background:var(--laranja2);
 }
+
 .botao.pequeno{
 padding:8px 12px;
 margin-top:0;
 }
+
 .botao.vermelho{
 background:var(--vermelho);
 }
+
 .indicadores{
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:15px;
 margin-bottom:20px;
 }
+
 .indicador{
 background:var(--card);
 border-radius:10px;
 padding:20px;
 border-top:4px solid var(--laranja);
 }
+
 .indicador small{
 color:var(--cinza);
 }
+
 .indicador strong{
 display:block;
 font-size:28px;
 margin-top:8px;
 }
+
 .tabela{
 overflow-x:auto;
 }
+
 table{
 width:100%;
 border-collapse:collapse;
 }
+
 th{
 background:var(--fundo2);
 color:var(--laranja);
 text-align:left;
 padding:12px;
 }
+
 td{
 padding:11px;
 border-bottom:1px solid #444;
 }
+
 tr:hover{
 background:#36383a;
 }
+
 .verde{
 color:var(--verde);
 font-weight:bold;
 }
+
 .amarelo{
 color:var(--laranja2);
 font-weight:bold;
 }
+
 .vermelho{
 color:var(--vermelho);
 font-weight:bold;
 }
+
 .mensagem{
 margin-top:15px;
 color:var(--verde);
 font-weight:bold;
 }
+
 .linha-cadastro{
 display:grid;
 grid-template-columns:2fr 1fr 1fr auto;
@@ -202,6 +251,7 @@ gap:10px;
 align-items:end;
 margin-bottom:20px;
 }
+
 .linha-setor{
 display:grid;
 grid-template-columns:1fr auto;
@@ -209,11 +259,13 @@ gap:10px;
 align-items:end;
 margin-bottom:20px;
 }
+
 .lista-vazia{
 color:var(--cinza);
 text-align:center;
 padding:20px;
 }
+
 .aviso-jornada{
 background:#3a3c3f;
 border-left:4px solid var(--laranja);
@@ -222,9 +274,11 @@ margin-bottom:20px;
 border-radius:5px;
 color:var(--cinza);
 }
+
 .aviso-jornada strong{
 color:white;
 }
+
 .status{
 padding:10px;
 margin-bottom:15px;
@@ -232,12 +286,15 @@ border-radius:6px;
 background:#3a3c3f;
 color:var(--cinza);
 }
+
 .status.ok{
 color:var(--verde);
 }
+
 .status.erro{
 color:var(--vermelho);
 }
+
 .explicacao{
 background:#252627;
 border-left:4px solid var(--verde);
@@ -246,79 +303,108 @@ border-radius:6px;
 color:var(--cinza);
 margin-top:15px;
 }
+
 .explicacao strong{
 color:white;
 }
+
 .resumo-produtividade{
 display:grid;
 grid-template-columns:repeat(3,1fr);
 gap:15px;
 margin-top:15px;
 }
+
 .resumo-box{
 background:#3a3c3f;
 padding:15px;
 border-radius:7px;
 }
+
 .resumo-box small{
 color:var(--cinza);
 }
+
 .resumo-box strong{
 display:block;
 font-size:22px;
 margin-top:5px;
 }
+
 @media(max-width:850px){
+
 .formulario{
 grid-template-columns:repeat(2,1fr);
 }
+
 .indicadores{
 grid-template-columns:repeat(2,1fr);
 }
+
 .linha-cadastro{
 grid-template-columns:1fr 1fr;
 }
+
 .resumo-produtividade{
 grid-template-columns:1fr;
 }
+
 }
+
 @media(max-width:500px){
+
 header{
 padding:15px;
 }
+
+header .logo-empresa{
+height:42px;
+width:175px;
+}
+
 header h1{
 font-size:17px;
 }
+
 header span{
 display:none;
 }
+
 nav{
 padding:10px;
 }
+
 nav button{
 flex:1;
 font-size:12px;
 padding:10px 5px;
 }
+
 main{
 padding:15px;
 }
+
 .formulario{
 grid-template-columns:1fr;
 }
+
 .indicadores{
 grid-template-columns:1fr 1fr;
 }
+
 .indicador{
 padding:15px;
 }
+
 .indicador strong{
 font-size:22px;
 }
+
 .linha-cadastro,
 .linha-setor{
 grid-template-columns:1fr;
 }
+
 }
 </style>
 </head>
@@ -326,26 +412,47 @@ grid-template-columns:1fr;
 <body>
 
 <header>
+
+<img
+class="logo-empresa"
+src="https://images.seeklogo.com/logo-png/25/1/budny-logo-png_seeklogo-256107.png"
+alt="Budny Tratores e Implementos"
+>
+
+<div>
+
 <h1>🟠 GESTÃO DA MANUTENÇÃO</h1>
+
 <span>CONTROLE</span>
+
+</div>
+
 </header>
 
 <nav>
-<button id="menuLancamento"
+
+<button
+id="menuLancamento"
 class="ativo"
-onclick="mostrarTela('lancamento')">
+onclick="mostrarTela('lancamento')"
+>
 📝 Lançar OS
 </button>
 
-<button id="menuIndicadores"
-onclick="mostrarTela('indicadores')">
+<button
+id="menuIndicadores"
+onclick="mostrarTela('indicadores')"
+>
 📊 Indicadores
 </button>
 
-<button id="menuCadastros"
-onclick="mostrarTela('cadastros')">
+<button
+id="menuCadastros"
+onclick="mostrarTela('cadastros')"
+>
 ⚙️ Cadastros
 </button>
+
 </nav>
 
 <main>
@@ -363,43 +470,84 @@ Conectando ao banco de dados...
 <div class="formulario">
 
 <div class="campo">
+
 <label>Técnico</label>
+
 <select id="tecnico">
-<option value="">Selecione o técnico</option>
+
+<option value="">
+Selecione o técnico
+</option>
+
 </select>
+
 </div>
 
 <div class="campo">
+
 <label>Nº da OS</label>
-<input type="text" id="os" placeholder="Ex.: 1542">
+
+<input
+type="text"
+id="os"
+placeholder="Ex.: 1542"
+>
+
 </div>
 
 <div class="campo">
+
 <label>Data</label>
-<input type="date" id="data">
+
+<input
+type="date"
+id="data"
+>
+
 </div>
 
 <div class="campo">
+
 <label>Setor</label>
+
 <select id="setor">
-<option value="">Selecione o setor</option>
+
+<option value="">
+Selecione o setor
+</option>
+
 </select>
+
 </div>
 
 <div class="campo">
+
 <label>Hora início</label>
-<input type="time" id="inicio">
+
+<input
+type="time"
+id="inicio"
+>
+
 </div>
 
 <div class="campo">
+
 <label>Hora fim</label>
-<input type="time" id="fim">
+
+<input
+type="time"
+id="fim"
+>
+
 </div>
 
 <div class="campo">
+
 <label>Tipo de manutenção</label>
 
 <select id="tipo">
+
 <option>Preventiva</option>
 <option>Corretiva</option>
 <option>Melhoria</option>
@@ -407,14 +555,17 @@ Conectando ao banco de dados...
 <option>Instalação</option>
 <option>Desenvolvimento</option>
 <option>Outro</option>
+
 </select>
 
 </div>
 
 <div class="campo">
+
 <label>Motivo de espera</label>
 
 <select id="espera">
+
 <option>Nenhum</option>
 <option>Aguardando peça</option>
 <option>Aguardando liberação</option>
@@ -422,17 +573,24 @@ Conectando ao banco de dados...
 <option>Falta de ferramenta</option>
 <option>Deslocamento</option>
 <option>Outro</option>
+
 </select>
 
 </div>
 
 </div>
 
-<button class="botao" onclick="registrar()">
+<button
+class="botao"
+onclick="registrar()"
+>
 🟠 REGISTRAR SERVIÇO
 </button>
 
-<div id="mensagem" class="mensagem"></div>
+<div
+id="mensagem"
+class="mensagem"
+></div>
 
 </div>
 
@@ -445,7 +603,9 @@ Conectando ao banco de dados...
 <table>
 
 <thead>
+
 <tr>
+
 <th>Data</th>
 <th>OS</th>
 <th>Técnico</th>
@@ -453,7 +613,9 @@ Conectando ao banco de dados...
 <th>Tipo</th>
 <th>Tempo</th>
 <th></th>
+
 </tr>
+
 </thead>
 
 <tbody id="tabelaLancamentos"></tbody>
@@ -461,6 +623,7 @@ Conectando ao banco de dados...
 </table>
 
 </div>
+
 </div>
 
 </section>
@@ -472,14 +635,18 @@ Conectando ao banco de dados...
 
 <h2>Indicadores de produtividade</h2>
 
-<div class="campo" style="max-width:220px;">
+<div
+class="campo"
+style="max-width:220px;"
+>
 
 <label>Mês</label>
 
 <input
 type="month"
 id="mesFiltro"
-onchange="atualizarDashboard">
+onchange="atualizarDashboard()"
+>
 
 </div>
 
@@ -489,23 +656,54 @@ onchange="atualizarDashboard">
 <div class="indicadores">
 
 <div class="indicador">
-<small>Tempo trabalhado</small>
-<strong id="totalHoras">0 min</strong>
+
+<small>
+Tempo trabalhado
+</small>
+
+<strong id="totalHoras">
+0 min
+</strong>
+
 </div>
 
-<div class="indicador">
-<small>OS realizadas</small>
-<strong id="totalOS">0</strong>
-</div>
 
 <div class="indicador">
-<small>Produtividade da equipe</small>
-<strong id="produtividade">0%</strong>
+
+<small>
+OS realizadas
+</small>
+
+<strong id="totalOS">
+0
+</strong>
+
 </div>
 
+
 <div class="indicador">
-<small>Técnicos</small>
-<strong id="numeroTecnicos">0</strong>
+
+<small>
+Produtividade da equipe
+</small>
+
+<strong id="produtividade">
+0%
+</strong>
+
+</div>
+
+
+<div class="indicador">
+
+<small>
+Técnicos
+</small>
+
+<strong id="numeroTecnicos">
+0
+</strong>
+
 </div>
 
 </div>
@@ -513,7 +711,9 @@ onchange="atualizarDashboard">
 
 <div class="card">
 
-<h2>Desempenho por funcionário</h2>
+<h2>
+Desempenho por funcionário
+</h2>
 
 <div class="tabela">
 
@@ -522,12 +722,14 @@ onchange="atualizarDashboard">
 <thead>
 
 <tr>
+
 <th>Funcionário</th>
 <th>Jornada/dia</th>
 <th>Tempo manutenção</th>
 <th>OS</th>
 <th>Disponibilidade</th>
 <th>Produtividade</th>
+
 </tr>
 
 </thead>
@@ -543,7 +745,9 @@ onchange="atualizarDashboard">
 
 <div class="card">
 
-<h2>Horas por setor</h2>
+<h2>
+Horas por setor
+</h2>
 
 <div class="tabela">
 
@@ -552,9 +756,11 @@ onchange="atualizarDashboard">
 <thead>
 
 <tr>
+
 <th>Setor</th>
 <th>Tempo</th>
 <th>OS</th>
+
 </tr>
 
 </thead>
@@ -570,7 +776,9 @@ onchange="atualizarDashboard">
 
 <div class="card">
 
-<h2>Tipos de manutenção</h2>
+<h2>
+Tipos de manutenção
+</h2>
 
 <div class="tabela">
 
@@ -579,9 +787,11 @@ onchange="atualizarDashboard">
 <thead>
 
 <tr>
+
 <th>Tipo</th>
 <th>OS</th>
 <th>Percentual</th>
+
 </tr>
 
 </thead>
@@ -605,11 +815,15 @@ onchange="atualizarDashboard">
 
 <div class="aviso-jornada">
 
-Informe a jornada no formato <strong>HH:MM</strong>.
+Informe a jornada no formato
+<strong>HH:MM</strong>.
 
 <br>
 
-Exemplo: <strong>08:48</strong> = 8 horas e 48 minutos por dia.
+Exemplo:
+<strong>08:48</strong>
+=
+8 horas e 48 minutos por dia.
 
 </div>
 
@@ -623,7 +837,8 @@ Exemplo: <strong>08:48</strong> = 8 horas e 48 minutos por dia.
 <input
 type="text"
 id="novoFuncionario"
-placeholder="Nome do funcionário">
+placeholder="Nome do funcionário"
+>
 
 </div>
 
@@ -635,7 +850,8 @@ placeholder="Nome do funcionário">
 <input
 type="text"
 id="funcaoFuncionario"
-placeholder="Mecânico">
+placeholder="Mecânico"
+>
 
 </div>
 
@@ -647,7 +863,8 @@ placeholder="Mecânico">
 <input
 type="time"
 id="jornadaFuncionario"
-value="08:48">
+value="08:48"
+>
 
 <span class="ajuda">
 Ex.: 08:48
@@ -658,7 +875,8 @@ Ex.: 08:48
 
 <button
 class="botao pequeno"
-onclick="cadastrarFuncionario()">
+onclick="cadastrarFuncionario()"
+>
 + Cadastrar
 </button>
 
@@ -672,10 +890,12 @@ onclick="cadastrarFuncionario()">
 <thead>
 
 <tr>
+
 <th>Nome</th>
 <th>Função</th>
 <th>Jornada</th>
 <th></th>
+
 </tr>
 
 </thead>
@@ -702,13 +922,16 @@ onclick="cadastrarFuncionario()">
 <input
 type="text"
 id="novoSetor"
-placeholder="Ex.: Produção">
+placeholder="Ex.: Produção"
+>
 
 </div>
 
+
 <button
 class="botao pequeno"
-onclick="cadastrarSetor()">
+onclick="cadastrarSetor()"
+>
 + Cadastrar
 </button>
 
@@ -722,8 +945,10 @@ onclick="cadastrarSetor()">
 <thead>
 
 <tr>
+
 <th>Setor</th>
 <th></th>
+
 </tr>
 
 </thead>
@@ -750,11 +975,16 @@ const SUPABASE_KEY =
 "sb_publishable_oIe4-XsdKOYhvPFdkAnPrw_wzAA95rG";
 
 let funcionarios = [];
+
 let setores = [];
+
 let registros = [];
 
 
-async function supabaseRequest(tabela, opcoes = {}) {
+async function supabaseRequest(
+tabela,
+opcoes = {}
+){
 
 const resposta =
 await fetch(
@@ -871,24 +1101,27 @@ document
 .getElementById(tela)
 .classList.add("ativa");
 
-
 document
 .querySelectorAll("nav button")
 .forEach(btn =>
 btn.classList.remove("ativo")
 );
 
-
 if(tela === "lancamento")
+
 document
-.getElementById("menuLancamento")
+.getElementById(
+"menuLancamento"
+)
 .classList.add("ativo");
 
 
 if(tela === "indicadores"){
 
 document
-.getElementById("menuIndicadores")
+.getElementById(
+"menuIndicadores"
+)
 .classList.add("ativo");
 
 atualizarDashboard();
@@ -897,8 +1130,11 @@ atualizarDashboard();
 
 
 if(tela === "cadastros")
+
 document
-.getElementById("menuCadastros")
+.getElementById(
+"menuCadastros"
+)
 .classList.add("ativo");
 
 }
@@ -949,7 +1185,8 @@ const p =
 hora.split(":");
 
 return (
-Number(p[0]) * 60 +
+Number(p[0]) * 60
++
 Number(p[1])
 );
 
@@ -1029,8 +1266,10 @@ if(funcionarios.length === 0){
 
 tabela.innerHTML = `
 <tr>
-<td colspan="4"
-class="lista-vazia">
+<td
+colspan="4"
+class="lista-vazia"
+>
 Nenhum funcionário cadastrado.
 </td>
 </tr>
@@ -1046,16 +1285,35 @@ const tr =
 document.createElement("tr");
 
 tr.innerHTML = `
-<td>${esc(f.nome)}</td>
-<td>${esc(f.funcao || "Não informado")}</td>
-<td>${minutosParaJornada(f.jornada_minutos)}</td>
+
 <td>
+${esc(f.nome)}
+</td>
+
+<td>
+${esc(
+f.funcao ||
+"Não informado"
+)}
+</td>
+
+<td>
+${minutosParaJornada(
+f.jornada_minutos
+)}
+</td>
+
+<td>
+
 <button
 class="botao vermelho pequeno"
-onclick="excluirFuncionario(${f.id})">
+onclick="excluirFuncionario(${f.id})"
+>
 X
 </button>
+
 </td>
+
 `;
 
 tabela.appendChild(tr);
@@ -1079,7 +1337,6 @@ document
 .value
 .trim();
 
-
 const funcao =
 document
 .getElementById(
@@ -1088,14 +1345,12 @@ document
 .value
 .trim();
 
-
 const jornadaTexto =
 document
 .getElementById(
 "jornadaFuncionario"
 )
 .value;
-
 
 const jornadaMinutos =
 jornadaParaMinutos(
@@ -1164,6 +1419,7 @@ jornadaMinutos,
 
 ativo:true
 }
+
 }
 );
 
@@ -1245,12 +1501,20 @@ tabela.innerHTML = "";
 if(setores.length === 0){
 
 tabela.innerHTML = `
+
 <tr>
-<td colspan="2"
-class="lista-vazia">
+
+<td
+colspan="2"
+class="lista-vazia"
+>
+
 Nenhum setor cadastrado.
+
 </td>
+
 </tr>
+
 `;
 
 }
@@ -1263,17 +1527,22 @@ const tr =
 document.createElement("tr");
 
 tr.innerHTML = `
+
 <td>
 ${esc(s.nome)}
 </td>
 
 <td>
+
 <button
 class="botao vermelho pequeno"
-onclick="excluirSetor(${s.id})">
+onclick="excluirSetor(${s.id})"
+>
 X
 </button>
+
 </td>
+
 `;
 
 tabela.appendChild(tr);
@@ -1340,6 +1609,7 @@ body:{
 nome:nome,
 ativo:true
 }
+
 }
 );
 
@@ -1381,20 +1651,23 @@ document.getElementById(
 "tecnico"
 );
 
-select.innerHTML =
-`
+select.innerHTML = `
+
 <option value="">
 Selecione o técnico
 </option>
+
 `;
 
 
 funcionarios.forEach(f => {
 
 select.innerHTML += `
+
 <option value="${f.id}">
 ${esc(f.nome)}
 </option>
+
 `;
 
 });
@@ -1409,20 +1682,23 @@ document.getElementById(
 "setor"
 );
 
-select.innerHTML =
-`
+select.innerHTML = `
+
 <option value="">
 Selecione o setor
 </option>
+
 `;
 
 
 setores.forEach(s => {
 
 select.innerHTML += `
+
 <option value="${s.id}">
 ${esc(s.nome)}
 </option>
+
 `;
 
 });
@@ -1439,7 +1715,6 @@ document
 )
 .value;
 
-
 const os =
 document
 .getElementById(
@@ -1448,14 +1723,12 @@ document
 .value
 .trim();
 
-
 const data =
 document
 .getElementById(
 "data"
 )
 .value;
-
 
 const setorId =
 document
@@ -1464,14 +1737,12 @@ document
 )
 .value;
 
-
 const inicio =
 document
 .getElementById(
 "inicio"
 )
 .value;
-
 
 const fim =
 document
@@ -1480,14 +1751,12 @@ document
 )
 .value;
 
-
 const tipo =
 document
 .getElementById(
 "tipo"
 )
 .value;
-
 
 const espera =
 document
@@ -1521,7 +1790,6 @@ converterHora(inicio);
 const fimMin =
 converterHora(fim);
 
-
 let minutos =
 fimMin - inicioMin;
 
@@ -1549,6 +1817,7 @@ await supabaseRequest(
 method:"POST",
 
 body:{
+
 funcionario_id:
 Number(funcionarioId),
 
@@ -1569,7 +1838,9 @@ minutos,
 tipo:tipo,
 
 espera:espera
+
 }
+
 }
 );
 
@@ -1655,12 +1926,20 @@ registros = dados;
 if(dados.length === 0){
 
 tabela.innerHTML = `
+
 <tr>
-<td colspan="7"
-class="lista-vazia">
+
+<td
+colspan="7"
+class="lista-vazia"
+>
+
 Nenhum lançamento ainda.
+
 </td>
+
 </tr>
+
 `;
 
 return;
@@ -1691,6 +1970,7 @@ document.createElement("tr");
 
 
 tr.innerHTML = `
+
 <td>
 ${formatarData(r.data)}
 </td>
@@ -1712,20 +1992,26 @@ ${esc(r.tipo)}
 </td>
 
 <td>
+
 <strong>
 ${formatarTempo(
 r.minutos_trabalhados
 )}
 </strong>
+
 </td>
 
 <td>
+
 <button
 class="botao vermelho pequeno"
-onclick="excluirRegistro(${r.id})">
+onclick="excluirRegistro(${r.id})"
+>
 X
 </button>
+
 </td>
+
 `;
 
 
@@ -1740,12 +2026,20 @@ catch(erro){
 console.error(erro);
 
 tabela.innerHTML = `
+
 <tr>
-<td colspan="7"
-class="lista-vazia">
+
+<td
+colspan="7"
+class="lista-vazia"
+>
+
 Não foi possível carregar os lançamentos.
+
 </td>
+
 </tr>
+
 `;
 
 }
@@ -2088,9 +2382,11 @@ montarTabelaTecnicos(
 tecnicos
 );
 
+
 montarTabelaSetores(
 dados
 );
+
 
 montarTabelaTipos(
 dados
@@ -2128,12 +2424,20 @@ tecnicos
 if(nomes.length === 0){
 
 tabela.innerHTML = `
+
 <tr>
-<td colspan="6"
-class="lista-vazia">
+
+<td
+colspan="6"
+class="lista-vazia"
+>
+
 Nenhum serviço no período.
+
 </td>
+
 </tr>
+
 `;
 
 return;
@@ -2174,12 +2478,15 @@ let classe = "";
 
 
 if(produtividade >= 80)
+
 classe = "verde";
 
 else if(produtividade >= 70)
+
 classe = "amarelo";
 
 else
+
 classe = "vermelho";
 
 
@@ -2190,6 +2497,7 @@ document.createElement(
 
 
 tr.innerHTML = `
+
 <td>
 ${esc(nome)}
 </td>
@@ -2224,7 +2532,8 @@ display:flex;
 align-items:center;
 gap:10px;
 min-width:220px;
-">
+"
+>
 
 <div
 style="
@@ -2233,7 +2542,8 @@ height:18px;
 background:#3a3c3f;
 border-radius:5px;
 overflow:hidden;
-">
+"
+>
 
 <div
 style="
@@ -2242,8 +2552,8 @@ height:100%;
 background:var(--laranja);
 border-radius:5px;
 transition:width .4s ease;
-">
-</div>
+"
+></div>
 
 </div>
 
@@ -2252,7 +2562,8 @@ class="${classe}"
 style="
 min-width:55px;
 text-align:right;
-">
+"
+>
 
 ${produtividade.toFixed(1)}%
 
@@ -2261,10 +2572,13 @@ ${produtividade.toFixed(1)}%
 </div>
 
 </td>
+
 `;
 
 
-tabela.appendChild(tr);
+tabela.appendChild(
+tr
+);
 
 });
 
@@ -2297,6 +2611,7 @@ r.setores.nome
 
 
 if(!setoresDados[nome])
+
 setoresDados[nome] = {
 minutos:0,
 os:0
@@ -2322,14 +2637,21 @@ setoresDados
 
 if(nomes.length === 0){
 
-tabela.innerHTML =
-`
+tabela.innerHTML = `
+
 <tr>
-<td colspan="3"
-class="lista-vazia">
+
+<td
+colspan="3"
+class="lista-vazia"
+>
+
 Nenhum serviço no período.
+
 </td>
+
 </tr>
+
 `;
 
 return;
@@ -2344,13 +2666,11 @@ setoresDados[nome];
 
 
 const tr =
-document.createElement(
-"tr"
-);
+document.createElement("tr");
 
 
-tr.innerHTML =
-`
+tr.innerHTML = `
+
 <td>
 ${esc(nome)}
 </td>
@@ -2362,6 +2682,7 @@ ${formatarTempo(s.minutos)}
 <td>
 ${s.os}
 </td>
+
 `;
 
 
@@ -2395,8 +2716,7 @@ r.tipo ||
 
 
 tipos[nome] =
-(tipos[nome] || 0) +
-1;
+(tipos[nome] || 0) + 1;
 
 });
 
@@ -2406,25 +2726,30 @@ dados.length;
 
 
 const nomes =
-Object.keys(
-tipos
-).sort(
+Object.keys(tipos)
+.sort(
 (a,b) =>
-tipos[b] -
-tipos[a]
+tipos[b] - tipos[a]
 );
 
 
 if(nomes.length === 0){
 
-tabela.innerHTML =
-`
+tabela.innerHTML = `
+
 <tr>
-<td colspan="3"
-class="lista-vazia">
+
+<td
+colspan="3"
+class="lista-vazia"
+>
+
 Nenhum serviço no período.
+
 </td>
+
 </tr>
+
 `;
 
 return;
@@ -2441,22 +2766,16 @@ tipos[nome];
 const percentual =
 total > 0
 ?
-(
-quantidade /
-total
-) * 100
+(quantidade / total) * 100
 :
 0;
 
 
 const tr =
-document.createElement(
-"tr"
-);
+document.createElement("tr");
 
 
-tr.innerHTML =
-`
+tr.innerHTML = `
 
 <td>
 ${esc(nome)}
@@ -2474,7 +2793,8 @@ display:flex;
 align-items:center;
 gap:10px;
 min-width:220px;
-">
+"
+>
 
 <div
 style="
@@ -2483,7 +2803,8 @@ height:18px;
 background:#3a3c3f;
 border-radius:5px;
 overflow:hidden;
-">
+"
+>
 
 <div
 style="
@@ -2492,8 +2813,8 @@ height:100%;
 background:var(--laranja);
 border-radius:5px;
 transition:width .4s ease;
-">
-</div>
+"
+></div>
 
 </div>
 
@@ -2501,7 +2822,8 @@ transition:width .4s ease;
 style="
 min-width:55px;
 text-align:right;
-">
+"
+>
 
 ${percentual.toFixed(1)}%
 
@@ -2531,6 +2853,9 @@ await carregarSetores();
 
 await mostrarLancamentos();
 
+
+// Ao abrir a página,
+// usar o mês do lançamento mais recente.
 
 if(
 registros.length &&
@@ -2589,12 +2914,17 @@ ano++;
 
 
 return (
+
 ano +
+
 "-" +
+
 String(
 numero
 ).padStart(2,"0") +
+
 "-01"
+
 );
 
 }
