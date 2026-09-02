@@ -6,6 +6,7 @@
 <title>Gestão da Manutenção</title>
 
 <style>
+
 :root{
 --laranja:#f57c00;
 --laranja2:#ff9800;
@@ -350,6 +351,7 @@ grid-template-columns:1fr;
 }
 
 }
+
 </style>
 </head>
 
@@ -398,10 +400,6 @@ onclick="mostrarTela('cadastros')">
 
 <main>
 
-
-<!-- =====================================================
-     LANÇAMENTO
-===================================================== -->
 
 <section
 id="lancamento"
@@ -566,10 +564,6 @@ class="mensagem">
 </div>
 
 
-<!-- =====================================================
-     ÚLTIMOS LANÇAMENTOS
-===================================================== -->
-
 <div class="card">
 
 <h2>Últimos lançamentos</h2>
@@ -615,10 +609,6 @@ id="tabelaLancamentos">
 
 </section>
 
-
-<!-- =====================================================
-     INDICADORES
-===================================================== -->
 
 <section
 id="indicadores"
@@ -716,10 +706,6 @@ id="numeroTecnicos">
 </div>
 
 
-<!-- =====================================================
-     DESEMPENHO POR FUNCIONÁRIO
-===================================================== -->
-
 <div class="card">
 
 <h2>Desempenho por funcionário</h2>
@@ -762,10 +748,6 @@ id="tabelaTecnicos">
 </div>
 
 
-<!-- =====================================================
-     HORAS POR SETOR
-===================================================== -->
-
 <div class="card">
 
 <h2>Horas por setor</h2>
@@ -801,10 +783,6 @@ id="tabelaSetores">
 
 </div>
 
-
-<!-- =====================================================
-     TIPOS DE MANUTENÇÃO
-===================================================== -->
 
 <div class="card">
 
@@ -845,16 +823,10 @@ id="tabelaTipos">
 </section>
 
 
-<!-- =====================================================
-     CADASTROS
-===================================================== -->
-
 <section
 id="cadastros"
 class="tela">
 
-
-<!-- FUNCIONÁRIOS -->
 
 <div class="card">
 
@@ -965,8 +937,6 @@ id="tabelaFuncionarios">
 </div>
 
 
-<!-- SETORES -->
-
 <div class="card">
 
 <h2>🏭 Setores</h2>
@@ -994,7 +964,6 @@ onclick="cadastrarSetor()">
 + Cadastrar
 
 </button>
-
 
 </div>
 
@@ -1036,10 +1005,6 @@ id="tabelaSetoresCadastro">
 <script>
 
 
-/* =====================================================
-   SUPABASE
-===================================================== */
-
 const SUPABASE_URL =
 "https://qwaibjzdpwebddvbfkoj.supabase.co";
 
@@ -1048,20 +1013,12 @@ const SUPABASE_KEY =
 "sb_publishable_oIe4-XsdKOYhvPFdkAnPrw_wzAA95rG";
 
 
-/* =====================================================
-   VARIÁVEIS
-===================================================== */
-
 let funcionarios = [];
 
 let setores = [];
 
 let registros = [];
 
-
-/* =====================================================
-   SUPABASE REQUEST
-===================================================== */
 
 async function supabaseRequest(
 tabela,
@@ -1124,10 +1081,6 @@ JSON.parse(texto)
 }
 
 
-/* =====================================================
-   TESTAR CONEXÃO
-===================================================== */
-
 async function testarConexao(){
 
 const status =
@@ -1168,10 +1121,6 @@ status.className =
 
 }
 
-
-/* =====================================================
-   NAVEGAÇÃO
-===================================================== */
 
 function mostrarTela(
 nome
@@ -1256,10 +1205,6 @@ document
 
 }
 
-
-/* =====================================================
-   CONVERSÃO DE HORAS
-===================================================== */
 
 function converterHora(
 hora
@@ -1385,10 +1330,6 @@ partes[0]
 }
 
 
-/* =====================================================
-   ESCAPE
-===================================================== */
-
 function esc(
 valor
 ){
@@ -1425,10 +1366,6 @@ valor ?? ""
 }
 
 
-/* =====================================================
-   FUNCIONÁRIOS
-===================================================== */
-
 async function carregarFuncionarios(){
 
 try{
@@ -1453,10 +1390,6 @@ console.error(erro);
 
 }
 
-
-/* =====================================================
-   SELECT TÉCNICOS
-===================================================== */
 
 function atualizarSelectTecnicos(){
 
@@ -1489,10 +1422,6 @@ ${esc(f.nome)}
 
 }
 
-
-/* =====================================================
-   TABELA FUNCIONÁRIOS
-===================================================== */
 
 function montarTabelaFuncionarios(){
 
@@ -1577,10 +1506,6 @@ tr
 
 }
 
-
-/* =====================================================
-   CADASTRAR FUNCIONÁRIO
-===================================================== */
 
 async function cadastrarFuncionario(){
 
@@ -1692,10 +1617,6 @@ erro.message
 }
 
 
-/* =====================================================
-   SETORES
-===================================================== */
-
 async function carregarSetores(){
 
 try{
@@ -1720,10 +1641,6 @@ console.error(erro);
 
 }
 
-
-/* =====================================================
-   SELECT SETORES
-===================================================== */
 
 function atualizarSelectSetores(){
 
@@ -1756,10 +1673,6 @@ ${esc(s.nome)}
 
 }
 
-
-/* =====================================================
-   TABELA SETORES CADASTRO
-===================================================== */
 
 function montarTabelaSetoresCadastro(){
 
@@ -1835,10 +1748,6 @@ tr
 }
 
 
-/* =====================================================
-   CADASTRAR SETOR
-===================================================== */
-
 async function cadastrarSetor(){
 
 const nome =
@@ -1912,10 +1821,6 @@ erro.message
 
 }
 
-
-/* =====================================================
-   REGISTRAR OS
-===================================================== */
 
 async function registrar(){
 
@@ -2158,10 +2063,6 @@ erro.message
 }
 
 
-/* =====================================================
-   ÚLTIMOS LANÇAMENTOS
-===================================================== */
-
 async function mostrarLancamentos(){
 
 const tabela =
@@ -2314,10 +2215,6 @@ Não foi possível carregar os lançamentos.
 }
 
 
-/* =====================================================
-   EXCLUIR REGISTRO
-===================================================== */
-
 async function excluirRegistro(
 id
 ){
@@ -2367,10 +2264,6 @@ erro.message
 
 }
 
-
-/* =====================================================
-   EXCLUIR FUNCIONÁRIO
-===================================================== */
 
 async function excluirFuncionario(
 id
@@ -2438,10 +2331,6 @@ erro.message
 }
 
 
-/* =====================================================
-   EXCLUIR SETOR
-===================================================== */
-
 async function excluirSetor(
 id
 ){
@@ -2508,10 +2397,6 @@ erro.message
 }
 
 
-/* =====================================================
-   DASHBOARD
-===================================================== */
-
 async function atualizarDashboard(){
 
 const mes =
@@ -2573,10 +2458,6 @@ document
 .innerText =
 dados.length;
 
-
-/* =====================================================
-   FUNCIONÁRIOS
-===================================================== */
 
 const tecnicos = {};
 
@@ -2672,10 +2553,6 @@ tecnicos
 ).length;
 
 
-/* =====================================================
-   DISPONIBILIDADE
-===================================================== */
-
 let totalDisponivel =
 0;
 
@@ -2708,10 +2585,6 @@ tecnicos[nome].disponivel;
 );
 
 
-/* =====================================================
-   PRODUTIVIDADE
-===================================================== */
-
 const produtividade =
 totalDisponivel > 0
 ?
@@ -2737,10 +2610,6 @@ produtividade.toFixed(
 "%";
 
 
-/* =====================================================
-   TABELAS
-===================================================== */
-
 montarTabelaTecnicos(
 tecnicos
 );
@@ -2764,10 +2633,6 @@ console.error(erro);
 
 }
 
-
-/* =====================================================
-   TABELA DESEMPENHO
-===================================================== */
 
 function montarTabelaTecnicos(
 tecnicos
@@ -2910,8 +2775,53 @@ disponivel
 )}
 </td>
 
-<td class="${classe}">
+<td>
+
+<div
+style="
+display:flex;
+align-items:center;
+gap:10px;
+min-width:220px;
+">
+
+<div
+style="
+flex:1;
+height:18px;
+background:#3a3c3f;
+border-radius:5px;
+overflow:hidden;
+">
+
+<div
+style="
+width:${Math.min(
+produtividade,
+100
+)}%;
+height:100%;
+background:var(--laranja);
+border-radius:5px;
+transition:width .4s ease;
+">
+</div>
+
+</div>
+
+<strong
+class="${classe}"
+style="
+min-width:55px;
+text-align:right;
+">
+
 ${produtividade.toFixed(1)}%
+
+</strong>
+
+</div>
+
 </td>
 `;
 
@@ -2925,10 +2835,6 @@ tr
 
 }
 
-
-/* =====================================================
-   TABELA SETORES
-===================================================== */
 
 function montarTabelaSetores(
 dados
@@ -3060,11 +2966,6 @@ tr
 }
 
 
-/* =====================================================
-   TIPOS DE MANUTENÇÃO
-   QUANTIDADE + PERCENTUAL + BARRA
-===================================================== */
-
 function montarTabelaTipos(
 dados
 ){
@@ -3098,7 +2999,8 @@ tipos[nome]
 +
 1;
 
-});
+}
+);
 
 
 const total =
@@ -3233,10 +3135,6 @@ tr
 }
 
 
-/* =====================================================
-   CARREGAR TUDO
-===================================================== */
-
 async function carregarTudo(){
 
 testarConexao();
@@ -3250,11 +3148,6 @@ await carregarSetores();
 
 await mostrarLancamentos();
 
-
-/*
-Ao abrir a página,
-usar o mês do lançamento mais recente.
-*/
 
 if(
 registros.length &&
@@ -3285,10 +3178,6 @@ await atualizarDashboard();
 
 }
 
-
-/* =====================================================
-   PRÓXIMO MÊS
-===================================================== */
 
 function proximoMes(
 mes
@@ -3344,10 +3233,6 @@ numero
 
 }
 
-
-/* =====================================================
-   INICIALIZAÇÃO
-===================================================== */
 
 document.addEventListener(
 "DOMContentLoaded",
