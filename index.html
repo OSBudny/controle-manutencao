@@ -285,6 +285,42 @@ tr:hover {
     color:var(--vermelho);
 }
 
+.explicacao {
+    background:#252627;
+    border-left:4px solid var(--verde);
+    padding:14px;
+    border-radius:6px;
+    color:var(--cinza);
+    margin-top:15px;
+}
+
+.explicacao strong {
+    color:white;
+}
+
+.resumo-produtividade {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:15px;
+}
+
+.resumo-box {
+    background:#3a3c3f;
+    padding:15px;
+    border-radius:7px;
+}
+
+.resumo-box small {
+    color:var(--cinza);
+}
+
+.resumo-box strong {
+    display:block;
+    font-size:22px;
+    margin-top:5px;
+}
+
 @media(max-width:850px) {
     .formulario {
         grid-template-columns:repeat(2,1fr);
@@ -296,6 +332,10 @@ tr:hover {
 
     .linha-cadastro {
         grid-template-columns:1fr 1fr;
+    }
+
+    .resumo-produtividade {
+        grid-template-columns:1fr;
     }
 }
 
@@ -358,21 +398,23 @@ tr:hover {
 </header>
 
 <nav>
-    <button id="menuLancamento"
-            class="ativo"
-            onclick="mostrarTela('lancamento')">
-        📝 Lançar OS
-    </button>
 
-    <button id="menuIndicadores"
-            onclick="mostrarTela('indicadores')">
-        📊 Indicadores
-    </button>
+<button id="menuLancamento"
+        class="ativo"
+        onclick="mostrarTela('lancamento')">
+    📝 Lançar OS
+</button>
 
-    <button id="menuCadastros"
-            onclick="mostrarTela('cadastros')">
-        ⚙️ Cadastros
-    </button>
+<button id="menuIndicadores"
+        onclick="mostrarTela('indicadores')">
+    📊 Indicadores
+</button>
+
+<button id="menuCadastros"
+        onclick="mostrarTela('cadastros')">
+    ⚙️ Cadastros
+</button>
+
 </nav>
 
 <main>
@@ -488,13 +530,14 @@ tr:hover {
 
 </section>
 
+
 <!-- ================= INDICADORES ================= -->
 
 <section id="indicadores" class="tela">
 
 <div class="card">
 
-<h2>Indicadores</h2>
+<h2>Indicadores de produtividade</h2>
 
 <div class="campo" style="max-width:220px;">
 
@@ -506,7 +549,29 @@ tr:hover {
 
 </div>
 
+<div class="explicacao">
+
+<strong>Como a produtividade é calculada?</strong>
+
+<br><br>
+
+A produtividade considera o tempo em que o funcionário
+<strong>realmente estava disponível para trabalhar</strong>.
+
+<br><br>
+
+<strong>Produtividade = Tempo de manutenção ÷ Tempo disponível × 100</strong>
+
+<br><br>
+
+A jornada padrão cadastrada para cada funcionário é utilizada
+como base. Dias sem lançamento de serviço não são considerados
+automaticamente como folga nesta versão.
+
 </div>
+
+</div>
+
 
 <div class="indicadores">
 
@@ -521,7 +586,7 @@ tr:hover {
 </div>
 
 <div class="indicador">
-<small>Produtividade</small>
+<small>Produtividade da equipe</small>
 <strong id="produtividade">0%</strong>
 </div>
 
@@ -532,22 +597,26 @@ tr:hover {
 
 </div>
 
+
 <div class="card">
 
-<h2>Desempenho por técnico</h2>
+<h2>Desempenho por funcionário</h2>
 
 <div class="tabela">
 
 <table>
 
 <thead>
+
 <tr>
-<th>Técnico</th>
+<th>Funcionário</th>
 <th>Jornada/dia</th>
-<th>Tempo</th>
+<th>Tempo manutenção</th>
 <th>OS</th>
+<th>Disponibilidade</th>
 <th>Produtividade</th>
 </tr>
+
 </thead>
 
 <tbody id="tabelaTecnicos"></tbody>
@@ -555,7 +624,9 @@ tr:hover {
 </table>
 
 </div>
+
 </div>
+
 
 <div class="card">
 
@@ -566,11 +637,13 @@ tr:hover {
 <table>
 
 <thead>
+
 <tr>
 <th>Setor</th>
 <th>Tempo</th>
 <th>OS</th>
 </tr>
+
 </thead>
 
 <tbody id="tabelaSetores"></tbody>
@@ -578,7 +651,9 @@ tr:hover {
 </table>
 
 </div>
+
 </div>
+
 
 <div class="card">
 
@@ -590,6 +665,7 @@ tr:hover {
 
 </section>
 
+
 <!-- ================= CADASTROS ================= -->
 
 <section id="cadastros" class="tela">
@@ -599,39 +675,56 @@ tr:hover {
 <h2>👷 Funcionários</h2>
 
 <div class="aviso-jornada">
-    Informe a jornada no formato <strong>HH:MM</strong>.
-    <br>
-    Exemplo: <strong>08:48</strong> = 8 horas e 48 minutos por dia.
+
+Informe a jornada no formato <strong>HH:MM</strong>.
+
+<br>
+
+Exemplo: <strong>08:48</strong> = 8 horas e 48 minutos por dia.
+
 </div>
 
 <div class="linha-cadastro">
 
 <div class="campo">
+
 <label>Nome</label>
+
 <input type="text"
        id="novoFuncionario"
        placeholder="Nome do funcionário">
+
 </div>
 
 <div class="campo">
+
 <label>Função</label>
+
 <input type="text"
        id="funcaoFuncionario"
        placeholder="Mecânico">
+
 </div>
 
 <div class="campo">
+
 <label>Jornada diária</label>
+
 <input type="time"
        id="jornadaFuncionario"
        value="08:48">
 
-<span class="ajuda">Ex.: 08:48</span>
+<span class="ajuda">
+Ex.: 08:48
+</span>
+
 </div>
 
 <button class="botao pequeno"
         onclick="cadastrarFuncionario()">
-    + Cadastrar
+
++ Cadastrar
+
 </button>
 
 </div>
@@ -641,12 +734,14 @@ tr:hover {
 <table>
 
 <thead>
+
 <tr>
 <th>Nome</th>
 <th>Função</th>
 <th>Jornada</th>
 <th></th>
 </tr>
+
 </thead>
 
 <tbody id="tabelaFuncionarios"></tbody>
@@ -657,6 +752,7 @@ tr:hover {
 
 </div>
 
+
 <div class="card">
 
 <h2>🏭 Setores</h2>
@@ -664,15 +760,20 @@ tr:hover {
 <div class="linha-setor">
 
 <div class="campo">
+
 <label>Nome do setor</label>
+
 <input type="text"
        id="novoSetor"
        placeholder="Ex.: Produção">
+
 </div>
 
 <button class="botao pequeno"
         onclick="cadastrarSetor()">
-    + Cadastrar
+
++ Cadastrar
+
 </button>
 
 </div>
@@ -682,10 +783,12 @@ tr:hover {
 <table>
 
 <thead>
+
 <tr>
 <th>Setor</th>
 <th></th>
 </tr>
+
 </thead>
 
 <tbody id="tabelaSetoresCadastro"></tbody>
@@ -700,6 +803,7 @@ tr:hover {
 
 </main>
 
+
 <script>
 
 /* =====================================================
@@ -710,7 +814,7 @@ const SUPABASE_URL =
 "https://qwaibjzdpwebddvbfkoj.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_oIe4-XsdKOYhvPFdkAnPrw_wzAA95rG";
+"sb_publishable_oIe4-XsdKOYhvPFdkAnPrw_wzAA95gR";
 
 
 /* =====================================================
@@ -728,23 +832,27 @@ let registros = [];
 
 async function supabaseRequest(tabela, opcoes = {}) {
 
-    const resposta = await fetch(
-        `${SUPABASE_URL}/rest/v1/${tabela}`,
-        {
-            method: opcoes.method || "GET",
+    const resposta =
+        await fetch(
+            `${SUPABASE_URL}/rest/v1/${tabela}`,
+            {
+                method: opcoes.method || "GET",
 
-            headers: {
-                "apikey": SUPABASE_KEY,
-                "Authorization": `Bearer ${SUPABASE_KEY}`,
-                "Content-Type": "application/json",
-                "Prefer": opcoes.prefer || "return=representation"
-            },
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": `Bearer ${SUPABASE_KEY}`,
+                    "Content-Type": "application/json",
+                    "Prefer":
+                        opcoes.prefer ||
+                        "return=representation"
+                },
 
-            body: opcoes.body
-                ? JSON.stringify(opcoes.body)
-                : undefined
-        }
-    );
+                body:
+                    opcoes.body
+                    ? JSON.stringify(opcoes.body)
+                    : undefined
+            }
+        );
 
     if(!resposta.ok) {
 
@@ -766,7 +874,7 @@ async function supabaseRequest(tabela, opcoes = {}) {
 
 
 /* =====================================================
-   TESTAR CONEXÃO
+   CONEXÃO
 ===================================================== */
 
 async function testarConexao() {
@@ -779,10 +887,7 @@ async function testarConexao() {
     try {
 
         await supabaseRequest(
-            "funcionarios",
-            {
-                method:"GET"
-            }
+            "funcionarios"
         );
 
         status.innerHTML =
@@ -797,7 +902,7 @@ async function testarConexao() {
         console.error(erro);
 
         status.innerHTML =
-            "✗ Erro na conexão com o banco. Verifique a chave do Supabase.";
+            "✗ Erro na conexão com o banco.";
 
         status.className =
             "status erro";
@@ -808,7 +913,7 @@ async function testarConexao() {
 
 
 /* =====================================================
-   INICIALIZAÇÃO
+   DATA INICIAL
 ===================================================== */
 
 document
@@ -847,13 +952,10 @@ function mostrarTela(tela) {
             btn.classList.remove("ativo")
         );
 
-    if(tela === "lancamento") {
-
+    if(tela === "lancamento")
         document
             .getElementById("menuLancamento")
             .classList.add("ativo");
-
-    }
 
     if(tela === "indicadores") {
 
@@ -865,13 +967,10 @@ function mostrarTela(tela) {
 
     }
 
-    if(tela === "cadastros") {
-
+    if(tela === "cadastros")
         document
             .getElementById("menuCadastros")
             .classList.add("ativo");
-
-    }
 
 }
 
@@ -898,6 +997,9 @@ function jornadaParaMinutos(valor) {
 
 
 function minutosParaJornada(minutos) {
+
+    minutos =
+        Number(minutos) || 0;
 
     const horas =
         Math.floor(minutos / 60);
@@ -1020,14 +1122,30 @@ async function carregarFuncionarios() {
 
             tr.innerHTML = `
                 <td>${esc(f.nome)}</td>
-                <td>${esc(f.funcao || "Não informado")}</td>
-                <td>${minutosParaJornada(f.jornada_minutos)}</td>
+
                 <td>
+                    ${esc(
+                        f.funcao ||
+                        "Não informado"
+                    )}
+                </td>
+
+                <td>
+                    ${minutosParaJornada(
+                        f.jornada_minutos
+                    )}
+                </td>
+
+                <td>
+
                     <button
                         class="botao vermelho pequeno"
                         onclick="excluirFuncionario(${f.id})">
+
                         X
+
                     </button>
+
                 </td>
             `;
 
@@ -1046,32 +1164,48 @@ async function cadastrarFuncionario() {
 
     const nome =
         document
-            .getElementById("novoFuncionario")
-            .value.trim();
+            .getElementById(
+                "novoFuncionario"
+            )
+            .value
+            .trim();
 
     const funcao =
         document
-            .getElementById("funcaoFuncionario")
-            .value.trim();
+            .getElementById(
+                "funcaoFuncionario"
+            )
+            .value
+            .trim();
 
     const jornadaTexto =
         document
-            .getElementById("jornadaFuncionario")
+            .getElementById(
+                "jornadaFuncionario"
+            )
             .value;
 
     const jornadaMinutos =
-        jornadaParaMinutos(jornadaTexto);
+        jornadaParaMinutos(
+            jornadaTexto
+        );
 
     if(!nome) {
 
-        alert("Digite o nome do funcionário.");
+        alert(
+            "Digite o nome do funcionário."
+        );
+
         return;
 
     }
 
     if(jornadaMinutos <= 0) {
 
-        alert("Informe uma jornada válida. Exemplo: 08:48.");
+        alert(
+            "Informe uma jornada válida. Exemplo: 08:48."
+        );
+
         return;
 
     }
@@ -1085,7 +1219,10 @@ async function cadastrarFuncionario() {
 
     if(existe) {
 
-        alert("Este funcionário já está cadastrado.");
+        alert(
+            "Este funcionário já está cadastrado."
+        );
+
         return;
 
     }
@@ -1096,30 +1233,45 @@ async function cadastrarFuncionario() {
             "funcionarios",
             {
                 method:"POST",
+
                 body:{
                     nome:nome,
-                    funcao:funcao || "Não informado",
-                    jornada_minutos:jornadaMinutos,
+                    funcao:
+                        funcao ||
+                        "Não informado",
+
+                    jornada_minutos:
+                        jornadaMinutos,
+
                     ativo:true
                 }
             }
         );
 
-        alert("Funcionário cadastrado com sucesso!");
+        alert(
+            "Funcionário cadastrado com sucesso!"
+        );
 
         document
-            .getElementById("novoFuncionario")
+            .getElementById(
+                "novoFuncionario"
+            )
             .value = "";
 
         document
-            .getElementById("funcaoFuncionario")
+            .getElementById(
+                "funcaoFuncionario"
+            )
             .value = "";
 
         document
-            .getElementById("jornadaFuncionario")
+            .getElementById(
+                "jornadaFuncionario"
+            )
             .value = "08:48";
 
         await carregarFuncionarios();
+
         await atualizarDashboard();
 
     }
@@ -1186,13 +1338,20 @@ async function carregarSetores() {
                 document.createElement("tr");
 
             tr.innerHTML = `
-                <td>${esc(s.nome)}</td>
                 <td>
+                    ${esc(s.nome)}
+                </td>
+
+                <td>
+
                     <button
                         class="botao vermelho pequeno"
                         onclick="excluirSetor(${s.id})">
+
                         X
+
                     </button>
+
                 </td>
             `;
 
@@ -1211,12 +1370,18 @@ async function cadastrarSetor() {
 
     const nome =
         document
-            .getElementById("novoSetor")
-            .value.trim();
+            .getElementById(
+                "novoSetor"
+            )
+            .value
+            .trim();
 
     if(!nome) {
 
-        alert("Digite o nome do setor.");
+        alert(
+            "Digite o nome do setor."
+        );
+
         return;
 
     }
@@ -1230,7 +1395,10 @@ async function cadastrarSetor() {
 
     if(existe) {
 
-        alert("Este setor já está cadastrado.");
+        alert(
+            "Este setor já está cadastrado."
+        );
+
         return;
 
     }
@@ -1241,6 +1409,7 @@ async function cadastrarSetor() {
             "setores",
             {
                 method:"POST",
+
                 body:{
                     nome:nome,
                     ativo:true
@@ -1248,10 +1417,14 @@ async function cadastrarSetor() {
             }
         );
 
-        alert("Setor cadastrado com sucesso!");
+        alert(
+            "Setor cadastrado com sucesso!"
+        );
 
         document
-            .getElementById("novoSetor")
+            .getElementById(
+                "novoSetor"
+            )
             .value = "";
 
         await carregarSetores();
@@ -1278,12 +1451,16 @@ async function cadastrarSetor() {
 function atualizarSelectTecnicos() {
 
     const select =
-        document.getElementById("tecnico");
+        document.getElementById(
+            "tecnico"
+        );
 
     select.innerHTML =
-        `<option value="">
+        `
+        <option value="">
             Selecione o técnico
-        </option>`;
+        </option>
+        `;
 
     funcionarios.forEach(f => {
 
@@ -1301,12 +1478,16 @@ function atualizarSelectTecnicos() {
 function atualizarSelectSetores() {
 
     const select =
-        document.getElementById("setor");
+        document.getElementById(
+            "setor"
+        );
 
     select.innerHTML =
-        `<option value="">
+        `
+        <option value="">
             Selecione o setor
-        </option>`;
+        </option>
+        `;
 
     setores.forEach(s => {
 
@@ -1329,42 +1510,59 @@ async function registrar() {
 
     const funcionarioId =
         document
-            .getElementById("tecnico")
+            .getElementById(
+                "tecnico"
+            )
             .value;
 
     const os =
         document
-            .getElementById("os")
-            .value.trim();
+            .getElementById(
+                "os"
+            )
+            .value
+            .trim();
 
     const data =
         document
-            .getElementById("data")
+            .getElementById(
+                "data"
+            )
             .value;
 
     const setorId =
         document
-            .getElementById("setor")
+            .getElementById(
+                "setor"
+            )
             .value;
 
     const inicio =
         document
-            .getElementById("inicio")
+            .getElementById(
+                "inicio"
+            )
             .value;
 
     const fim =
         document
-            .getElementById("fim")
+            .getElementById(
+                "fim"
+            )
             .value;
 
     const tipo =
         document
-            .getElementById("tipo")
+            .getElementById(
+                "tipo"
+            )
             .value;
 
     const espera =
         document
-            .getElementById("espera")
+            .getElementById(
+                "espera"
+            )
             .value;
 
     if(
@@ -1412,15 +1610,27 @@ async function registrar() {
             "registros",
             {
                 method:"POST",
+
                 body:{
-                    funcionario_id:Number(funcionarioId),
+                    funcionario_id:
+                        Number(funcionarioId),
+
                     os:os,
+
                     data:data,
-                    setor_id:Number(setorId),
+
+                    setor_id:
+                        Number(setorId),
+
                     inicio:inicio,
+
                     fim:fim,
-                    minutos_trabalhados:minutos,
+
+                    minutos_trabalhados:
+                        minutos,
+
                     tipo:tipo,
+
                     espera:espera
                 }
             }
@@ -1448,12 +1658,15 @@ async function registrar() {
             "✓ Serviço registrado com sucesso!";
 
         await mostrarLancamentos();
+
         await atualizarDashboard();
 
         setTimeout(() => {
 
             document
-                .getElementById("mensagem")
+                .getElementById(
+                    "mensagem"
+                )
                 .innerText = "";
 
         },3000);
@@ -1526,23 +1739,47 @@ async function mostrarLancamentos() {
                 document.createElement("tr");
 
             tr.innerHTML = `
-                <td>${formatarData(r.data)}</td>
-                <td>${esc(r.os)}</td>
-                <td>${esc(tecnico)}</td>
-                <td>${esc(setor)}</td>
-                <td>${esc(r.tipo)}</td>
+
+                <td>
+                    ${formatarData(r.data)}
+                </td>
+
+                <td>
+                    ${esc(r.os)}
+                </td>
+
+                <td>
+                    ${esc(tecnico)}
+                </td>
+
+                <td>
+                    ${esc(setor)}
+                </td>
+
+                <td>
+                    ${esc(r.tipo)}
+                </td>
+
                 <td>
                     <strong>
-                        ${formatarTempo(r.minutos_trabalhados)}
+                        ${formatarTempo(
+                            r.minutos_trabalhados
+                        )}
                     </strong>
                 </td>
+
                 <td>
+
                     <button
                         class="botao vermelho pequeno"
                         onclick="excluirRegistro(${r.id})">
+
                         X
+
                     </button>
+
                 </td>
+
             `;
 
             tabela.appendChild(tr);
@@ -1558,7 +1795,9 @@ async function mostrarLancamentos() {
         <tr>
             <td colspan="7"
                 class="lista-vazia">
+
                 Não foi possível carregar os lançamentos.
+
             </td>
         </tr>
         `;
@@ -1592,6 +1831,7 @@ async function excluirRegistro(id) {
         );
 
         await mostrarLancamentos();
+
         await atualizarDashboard();
 
     }
@@ -1638,9 +1878,11 @@ async function excluirFuncionario(id) {
             `funcionarios?id=eq.${id}`,
             {
                 method:"PATCH",
+
                 body:{
                     ativo:false
                 },
+
                 prefer:"return=minimal"
             }
         );
@@ -1691,9 +1933,11 @@ async function excluirSetor(id) {
             `setores?id=eq.${id}`,
             {
                 method:"PATCH",
+
                 body:{
                     ativo:false
                 },
+
                 prefer:"return=minimal"
             }
         );
@@ -1723,7 +1967,9 @@ async function atualizarDashboard() {
 
     const mes =
         document
-            .getElementById("mesFiltro")
+            .getElementById(
+                "mesFiltro"
+            )
             .value;
 
     if(!mes)
@@ -1743,63 +1989,135 @@ async function atualizarDashboard() {
         dados.forEach(r => {
 
             totalMinutos +=
-                Number(r.minutos_trabalhados) || 0;
+                Number(
+                    r.minutos_trabalhados
+                ) || 0;
 
         });
 
-        document
-            .getElementById("totalHoras")
-            .innerText =
-            formatarTempo(totalMinutos);
 
         document
-            .getElementById("totalOS")
+            .getElementById(
+                "totalHoras"
+            )
+            .innerText =
+            formatarTempo(
+                totalMinutos
+            );
+
+
+        document
+            .getElementById(
+                "totalOS"
+            )
             .innerText =
             dados.length;
 
+
+        /*
+         * =================================================
+         * PRODUTIVIDADE
+         *
+         * Nesta versão usamos:
+         *
+         * jornada diária x 22 dias
+         *
+         * como disponibilidade mensal.
+         *
+         * Isso mantém o cálculo atual funcionando.
+         *
+         * Na próxima evolução poderemos cadastrar:
+         *
+         * - folga
+         * - férias
+         * - falta
+         * - saída antecipada
+         * - entrada atrasada
+         * - afastamento
+         *
+         * e então descontar esses períodos
+         * automaticamente.
+         * =================================================
+         */
+
         const tecnicos = {};
+
 
         dados.forEach(r => {
 
+            const funcionario =
+                r.funcionarios;
+
             const nome =
-                r.funcionarios
-                ? r.funcionarios.nome
+                funcionario
+                ? funcionario.nome
                 : "Não identificado";
 
             if(!tecnicos[nome]) {
 
                 tecnicos[nome] = {
+
+                    id:
+                        funcionario
+                        ? funcionario.id
+                        : null,
+
                     minutos:0,
+
                     os:0,
+
                     jornada:
-                        r.funcionarios
-                        ? Number(r.funcionarios.jornada_minutos)
+                        funcionario
+                        ? Number(
+                            funcionario.jornada_minutos
+                        )
                         : 480
+
                 };
 
             }
 
             tecnicos[nome].minutos +=
-                Number(r.minutos_trabalhados) || 0;
+                Number(
+                    r.minutos_trabalhados
+                ) || 0;
 
             tecnicos[nome].os++;
 
         });
 
+
         document
-            .getElementById("numeroTecnicos")
+            .getElementById(
+                "numeroTecnicos"
+            )
             .innerText =
-            Object.keys(tecnicos).length;
+            Object.keys(
+                tecnicos
+            ).length;
+
+
+        /*
+         * Produtividade da equipe
+         *
+         * Soma do tempo produtivo de todos
+         * dividido pela soma da disponibilidade
+         */
 
         let totalDisponivel = 0;
+
 
         Object.keys(tecnicos)
             .forEach(nome => {
 
                 totalDisponivel +=
-                    tecnicos[nome].jornada * 22;
+                    (
+                        tecnicos[nome]
+                        .jornada || 480
+                    ) * 22;
 
             });
+
 
         const produtividade =
             totalDisponivel > 0
@@ -1809,14 +2127,27 @@ async function atualizarDashboard() {
             ) * 100
             : 0;
 
-        document
-            .getElementById("produtividade")
-            .innerText =
-            produtividade.toFixed(1) + "%";
 
-        montarTabelaTecnicos(tecnicos);
-        montarTabelaSetores(dados);
-        montarResumoTipos(dados);
+        document
+            .getElementById(
+                "produtividade"
+            )
+            .innerText =
+            produtividade.toFixed(1) +
+            "%";
+
+
+        montarTabelaTecnicos(
+            tecnicos
+        );
+
+        montarTabelaSetores(
+            dados
+        );
+
+        montarResumoTipos(
+            dados
+        );
 
     }
     catch(erro) {
@@ -1832,7 +2163,9 @@ async function atualizarDashboard() {
    TABELA TÉCNICOS
 ===================================================== */
 
-function montarTabelaTecnicos(tecnicos) {
+function montarTabelaTecnicos(
+    tecnicos
+) {
 
     const tabela =
         document.getElementById(
@@ -1842,16 +2175,23 @@ function montarTabelaTecnicos(tecnicos) {
     tabela.innerHTML = "";
 
     const nomes =
-        Object.keys(tecnicos).sort();
+        Object.keys(
+            tecnicos
+        ).sort();
+
 
     if(nomes.length === 0) {
 
         tabela.innerHTML = `
         <tr>
-            <td colspan="5"
+
+            <td colspan="6"
                 class="lista-vazia">
+
                 Nenhum serviço no período.
+
             </td>
+
         </tr>
         `;
 
@@ -1859,45 +2199,94 @@ function montarTabelaTecnicos(tecnicos) {
 
     }
 
+
     nomes.forEach(nome => {
 
         const t =
             tecnicos[nome];
 
+
         const jornada =
             t.jornada || 480;
+
+
+        /*
+         * 22 dias úteis/mês.
+         *
+         * A jornada cadastrada do funcionário
+         * é utilizada individualmente.
+         */
 
         const disponivel =
             jornada * 22;
 
+
         const produtividade =
             disponivel > 0
-            ? (t.minutos / disponivel) * 100
+            ? (
+                t.minutos /
+                disponivel
+            ) * 100
             : 0;
+
 
         let classe = "";
 
+
         if(produtividade >= 80)
             classe = "verde";
+
         else if(produtividade >= 70)
             classe = "amarelo";
+
         else
             classe = "vermelho";
 
+
         const tr =
-            document.createElement("tr");
+            document.createElement(
+                "tr"
+            );
+
 
         tr.innerHTML = `
-            <td>${esc(nome)}</td>
-            <td>${minutosParaJornada(jornada)}</td>
-            <td>${formatarTempo(t.minutos)}</td>
-            <td>${t.os}</td>
+
+            <td>
+                ${esc(nome)}
+            </td>
+
+            <td>
+                ${minutosParaJornada(
+                    jornada
+                )}
+            </td>
+
+            <td>
+                ${formatarTempo(
+                    t.minutos
+                )}
+            </td>
+
+            <td>
+                ${t.os}
+            </td>
+
+            <td>
+                ${formatarTempo(
+                    disponivel
+                )}
+            </td>
+
             <td class="${classe}">
                 ${produtividade.toFixed(1)}%
             </td>
+
         `;
 
-        tabela.appendChild(tr);
+
+        tabela.appendChild(
+            tr
+        );
 
     });
 
@@ -1908,7 +2297,9 @@ function montarTabelaTecnicos(tecnicos) {
    TABELA SETORES
 ===================================================== */
 
-function montarTabelaSetores(dados) {
+function montarTabelaSetores(
+    dados
+) {
 
     const tabela =
         document.getElementById(
@@ -1917,7 +2308,9 @@ function montarTabelaSetores(dados) {
 
     tabela.innerHTML = "";
 
+
     const setoresDados = {};
+
 
     dados.forEach(r => {
 
@@ -1926,33 +2319,51 @@ function montarTabelaSetores(dados) {
             ? r.setores.nome
             : "Não identificado";
 
+
         if(!setoresDados[nome]) {
 
             setoresDados[nome] = {
+
                 minutos:0,
+
                 os:0
+
             };
 
         }
 
-        setoresDados[nome].minutos +=
-            Number(r.minutos_trabalhados) || 0;
 
-        setoresDados[nome].os++;
+        setoresDados[nome]
+            .minutos +=
+            Number(
+                r.minutos_trabalhados
+            ) || 0;
+
+
+        setoresDados[nome]
+            .os++;
 
     });
 
+
     const nomes =
-        Object.keys(setoresDados).sort();
+        Object.keys(
+            setoresDados
+        ).sort();
+
 
     if(nomes.length === 0) {
 
         tabela.innerHTML = `
         <tr>
+
             <td colspan="3"
                 class="lista-vazia">
+
                 Nenhum serviço no período.
+
             </td>
+
         </tr>
         `;
 
@@ -1960,21 +2371,41 @@ function montarTabelaSetores(dados) {
 
     }
 
+
     nomes.forEach(nome => {
 
         const s =
             setoresDados[nome];
 
+
         const tr =
-            document.createElement("tr");
+            document.createElement(
+                "tr"
+            );
+
 
         tr.innerHTML = `
-            <td>${esc(nome)}</td>
-            <td>${formatarTempo(s.minutos)}</td>
-            <td>${s.os}</td>
+
+            <td>
+                ${esc(nome)}
+            </td>
+
+            <td>
+                ${formatarTempo(
+                    s.minutos
+                )}
+            </td>
+
+            <td>
+                ${s.os}
+            </td>
+
         `;
 
-        tabela.appendChild(tr);
+
+        tabela.appendChild(
+            tr
+        );
 
     });
 
@@ -1985,7 +2416,9 @@ function montarTabelaSetores(dados) {
    TIPOS
 ===================================================== */
 
-function montarResumoTipos(dados) {
+function montarResumoTipos(
+    dados
+) {
 
     const div =
         document.getElementById(
@@ -1994,43 +2427,70 @@ function montarResumoTipos(dados) {
 
     div.innerHTML = "";
 
+
     const tipos = {};
+
 
     dados.forEach(r => {
 
-        if(!tipos[r.tipo])
+        if(!tipos[r.tipo]) {
+
             tipos[r.tipo] = {
+
                 minutos:0,
+
                 os:0
+
             };
 
-        tipos[r.tipo].minutos +=
-            Number(r.minutos_trabalhados) || 0;
+        }
 
-        tipos[r.tipo].os++;
+
+        tipos[r.tipo]
+            .minutos +=
+            Number(
+                r.minutos_trabalhados
+            ) || 0;
+
+
+        tipos[r.tipo]
+            .os++;
 
     });
 
+
     const total =
-        Object.values(tipos)
-            .reduce(
-                (a,b) => a + b.minutos,
-                0
-            );
+        Object.values(
+            tipos
+        )
+        .reduce(
+            (a,b) =>
+                a + b.minutos,
+            0
+        );
+
 
     const nomes =
-        Object.keys(tipos);
+        Object.keys(
+            tipos
+        );
+
 
     if(nomes.length === 0) {
 
         div.innerHTML =
-            `<div class="lista-vazia">
+            `
+            <div class="lista-vazia">
+
                 Nenhum serviço no período.
-            </div>`;
+
+            </div>
+            `;
 
         return;
 
     }
+
 
     nomes.forEach(tipo => {
 
@@ -2042,7 +2502,9 @@ function montarResumoTipos(dados) {
             ) * 100
             : 0;
 
+
         div.innerHTML += `
+
         <div style="
             margin:10px 0;
             background:#3a3c3f;
@@ -2060,12 +2522,17 @@ function montarResumoTipos(dados) {
             ">
 
                 ${tipos[tipo].os} OS -
-                ${formatarTempo(tipos[tipo].minutos)}
+
+                ${formatarTempo(
+                    tipos[tipo].minutos
+                )}
+
                 (${percentual.toFixed(0)}%)
 
             </span>
 
         </div>
+
         `;
 
     });
@@ -2101,25 +2568,37 @@ function proximoMes(mes) {
     const partes =
         mes.split("-");
 
+
     let ano =
-        Number(partes[0]);
+        Number(
+            partes[0]
+        );
+
 
     let numero =
-        Number(partes[1]);
+        Number(
+            partes[1]
+        );
+
 
     numero++;
+
 
     if(numero > 12) {
 
         numero = 1;
+
         ano++;
 
     }
 
+
     return (
         ano +
         "-" +
-        String(numero).padStart(2,"0") +
+        String(
+            numero
+        ).padStart(2,"0") +
         "-01"
     );
 
@@ -2132,12 +2611,29 @@ function proximoMes(mes) {
 
 function esc(valor) {
 
-    return String(valor ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+    return String(
+        valor ?? ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
