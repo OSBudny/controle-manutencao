@@ -390,6 +390,65 @@ text-align:center;
 padding:25px 10px;
 }
 
+.ranking-setores{
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+.setor-ranking{
+background:#252627;
+border:1px solid #3a3c3f;
+border-radius:8px;
+padding:15px;
+}
+
+.setor-ranking-topo{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:15px;
+margin-bottom:9px;
+}
+
+.setor-ranking-nome{
+font-weight:bold;
+font-size:15px;
+}
+
+.setor-ranking-numero{
+color:var(--laranja);
+font-weight:bold;
+}
+
+.setor-ranking-barra{
+height:9px;
+background:#3a3c3f;
+border-radius:20px;
+overflow:hidden;
+}
+
+.setor-ranking-preenchimento{
+height:100%;
+background:var(--laranja);
+border-radius:20px;
+}
+
+.setor-ranking-info{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-top:10px;
+color:var(--cinza);
+font-size:12px;
+}
+
+.setor-ranking-info strong{
+color:white;
+display:block;
+margin-top:3px;
+}
+
 @media(max-width:850px){
 
 .formulario{
@@ -467,6 +526,10 @@ font-size:22px;
 grid-template-columns:1fr;
 }
 
+.setor-ranking-info{
+grid-template-columns:1fr 1fr;
+}
+
 }
 </style>
 </head>
@@ -503,7 +566,9 @@ onclick="mostrarTela('cadastros')">
 
 <main>
 
-<!-- LANÇAMENTO -->
+<!-- =====================================================
+     LANÇAMENTO
+     ===================================================== -->
 
 <section id="lancamento" class="tela ativa">
 
@@ -585,6 +650,9 @@ id="fim">
 <option>Corretiva</option>
 <option>Melhoria</option>
 <option>Inspeção</option>
+<option>Instalação</option>
+<option>Montagem</option>
+<option>Desenvolvimento</option>
 <option>Outro</option>
 
 </select>
@@ -660,7 +728,9 @@ class="mensagem">
 </section>
 
 
-<!-- INDICADORES -->
+<!-- =====================================================
+     INDICADORES
+     ===================================================== -->
 
 <section id="indicadores" class="tela">
 
@@ -678,6 +748,25 @@ style="max-width:220px;">
 type="month"
 id="mesFiltro"
 onchange="atualizarDashboard()">
+
+</div>
+
+<div class="explicacao">
+
+<strong>Como a produtividade é calculada:</strong>
+
+<br><br>
+
+Produtividade =
+<strong>
+tempo de manutenção ÷ tempo disponível × 100
+</strong>
+
+<br><br>
+
+O tempo disponível considera a jornada diária do técnico
+multiplicada pela quantidade de dias em que ele possui pelo
+menos um lançamento de serviço no mês selecionado.
 
 </div>
 
@@ -740,6 +829,10 @@ Técnicos
 </div>
 
 
+<!-- =====================================================
+     GRÁFICOS
+     ===================================================== -->
+
 <div class="card">
 
 <h2>📊 Gráficos de desempenho</h2>
@@ -793,6 +886,10 @@ class="grafico-barras">
 </div>
 
 
+<!-- =====================================================
+     DESEMPENHO FUNCIONÁRIOS
+     ===================================================== -->
+
 <div class="card">
 
 <h2>
@@ -828,22 +925,96 @@ Desempenho por funcionário
 </div>
 
 
+<!-- =====================================================
+     OS POR SETOR
+     ===================================================== -->
+
 <div class="card">
 
 <h2>
-Horas por setor
+🏭 OS por setor
 </h2>
 
-<div class="tabela">
+<div class="resumo-produtividade">
+
+<div class="resumo-box">
+
+<small>
+Total de OS
+</small>
+
+<strong id="totalOSSetores">
+0
+</strong>
+
+</div>
+
+
+<div class="resumo-box">
+
+<small>
+Setor com mais OS
+</small>
+
+<strong id="setorMaisOS">
+—
+</strong>
+
+</div>
+
+
+<div class="resumo-box">
+
+<small>
+Horas totais
+</small>
+
+<strong id="horasSetores">
+0 min
+</strong>
+
+</div>
+
+</div>
+
+
+<div
+style="
+margin-top:20px;
+margin-bottom:10px;
+color:var(--cinza);
+font-size:13px;
+">
+
+Ranking dos setores por quantidade de ordens de serviço.
+
+</div>
+
+
+<div
+id="rankingSetores"
+class="ranking-setores">
+
+</div>
+
+
+<div
+class="tabela"
+style="margin-top:25px;">
 
 <table>
 
 <thead>
 
 <tr>
+
+<th>Ranking</th>
 <th>Setor</th>
-<th>Tempo</th>
 <th>OS</th>
+<th>Participação</th>
+<th>Horas trabalhadas</th>
+<th>Média/OS</th>
+
 </tr>
 
 </thead>
@@ -857,6 +1028,10 @@ Horas por setor
 
 </div>
 
+
+<!-- =====================================================
+     TIPOS DE MANUTENÇÃO
+     ===================================================== -->
 
 <div class="card">
 
@@ -872,7 +1047,9 @@ Tipos de manutenção
 </section>
 
 
-<!-- CADASTROS -->
+<!-- =====================================================
+     CADASTROS
+     ===================================================== -->
 
 <section id="cadastros" class="tela">
 
@@ -1037,12 +1214,14 @@ onclick="cadastrarSetor()">
    CONFIGURAÇÃO SUPABASE
    ========================================================= */
 
+/*
+   NÃO ALTERAR ESTES DOIS VALORES.
+   Esta é a configuração que está funcionando.
+*/
+
 const SUPABASE_URL =
 "https://qwaibjzdpwebddvbfkoj.supabase.co";
 
-/*
-   CHAVE CORRETA DO PROJETO
-*/
 const SUPABASE_KEY =
 "sb_publishable_oIe4-XsdKOYhvPFdkAnPrw_wzAA95rG";
 
@@ -1072,9 +1251,14 @@ headers:{
 
 /*
    IMPORTANTE:
-   Para sb_publishable_ usamos apikey.
-   NÃO usar Authorization Bearer.
+
+   A chave sb_publishable_ é enviada
+   somente no cabeçalho apikey.
+
+   NÃO usar:
+   Authorization: Bearer ...
 */
+
 "apikey":
 SUPABASE_KEY,
 
@@ -1380,6 +1564,15 @@ else{
 
 funcionarios.forEach(f => {
 
+const jornada =
+f.jornada_minutos !== undefined
+&& f.jornada_minutos !== null
+?
+Number(f.jornada_minutos)
+:
+jornadaParaMinutos(f.jornada || "08:00");
+
+
 const tr =
 document.createElement("tr");
 
@@ -1398,7 +1591,7 @@ f.funcao ||
 
 <td>
 ${minutosParaJornada(
-f.jornada_minutos
+jornada
 )}
 </td>
 
@@ -1509,6 +1702,11 @@ return;
 
 
 try{
+
+/*
+   Mantemos jornada_minutos porque
+   é o formato utilizado pelo sistema.
+*/
 
 await supabaseRequest(
 "funcionarios",
@@ -1962,14 +2160,14 @@ body:{
 funcionario_id:
 Number(funcionarioId),
 
+setor_id:
+Number(setorId),
+
 os:
 os,
 
 data:
 data,
-
-setor_id:
-Number(setorId),
 
 inicio:
 inicio,
@@ -1977,14 +2175,14 @@ inicio,
 fim:
 fim,
 
-minutos_trabalhados:
-minutos,
-
 tipo:
 tipo,
 
 espera:
-espera
+espera,
+
+minutos_trabalhados:
+minutos
 
 }
 
@@ -2067,7 +2265,7 @@ try{
 const dados =
 await supabaseRequest(
 
-"registros?select=*,funcionarios(nome),setores(nome)&order=criado_em.desc&limit=30"
+"registros?select=*,funcionarios(nome),setores(nome)&order=data.desc&limit=30"
 
 );
 
@@ -2396,7 +2594,7 @@ try{
 const dados =
 await supabaseRequest(
 
-`registros?select=*,funcionarios(id,nome,jornada_minutos),setores(id,nome)&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.desc`
+`registros?select=*,funcionarios(id,nome,jornada_minutos,jornada),setores(id,nome)&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.asc`
 
 );
 
@@ -2454,6 +2652,38 @@ funcionario.nome
 
 if(!tecnicos[nome]){
 
+let jornada = 0;
+
+
+if(
+funcionario &&
+funcionario.jornada_minutos !== undefined &&
+funcionario.jornada_minutos !== null
+){
+
+jornada =
+Number(
+funcionario.jornada_minutos
+);
+
+}
+else if(
+funcionario &&
+funcionario.jornada
+){
+
+jornada =
+jornadaParaMinutos(
+funcionario.jornada
+);
+
+}
+
+
+if(!jornada)
+jornada = 480;
+
+
 tecnicos[nome] = {
 
 id:
@@ -2473,13 +2703,7 @@ dias:
 new Set(),
 
 jornada:
-funcionario
-?
-Number(
-funcionario.jornada_minutos
-)
-:
-480
+jornada
 
 };
 
@@ -2658,12 +2882,17 @@ t.jornada ||
 
 
 const disponivel =
+t.disponivel ??
+(
+jornada *
+(
 t.dias
 ?
-jornada *
 t.dias.size
 :
-0;
+0
+)
+);
 
 
 const produtividade =
@@ -2741,7 +2970,7 @@ tr
 
 
 /* =========================================================
-   TABELA DE SETORES
+   OS POR SETOR
    ========================================================= */
 
 function montarTabelaSetores(
@@ -2753,10 +2982,18 @@ document.getElementById(
 "tabelaSetores"
 );
 
+const ranking =
+document.getElementById(
+"rankingSetores"
+);
+
 tabela.innerHTML = "";
+ranking.innerHTML = "";
 
 
 const setoresDados = {};
+
+let totalMinutos = 0;
 
 
 dados.forEach(r => {
@@ -2773,26 +3010,32 @@ if(!setoresDados[nome]){
 
 setoresDados[nome] = {
 
-minutos:
-0,
+minutos:0,
 
-os:
-0
+os:0
 
 };
 
 }
 
 
-setoresDados[nome]
-.minutos +=
+const minutos =
 Number(
 r.minutos_trabalhados
 ) || 0;
 
 
 setoresDados[nome]
+.minutos +=
+minutos;
+
+
+setoresDados[nome]
 .os++;
+
+
+totalMinutos +=
+minutos;
 
 });
 
@@ -2800,16 +3043,67 @@ setoresDados[nome]
 const nomes =
 Object.keys(
 setoresDados
-).sort();
+)
+.sort(
+(a,b) => {
+
+if(
+setoresDados[b].os !==
+setoresDados[a].os
+){
+
+return (
+setoresDados[b].os -
+setoresDados[a].os
+);
+
+}
+
+return (
+setoresDados[b].minutos -
+setoresDados[a].minutos
+);
+
+}
+);
+
+
+document
+.getElementById(
+"totalOSSetores"
+)
+.innerText =
+dados.length;
+
+
+document
+.getElementById(
+"horasSetores"
+)
+.innerText =
+formatarTempo(
+totalMinutos
+);
+
+
+document
+.getElementById(
+"setorMaisOS"
+)
+.innerText =
+nomes.length
+?
+nomes[0]
+:
+"—";
 
 
 if(nomes.length === 0){
 
 tabela.innerHTML = `
-
 <tr>
 
-<td colspan="3"
+<td colspan="6"
 class="lista-vazia">
 
 Nenhum serviço no período.
@@ -2817,7 +3111,13 @@ Nenhum serviço no período.
 </td>
 
 </tr>
+`;
 
+
+ranking.innerHTML = `
+<div class="grafico-vazio">
+Nenhum serviço no período.
+</div>
 `;
 
 return;
@@ -2825,10 +3125,158 @@ return;
 }
 
 
-nomes.forEach(nome => {
+/*
+   O maior número de OS é usado
+   para dimensionar a barra visual.
+*/
+
+const maiorQuantidade =
+Math.max(
+...nomes.map(
+nome =>
+setoresDados[nome].os
+),
+1
+);
+
+
+nomes.forEach(
+(nome,index) => {
 
 const s =
 setoresDados[nome];
+
+
+const percentual =
+dados.length > 0
+?
+(
+s.os /
+dados.length
+) * 100
+:
+0;
+
+
+const media =
+s.os > 0
+?
+s.minutos /
+s.os
+:
+0;
+
+
+const largura =
+(
+s.os /
+maiorQuantidade
+) *
+100;
+
+
+const posicao =
+index === 0
+?
+"🥇"
+:
+index === 1
+?
+"🥈"
+:
+index === 2
+?
+"🥉"
+:
+String(index + 1);
+
+
+const rankingItem =
+document.createElement(
+"div"
+);
+
+
+rankingItem.className =
+"setor-ranking";
+
+
+rankingItem.innerHTML = `
+
+<div class="setor-ranking-topo">
+
+<div class="setor-ranking-nome">
+
+${posicao}
+&nbsp;
+${esc(nome)}
+
+</div>
+
+<div class="setor-ranking-numero">
+
+${s.os} OS
+
+</div>
+
+</div>
+
+
+<div class="setor-ranking-barra">
+
+<div
+class="setor-ranking-preenchimento"
+style="
+width:${largura.toFixed(1)}%;
+">
+
+</div>
+
+</div>
+
+
+<div class="setor-ranking-info">
+
+<div>
+
+Participação
+
+<strong>
+${percentual.toFixed(1)}%
+</strong>
+
+</div>
+
+
+<div>
+
+Horas
+
+<strong>
+${formatarTempo(s.minutos)}
+</strong>
+
+</div>
+
+
+<div>
+
+Média por OS
+
+<strong>
+${formatarTempo(media)}
+</strong>
+
+</div>
+
+</div>
+
+`;
+
+
+ranking.appendChild(
+rankingItem
+);
 
 
 const tr =
@@ -2840,17 +3288,27 @@ document.createElement(
 tr.innerHTML = `
 
 <td>
-${esc(nome)}
+<strong>${posicao}</strong>
 </td>
 
 <td>
-${formatarTempo(
-s.minutos
-)}
+<strong>${esc(nome)}</strong>
 </td>
 
 <td>
-${s.os}
+<strong>${s.os}</strong>
+</td>
+
+<td>
+${percentual.toFixed(1)}%
+</td>
+
+<td>
+${formatarTempo(s.minutos)}
+</td>
+
+<td>
+${formatarTempo(media)}
 </td>
 
 `;
@@ -2886,9 +3344,14 @@ const tipos = {};
 
 dados.forEach(r => {
 
-if(!tipos[r.tipo]){
+const tipo =
+r.tipo ||
+"Não informado";
 
-tipos[r.tipo] = {
+
+if(!tipos[tipo]){
+
+tipos[tipo] = {
 
 minutos:
 0,
@@ -2901,14 +3364,14 @@ os:
 }
 
 
-tipos[r.tipo]
+tipos[tipo]
 .minutos +=
 Number(
 r.minutos_trabalhados
 ) || 0;
 
 
-tipos[r.tipo]
+tipos[tipo]
 .os++;
 
 });
@@ -2949,7 +3412,13 @@ return;
 }
 
 
-nomes.forEach(tipo => {
+nomes
+.sort(
+(a,b) =>
+tipos[b].minutos -
+tipos[a].minutos
+)
+.forEach(tipo => {
 
 const percentual =
 total > 0
@@ -3132,11 +3601,13 @@ const disponivel =
 t.disponivel ??
 (
 (t.jornada || 480) *
-(t.dias
+(
+t.dias
 ?
 t.dias.size
 :
-0)
+0
+)
 );
 
 
@@ -3152,8 +3623,11 @@ disponivel
 
 
 return {
+
 nome,
+
 valor
+
 };
 
 })
@@ -3192,9 +3666,11 @@ r.setores.nome
 setores[nome] =
 (setores[nome] || 0)
 +
-(Number(
+(
+Number(
 r.minutos_trabalhados
-) || 0);
+) || 0
+);
 
 });
 
@@ -3283,7 +3759,7 @@ Number(valor)
 
 async function carregarTudo(){
 
-testarConexao();
+await testarConexao();
 
 await carregarFuncionarios();
 
