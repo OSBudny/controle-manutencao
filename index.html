@@ -284,99 +284,6 @@ color:var(--verde);
 color:var(--vermelho);
 }
 
-.resumo-produtividade{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:15px;
-margin-top:15px;
-}
-
-.resumo-box{
-background:#3a3c3f;
-padding:15px;
-border-radius:7px;
-}
-
-.resumo-box small{
-color:var(--cinza);
-}
-
-.resumo-box strong{
-display:block;
-font-size:22px;
-margin-top:5px;
-}
-
-.graficos-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-.grafico-card{
-background:#252627;
-border-radius:8px;
-padding:18px;
-border:1px solid #3a3c3f;
-}
-
-.grafico-largo{
-grid-column:1 / -1;
-}
-
-.grafico-card h3{
-margin:0 0 18px;
-font-size:16px;
-}
-
-.grafico-barras{
-display:flex;
-flex-direction:column;
-gap:12px;
-}
-
-.barra-item{
-display:grid;
-grid-template-columns:minmax(100px,150px) 1fr 70px;
-gap:10px;
-align-items:center;
-}
-
-.barra-label{
-overflow:hidden;
-text-overflow:ellipsis;
-white-space:nowrap;
-color:#ddd;
-font-size:13px;
-}
-
-.barra-fundo{
-height:14px;
-background:#3a3c3f;
-border-radius:20px;
-overflow:hidden;
-}
-
-.barra-preenchimento{
-height:100%;
-width:0;
-background:var(--laranja);
-border-radius:20px;
-transition:width .5s ease;
-}
-
-.barra-valor{
-text-align:right;
-font-weight:bold;
-font-size:13px;
-}
-
-.grafico-vazio{
-color:var(--cinza);
-text-align:center;
-padding:25px 10px;
-}
-
 @media(max-width:850px){
 
 .formulario{
@@ -389,18 +296,6 @@ grid-template-columns:repeat(2,1fr);
 
 .linha-cadastro{
 grid-template-columns:1fr 1fr;
-}
-
-.resumo-produtividade{
-grid-template-columns:1fr;
-}
-
-.graficos-grid{
-grid-template-columns:1fr;
-}
-
-.grafico-largo{
-grid-column:auto;
 }
 
 }
@@ -483,111 +378,140 @@ onclick="mostrarTela('indicadores')">
 <button
 id="menuCadastros"
 onclick="mostrarTela('cadastros')">
-⚙ Cadastros
+⚙️ Cadastros
 </button>
 
 </nav>
 
 <main>
 
-<!-- ================= LANÇAMENTO ================= -->
+<!-- =====================================================
+     LANÇAMENTO
+===================================================== -->
 
 <section id="lancamento" class="tela ativa">
 
 <div class="card">
 
-<h2>📝 Lançar Ordem de Serviço</h2>
+<h2>Lançar serviço</h2>
 
-<div
-id="statusConexao"
-class="status">
-Verificando conexão...
+<div id="statusConexao" class="status">
+Conectando ao banco de dados...
 </div>
 
 <div class="formulario">
 
 <div class="campo">
-<label>Funcionário</label>
 
-<select id="funcionario">
-<option value="">Selecione</option>
+<label>Técnico</label>
+
+<select id="tecnico">
+
+<option value="">
+Selecione o técnico
+</option>
+
 </select>
+
 </div>
 
 <div class="campo">
-<label>Setor</label>
 
-<select id="setor">
-<option value="">Selecione</option>
-</select>
-</div>
-
-<div class="campo">
-<label>OS</label>
+<label>Nº da OS</label>
 
 <input
 type="text"
 id="os"
-placeholder="Número da OS">
+placeholder="Ex.: 1542">
+
 </div>
 
 <div class="campo">
+
 <label>Data</label>
 
 <input
 type="date"
 id="data">
+
 </div>
 
 <div class="campo">
-<label>Início</label>
+
+<label>Setor</label>
+
+<select id="setor">
+
+<option value="">
+Selecione o setor
+</option>
+
+</select>
+
+</div>
+
+<div class="campo">
+
+<label>Hora início</label>
 
 <input
 type="time"
 id="inicio">
+
 </div>
 
 <div class="campo">
-<label>Fim</label>
+
+<label>Hora fim</label>
 
 <input
 type="time"
 id="fim">
+
 </div>
 
 <div class="campo">
+
 <label>Tipo de manutenção</label>
 
 <select id="tipo">
-<option value="">Selecione</option>
-<option value="Preventiva">Preventiva</option>
-<option value="Corretiva">Corretiva</option>
-<option value="Melhoria">Melhoria</option>
-<option value="Inspeção">Inspeção</option>
-<option value="Instalação">Instalação</option>
-<option value="Montagem">Montagem</option>
-<option value="Desenvolvimento">Desenvolvimento</option>
-<option value="Outro">Outro</option>
+
+<option>Preventiva</option>
+<option>Corretiva</option>
+<option>Melhoria</option>
+<option>Inspeção</option>
+<option>Outro</option>
+
 </select>
+
 </div>
 
 <div class="campo">
-<label>Espera</label>
 
-<input
-type="number"
-id="espera"
-min="0"
-value="0"
-placeholder="Minutos">
+<label>Motivo de espera</label>
+
+<select id="espera">
+
+<option>Nenhum</option>
+<option>Aguardando peça</option>
+<option>Aguardando liberação</option>
+<option>Aguardando equipamento</option>
+<option>Falta de ferramenta</option>
+<option>Deslocamento</option>
+<option>Outro</option>
+
+</select>
+
 </div>
 
 </div>
 
 <button
 class="botao"
-onclick="lancarOS()">
-Lançar OS
+onclick="registrar()">
+
+🟠 REGISTRAR SERVIÇO
+
 </button>
 
 <div
@@ -596,6 +520,8 @@ class="mensagem">
 </div>
 
 </div>
+
+<!-- ÚLTIMOS LANÇAMENTOS -->
 
 <div class="card">
 
@@ -608,6 +534,7 @@ class="mensagem">
 <thead>
 
 <tr>
+
 <th>Data</th>
 <th>OS</th>
 <th>Técnico</th>
@@ -615,6 +542,7 @@ class="mensagem">
 <th>Tipo</th>
 <th>Tempo</th>
 <th></th>
+
 </tr>
 
 </thead>
@@ -630,7 +558,9 @@ class="mensagem">
 </section>
 
 
-<!-- ================= INDICADORES ================= -->
+<!-- =====================================================
+     INDICADORES
+===================================================== -->
 
 <section id="indicadores" class="tela">
 
@@ -710,70 +640,11 @@ Técnicos
 </div>
 
 
-<!-- GRÁFICOS -->
+<!-- DESEMPENHO POR FUNCIONÁRIO -->
 
 <div class="card">
 
-<h2>📊 Gráficos de desempenho</h2>
-
-<div class="graficos-grid">
-
-
-<div class="grafico-card">
-
-<h3>
-Desempenho por funcionário
-</h3>
-
-<div
-id="graficoProdutividade"
-class="grafico-barras">
-</div>
-
-</div>
-
-
-<div class="grafico-card">
-
-<h3>
-Horas por setor
-</h3>
-
-<div
-id="graficoSetores"
-class="grafico-barras">
-</div>
-
-</div>
-
-
-<div
-class="grafico-card grafico-largo">
-
-<h3>
-Tipos de manutenção por OS
-</h3>
-
-<div
-id="graficoTipos"
-class="grafico-barras">
-</div>
-
-</div>
-
-
-</div>
-
-</div>
-
-
-<!-- TABELA FUNCIONÁRIOS -->
-
-<div class="card">
-
-<h2>
-Desempenho por funcionário
-</h2>
+<h2>Desempenho por funcionário</h2>
 
 <div class="tabela">
 
@@ -794,9 +665,7 @@ Desempenho por funcionário
 
 </thead>
 
-<tbody
-id="tabelaTecnicos">
-</tbody>
+<tbody id="tabelaTecnicos"></tbody>
 
 </table>
 
@@ -809,9 +678,7 @@ id="tabelaTecnicos">
 
 <div class="card">
 
-<h2>
-Horas por setor
-</h2>
+<h2>Horas por setor</h2>
 
 <div class="tabela">
 
@@ -820,16 +687,16 @@ Horas por setor
 <thead>
 
 <tr>
+
 <th>Setor</th>
 <th>Tempo</th>
 <th>OS</th>
+
 </tr>
 
 </thead>
 
-<tbody
-id="tabelaSetores">
-</tbody>
+<tbody id="tabelaSetores"></tbody>
 
 </table>
 
@@ -838,25 +705,46 @@ id="tabelaSetores">
 </div>
 
 
-<!-- TIPOS -->
+<!-- TIPOS DE MANUTENÇÃO -->
 
 <div class="card">
 
-<h2>
-Tipos de manutenção
-</h2>
+<h2>Tipos de manutenção</h2>
 
-<div id="resumoTipos"></div>
+<div class="tabela">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Tipo</th>
+<th>OS</th>
+<th>Percentual</th>
+
+</tr>
+
+</thead>
+
+<tbody id="tabelaTipos"></tbody>
+
+</table>
+
+</div>
 
 </div>
 
 </section>
 
 
-<!-- ================= CADASTROS ================= -->
+<!-- =====================================================
+     CADASTROS
+===================================================== -->
 
 <section id="cadastros" class="tela">
 
+<!-- FUNCIONÁRIOS -->
 
 <div class="card">
 
@@ -877,7 +765,6 @@ Exemplo:
 
 
 <div class="linha-cadastro">
-
 
 <div class="campo">
 
@@ -922,7 +809,9 @@ Ex.: 08:48
 <button
 class="botao pequeno"
 onclick="cadastrarFuncionario()">
+
 + Cadastrar
+
 </button>
 
 </div>
@@ -935,17 +824,17 @@ onclick="cadastrarFuncionario()">
 <thead>
 
 <tr>
+
 <th>Nome</th>
 <th>Função</th>
 <th>Jornada</th>
 <th></th>
+
 </tr>
 
 </thead>
 
-<tbody
-id="tabelaFuncionarios">
-</tbody>
+<tbody id="tabelaFuncionarios"></tbody>
 
 </table>
 
@@ -953,6 +842,8 @@ id="tabelaFuncionarios">
 
 </div>
 
+
+<!-- SETORES -->
 
 <div class="card">
 
@@ -962,9 +853,7 @@ id="tabelaFuncionarios">
 
 <div class="campo">
 
-<label>
-Nome do setor
-</label>
+<label>Nome do setor</label>
 
 <input
 type="text"
@@ -973,10 +862,13 @@ placeholder="Ex.: Produção">
 
 </div>
 
+
 <button
 class="botao pequeno"
 onclick="cadastrarSetor()">
+
 + Cadastrar
+
 </button>
 
 </div>
@@ -989,15 +881,15 @@ onclick="cadastrarSetor()">
 <thead>
 
 <tr>
+
 <th>Setor</th>
 <th></th>
+
 </tr>
 
 </thead>
 
-<tbody
-id="tabelaSetoresCadastro">
-</tbody>
+<tbody id="tabelaSetoresCadastro"></tbody>
 
 </table>
 
@@ -1028,12 +920,14 @@ const SUPABASE_KEY =
 ===================================================== */
 
 let funcionarios = [];
+
 let setores = [];
+
 let registros = [];
 
 
 /* =====================================================
-   API SUPABASE
+   SUPABASE REQUEST
 ===================================================== */
 
 async function supabaseRequest(
@@ -1049,9 +943,12 @@ method:
 opcoes.method || "GET",
 
 headers:{
-"apikey":SUPABASE_KEY,
+"apikey":
+SUPABASE_KEY,
+
 "Content-Type":
 "application/json",
+
 "Prefer":
 opcoes.prefer ||
 "return=representation"
@@ -1060,7 +957,9 @@ opcoes.prefer ||
 body:
 opcoes.body
 ?
-JSON.stringify(opcoes.body)
+JSON.stringify(
+opcoes.body
+)
 :
 undefined
 }
@@ -1082,191 +981,6 @@ return texto
 JSON.parse(texto)
 :
 [];
-
-}
-
-
-/* =====================================================
-   NAVEGAÇÃO
-===================================================== */
-
-function mostrarTela(nome){
-
-document
-.querySelectorAll(".tela")
-.forEach(tela =>
-tela.classList.remove("ativa")
-);
-
-document
-.getElementById(nome)
-.classList.add("ativa");
-
-document
-.querySelectorAll("nav button")
-.forEach(botao =>
-botao.classList.remove("ativo")
-);
-
-if(nome === "lancamento"){
-
-document
-.getElementById("menuLancamento")
-.classList.add("ativo");
-
-}
-
-if(nome === "indicadores"){
-
-document
-.getElementById("menuIndicadores")
-.classList.add("ativo");
-
-atualizarDashboard();
-
-}
-
-if(nome === "cadastros"){
-
-document
-.getElementById("menuCadastros")
-.classList.add("ativo");
-
-}
-
-}
-
-
-/* =====================================================
-   UTILITÁRIOS
-===================================================== */
-
-function esc(valor){
-
-return String(valor ?? "")
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-
-}
-
-
-function jornadaParaMinutos(valor){
-
-if(!valor)
-return 0;
-
-const partes =
-valor.split(":");
-
-if(partes.length < 2)
-return 0;
-
-return (
-Number(partes[0]) * 60
-+
-Number(partes[1])
-);
-
-}
-
-
-function minutosParaJornada(minutos){
-
-minutos =
-Number(minutos) || 0;
-
-const horas =
-Math.floor(minutos / 60);
-
-const mins =
-minutos % 60;
-
-return String(horas)
-.padStart(2,"0")
-+
-":"
-+
-String(mins)
-.padStart(2,"0");
-
-}
-
-
-function formatarTempo(minutos){
-
-minutos =
-Number(minutos) || 0;
-
-const horas =
-Math.floor(minutos / 60);
-
-const mins =
-Math.round(minutos % 60);
-
-if(horas > 0)
-return `${horas}h ${mins}min`;
-
-return `${mins} min`;
-
-}
-
-
-function calcularMinutos(inicio,fim){
-
-if(!inicio || !fim)
-return 0;
-
-const [hi,mi] =
-inicio.split(":")
-.map(Number);
-
-const [hf,mf] =
-fim.split(":")
-.map(Number);
-
-let inicioMin =
-hi * 60 + mi;
-
-let fimMin =
-hf * 60 + mf;
-
-if(fimMin < inicioMin)
-fimMin += 24 * 60;
-
-return fimMin - inicioMin;
-
-}
-
-
-function proximoMes(mes){
-
-const partes =
-mes.split("-");
-
-let ano =
-Number(partes[0]);
-
-let numero =
-Number(partes[1]);
-
-numero++;
-
-if(numero > 12){
-
-numero = 1;
-ano++;
-
-}
-
-return (
-ano +
-"-" +
-String(numero).padStart(2,"0") +
-"-01"
-);
 
 }
 
@@ -1295,7 +1009,6 @@ status.className =
 "status ok";
 
 }
-
 catch(erro){
 
 console.error(erro);
@@ -1312,6 +1025,219 @@ status.className =
 
 
 /* =====================================================
+   NAVEGAÇÃO
+===================================================== */
+
+function mostrarTela(
+nome
+){
+
+document
+.querySelectorAll(
+".tela"
+)
+.forEach(
+tela =>
+tela.classList.remove(
+"ativa"
+)
+);
+
+document
+.getElementById(
+nome
+)
+.classList.add(
+"ativa"
+);
+
+
+document
+.querySelectorAll(
+"nav button"
+)
+.forEach(
+botao =>
+botao.classList.remove(
+"ativo"
+)
+);
+
+
+if(nome === "lancamento"){
+
+document
+.getElementById(
+"menuLancamento"
+)
+.classList.add(
+"ativo"
+);
+
+}
+
+if(nome === "indicadores"){
+
+document
+.getElementById(
+"menuIndicadores"
+)
+.classList.add(
+"ativo"
+);
+
+}
+
+if(nome === "cadastros"){
+
+document
+.getElementById(
+"menuCadastros"
+)
+.classList.add(
+"ativo"
+);
+
+}
+
+}
+
+
+/* =====================================================
+   CONVERSÃO DE HORAS
+===================================================== */
+
+function converterHora(
+hora
+){
+
+if(!hora)
+return 0;
+
+const partes =
+hora.split(":");
+
+return (
+Number(partes[0]) * 60
++
+Number(partes[1])
+);
+
+}
+
+
+function formatarTempo(
+minutos
+){
+
+minutos =
+Number(minutos) || 0;
+
+const horas =
+Math.floor(
+minutos / 60
+);
+
+const mins =
+minutos % 60;
+
+if(horas === 0)
+return `${mins} min`;
+
+if(mins === 0)
+return `${horas} h`;
+
+return `${horas} h ${mins} min`;
+
+}
+
+
+function minutosParaJornada(
+minutos
+){
+
+minutos =
+Number(minutos) || 0;
+
+const horas =
+Math.floor(
+minutos / 60
+);
+
+const mins =
+minutos % 60;
+
+return (
+String(horas).padStart(2,"0")
++
+":"
++
+String(mins).padStart(2,"0")
+);
+
+}
+
+
+function formatarData(
+data
+){
+
+if(!data)
+return "";
+
+const partes =
+String(data).split("-");
+
+if(partes.length !== 3)
+return data;
+
+return (
+partes[2] +
+"/" +
+partes[1] +
+"/" +
+partes[0]
+);
+
+}
+
+
+/* =====================================================
+   ESCAPE
+===================================================== */
+
+function esc(
+valor
+){
+
+return String(
+valor ?? ""
+)
+.replace(
+/&/g,
+"&amp;"
+)
+.replace(
+/</g,
+"&lt;"
+)
+.replace(
+/>/g,
+"&gt;"
+)
+.replace(
+/"/g,
+"&quot;"
+)
+.replace(
+/'/g,
+"&#039;"
+);
+
+}
+
+
+/* =====================================================
    FUNCIONÁRIOS
 ===================================================== */
 
@@ -1321,85 +1247,19 @@ try{
 
 funcionarios =
 await supabaseRequest(
-"funcionarios?ativo=eq.true&order=nome.asc"
+"funcionarios?select=*&ativo=eq.true&order=nome.asc"
 );
+
+atualizarSelectTecnicos();
+
+montarTabelaFuncionarios();
 
 }
 catch(erro){
 
 console.error(erro);
 
-funcionarios = [];
-
 }
-
-
-const tabela =
-document.getElementById(
-"tabelaFuncionarios"
-);
-
-tabela.innerHTML = "";
-
-
-if(funcionarios.length === 0){
-
-tabela.innerHTML = `
-<tr>
-<td colspan="4"
-class="lista-vazia">
-Nenhum funcionário cadastrado.
-</td>
-</tr>
-`;
-
-}
-
-else{
-
-funcionarios.forEach(f => {
-
-const tr =
-document.createElement("tr");
-
-tr.innerHTML = `
-
-<td>
-${esc(f.nome)}
-</td>
-
-<td>
-${esc(
-f.funcao ||
-"Não informado"
-)}
-</td>
-
-<td>
-${minutosParaJornada(
-f.jornada_minutos
-)}
-</td>
-
-<td>
-
-<button
-class="botao vermelho pequeno"
-onclick="excluirFuncionario(${f.id})">
-X
-</button>
-
-</td>
-
-`;
-
-tabela.appendChild(tr);
-
-});
-
-}
-
-atualizarSelectTecnicos();
 
 }
 
@@ -1408,28 +1268,108 @@ function atualizarSelectTecnicos(){
 
 const select =
 document.getElementById(
-"funcionario"
+"tecnico"
 );
 
 select.innerHTML =
-'<option value="">Selecione</option>';
+`
+<option value="">
+Selecione o técnico
+</option>
+`;
 
-funcionarios.forEach(f => {
+funcionarios.forEach(
+f => {
 
-const option =
-document.createElement("option");
+select.innerHTML +=
+`
+<option value="${f.id}">
+${esc(f.nome)}
+</option>
+`;
 
-option.value = f.id;
-
-option.textContent =
-f.nome;
-
-select.appendChild(option);
-
-});
+}
+);
 
 }
 
+
+function montarTabelaFuncionarios(){
+
+const tabela =
+document.getElementById(
+"tabelaFuncionarios"
+);
+
+tabela.innerHTML = "";
+
+if(funcionarios.length === 0){
+
+tabela.innerHTML =
+`
+<tr>
+<td colspan="4"
+class="lista-vazia">
+Nenhum funcionário cadastrado.
+</td>
+</tr>
+`;
+
+return;
+
+}
+
+
+funcionarios.forEach(
+f => {
+
+const tr =
+document.createElement(
+"tr"
+);
+
+tr.innerHTML =
+`
+<td>
+${esc(f.nome)}
+</td>
+
+<td>
+${esc(f.funcao || "")}
+</td>
+
+<td>
+${minutosParaJornada(
+f.jornada_minutos || 480
+)}
+</td>
+
+<td>
+
+<button
+class="botao vermelho pequeno"
+onclick="excluirFuncionario(${f.id})">
+
+X
+
+</button>
+
+</td>
+`;
+
+tabela.appendChild(
+tr
+);
+
+}
+);
+
+}
+
+
+/* =====================================================
+   CADASTRAR FUNCIONÁRIO
+===================================================== */
 
 async function cadastrarFuncionario(){
 
@@ -1449,23 +1389,18 @@ document
 .value
 .trim();
 
-const jornadaTexto =
+const jornada =
 document
 .getElementById(
 "jornadaFuncionario"
 )
 .value;
 
-const jornadaMinutos =
-jornadaParaMinutos(
-jornadaTexto
-);
-
 
 if(!nome){
 
 alert(
-"Digite o nome do funcionário."
+"Informe o nome do funcionário."
 );
 
 return;
@@ -1473,34 +1408,10 @@ return;
 }
 
 
-if(jornadaMinutos <= 0){
-
-alert(
-"Informe uma jornada válida. Exemplo: 08:48."
+const jornadaMinutos =
+converterHora(
+jornada
 );
-
-return;
-
-}
-
-
-const existe =
-funcionarios.some(
-f =>
-f.nome.toLowerCase()
-===
-nome.toLowerCase()
-);
-
-if(existe){
-
-alert(
-"Este funcionário já está cadastrado."
-);
-
-return;
-
-}
 
 
 try{
@@ -1514,8 +1425,7 @@ body:{
 nome:nome,
 
 funcao:
-funcao ||
-"Não informado",
+funcao,
 
 jornada_minutos:
 jornadaMinutos,
@@ -1524,6 +1434,7 @@ ativo:true
 }
 }
 );
+
 
 alert(
 "Funcionário cadastrado com sucesso!"
@@ -1536,7 +1447,6 @@ document
 )
 .value = "";
 
-
 document
 .getElementById(
 "funcaoFuncionario"
@@ -1544,27 +1454,15 @@ document
 .value = "";
 
 
-document
-.getElementById(
-"jornadaFuncionario"
-)
-.value =
-"08:48";
-
-
 await carregarFuncionarios();
 
-await atualizarDashboard();
-
 }
-
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao cadastrar funcionário:\n"
-+
+"Erro ao cadastrar funcionário:\n" +
 erro.message
 );
 
@@ -1583,72 +1481,19 @@ try{
 
 setores =
 await supabaseRequest(
-"setores?ativo=eq.true&order=nome.asc"
+"setores?select=*&ativo=eq.true&order=nome.asc"
 );
+
+atualizarSelectSetores();
+
+montarTabelaSetoresCadastro();
 
 }
 catch(erro){
 
 console.error(erro);
 
-setores = [];
-
 }
-
-
-const tabela =
-document.getElementById(
-"tabelaSetoresCadastro"
-);
-
-tabela.innerHTML = "";
-
-
-if(setores.length === 0){
-
-tabela.innerHTML = `
-<tr>
-<td colspan="2"
-class="lista-vazia">
-Nenhum setor cadastrado.
-</td>
-</tr>
-`;
-
-}
-
-else{
-
-setores.forEach(s => {
-
-const tr =
-document.createElement("tr");
-
-tr.innerHTML = `
-
-<td>
-${esc(s.nome)}
-</td>
-
-<td>
-
-<button
-class="botao vermelho pequeno"
-onclick="excluirSetor(${s.id})">
-X
-</button>
-
-</td>
-
-`;
-
-tabela.appendChild(tr);
-
-});
-
-}
-
-atualizarSelectSetores();
 
 }
 
@@ -1661,25 +1506,94 @@ document.getElementById(
 );
 
 select.innerHTML =
-'<option value="">Selecione</option>';
+`
+<option value="">
+Selecione o setor
+</option>
+`;
 
-setores.forEach(s => {
+setores.forEach(
+s => {
 
-const option =
-document.createElement("option");
+select.innerHTML +=
+`
+<option value="${s.id}">
+${esc(s.nome)}
+</option>
+`;
 
-option.value =
-s.id;
-
-option.textContent =
-s.nome;
-
-select.appendChild(option);
-
-});
+}
+);
 
 }
 
+
+function montarTabelaSetoresCadastro(){
+
+const tabela =
+document.getElementById(
+"tabelaSetoresCadastro"
+);
+
+tabela.innerHTML = "";
+
+if(setores.length === 0){
+
+tabela.innerHTML =
+`
+<tr>
+<td colspan="2"
+class="lista-vazia">
+Nenhum setor cadastrado.
+</td>
+</tr>
+`;
+
+return;
+
+}
+
+
+setores.forEach(
+s => {
+
+const tr =
+document.createElement(
+"tr"
+);
+
+tr.innerHTML =
+`
+<td>
+${esc(s.nome)}
+</td>
+
+<td>
+
+<button
+class="botao vermelho pequeno"
+onclick="excluirSetor(${s.id})">
+
+X
+
+</button>
+
+</td>
+`;
+
+tabela.appendChild(
+tr
+);
+
+}
+);
+
+}
+
+
+/* =====================================================
+   CADASTRAR SETOR
+===================================================== */
 
 async function cadastrarSetor(){
 
@@ -1695,26 +1609,7 @@ document
 if(!nome){
 
 alert(
-"Digite o nome do setor."
-);
-
-return;
-
-}
-
-
-const existe =
-setores.some(
-s =>
-s.nome.toLowerCase()
-===
-nome.toLowerCase()
-);
-
-if(existe){
-
-alert(
-"Este setor já está cadastrado."
+"Informe o nome do setor."
 );
 
 return;
@@ -1736,6 +1631,7 @@ ativo:true
 }
 );
 
+
 alert(
 "Setor cadastrado com sucesso!"
 );
@@ -1751,14 +1647,12 @@ document
 await carregarSetores();
 
 }
-
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao cadastrar setor:\n"
-+
+"Erro ao cadastrar setor:\n" +
 erro.message
 );
 
@@ -1771,19 +1665,12 @@ erro.message
    LANÇAR OS
 ===================================================== */
 
-async function lancarOS(){
+async function registrar(){
 
-const funcionario =
+const funcionarioId =
 document
 .getElementById(
-"funcionario"
-)
-.value;
-
-const setor =
-document
-.getElementById(
-"setor"
+"tecnico"
 )
 .value;
 
@@ -1799,6 +1686,13 @@ const data =
 document
 .getElementById(
 "data"
+)
+.value;
+
+const setorId =
+document
+.getElementById(
+"setor"
 )
 .value;
 
@@ -1824,27 +1718,24 @@ document
 .value;
 
 const espera =
-Number(
 document
 .getElementById(
 "espera"
 )
-.value
-) || 0;
+.value;
 
 
 if(
-!funcionario ||
-!setor ||
+!funcionarioId ||
 !os ||
 !data ||
+!setorId ||
 !inicio ||
-!fim ||
-!tipo
+!fim
 ){
 
 alert(
-"Preencha todos os campos obrigatórios."
+"Preencha Técnico, OS, Data, Setor, início e fim."
 );
 
 return;
@@ -1852,16 +1743,33 @@ return;
 }
 
 
-let minutos =
-calcularMinutos(
-inicio,
+const inicioMin =
+converterHora(
+inicio
+);
+
+const fimMin =
+converterHora(
 fim
 );
 
-minutos -= espera;
+let minutos =
+fimMin - inicioMin;
+
 
 if(minutos < 0)
-minutos = 0;
+minutos += 1440;
+
+
+if(minutos === 0){
+
+alert(
+"O horário inicial e final não podem ser iguais."
+);
+
+return;
+
+}
 
 
 try{
@@ -1872,37 +1780,32 @@ await supabaseRequest(
 method:"POST",
 
 body:{
-funcionario_id:
-Number(funcionario),
 
-setor_id:
-Number(setor),
+funcionario_id:
+Number(funcionarioId),
 
 os:os,
 
 data:data,
 
+setor_id:
+Number(setorId),
+
 inicio:inicio,
 
 fim:fim,
 
+minutos_trabalhados:
+minutos,
+
 tipo:tipo,
 
-espera:espera,
+espera:espera
 
-minutos_trabalhados:
-minutos
 }
+
 }
 );
-
-
-document
-.getElementById(
-"mensagem"
-)
-.innerText =
-"✓ OS lançada com sucesso!";
 
 
 document
@@ -1910,6 +1813,12 @@ document
 "os"
 )
 .value = "";
+
+document
+.getElementById(
+"setor"
+)
+.selectedIndex = 0;
 
 document
 .getElementById(
@@ -1923,32 +1832,40 @@ document
 )
 .value = "";
 
-document
-.getElementById(
-"espera"
-)
-.value = "0";
 
 document
 .getElementById(
-"tipo"
+"mensagem"
 )
-.value = "";
+.innerText =
+"✓ Serviço registrado com sucesso!";
 
 
 await mostrarLancamentos();
 
 await atualizarDashboard();
 
-}
 
+setTimeout(
+() => {
+
+document
+.getElementById(
+"mensagem"
+)
+.innerText = "";
+
+},
+3000
+);
+
+}
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao lançar OS:\n"
-+
+"Erro ao registrar serviço:\n" +
 erro.message
 );
 
@@ -1958,7 +1875,7 @@ erro.message
 
 
 /* =====================================================
-   LANÇAMENTOS
+   ÚLTIMOS LANÇAMENTOS
 ===================================================== */
 
 async function mostrarLancamentos(){
@@ -1967,6 +1884,9 @@ const tabela =
 document.getElementById(
 "tabelaLancamentos"
 );
+
+tabela.innerHTML = "";
+
 
 try{
 
@@ -1977,16 +1897,17 @@ await supabaseRequest(
 
 registros = dados;
 
-tabela.innerHTML = "";
-
 
 if(dados.length === 0){
 
-tabela.innerHTML = `
+tabela.innerHTML =
+`
 <tr>
 <td colspan="7"
 class="lista-vazia">
-Nenhum lançamento encontrado.
+
+Nenhum lançamento ainda.
+
 </td>
 </tr>
 `;
@@ -1996,31 +1917,34 @@ return;
 }
 
 
-dados.forEach(r => {
+dados.forEach(
+r => {
 
 const tecnico =
 r.funcionarios
 ?
 r.funcionarios.nome
 :
-"Não identificado";
+"—";
 
 const setor =
 r.setores
 ?
 r.setores.nome
 :
-"Não identificado";
+"—";
 
 
 const tr =
-document.createElement("tr");
+document.createElement(
+"tr"
+);
 
 
-tr.innerHTML = `
-
+tr.innerHTML =
+`
 <td>
-${esc(r.data)}
+${formatarData(r.data)}
 </td>
 
 <td>
@@ -2040,11 +1964,13 @@ ${esc(r.tipo)}
 </td>
 
 <td>
+
 <strong>
 ${formatarTempo(
 r.minutos_trabalhados
 )}
 </strong>
+
 </td>
 
 <td>
@@ -2052,30 +1978,38 @@ r.minutos_trabalhados
 <button
 class="botao vermelho pequeno"
 onclick="excluirRegistro(${r.id})">
+
 X
+
 </button>
 
 </td>
-
 `;
 
 
-tabela.appendChild(tr);
-
-});
+tabela.appendChild(
+tr
+);
 
 }
+);
 
+}
 catch(erro){
 
 console.error(erro);
 
-tabela.innerHTML = `
+tabela.innerHTML =
+`
 <tr>
+
 <td colspan="7"
 class="lista-vazia">
+
 Não foi possível carregar os lançamentos.
+
 </td>
+
 </tr>
 `;
 
@@ -2088,7 +2022,9 @@ Não foi possível carregar os lançamentos.
    EXCLUIR REGISTRO
 ===================================================== */
 
-async function excluirRegistro(id){
+async function excluirRegistro(
+id
+){
 
 if(
 !confirm(
@@ -2108,19 +2044,18 @@ prefer:"return=minimal"
 }
 );
 
+
 await mostrarLancamentos();
 
 await atualizarDashboard();
 
 }
-
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao excluir lançamento:\n"
-+
+"Erro ao excluir lançamento:\n" +
 erro.message
 );
 
@@ -2133,7 +2068,9 @@ erro.message
    EXCLUIR FUNCIONÁRIO
 ===================================================== */
 
-async function excluirFuncionario(id){
+async function excluirFuncionario(
+id
+){
 
 const funcionario =
 funcionarios.find(
@@ -2146,10 +2083,8 @@ return;
 
 if(
 !confirm(
-"Desativar "
-+
-funcionario.nome
-+
+"Desativar " +
+funcionario.nome +
 " do cadastro?"
 )
 )
@@ -2171,17 +2106,16 @@ prefer:"return=minimal"
 }
 );
 
+
 await carregarFuncionarios();
 
 }
-
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao excluir funcionário:\n"
-+
+"Erro ao excluir funcionário:\n" +
 erro.message
 );
 
@@ -2194,7 +2128,9 @@ erro.message
    EXCLUIR SETOR
 ===================================================== */
 
-async function excluirSetor(id){
+async function excluirSetor(
+id
+){
 
 const setor =
 setores.find(
@@ -2207,10 +2143,8 @@ return;
 
 if(
 !confirm(
-"Desativar o setor "
-+
-setor.nome
-+
+"Desativar o setor " +
+setor.nome +
 "?"
 )
 )
@@ -2232,17 +2166,16 @@ prefer:"return=minimal"
 }
 );
 
+
 await carregarSetores();
 
 }
-
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao excluir setor:\n"
-+
+"Erro ao excluir setor:\n" +
 erro.message
 );
 
@@ -2264,6 +2197,7 @@ document
 )
 .value;
 
+
 if(!mes)
 return;
 
@@ -2275,19 +2209,23 @@ await supabaseRequest(
 `registros?select=*,funcionarios(id,nome,jornada_minutos),setores(id,nome)&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.desc`
 );
 
+
 registros = dados;
 
 
 let totalMinutos = 0;
 
-dados.forEach(r => {
+
+dados.forEach(
+r => {
 
 totalMinutos +=
 Number(
 r.minutos_trabalhados
 ) || 0;
 
-});
+}
+);
 
 
 document
@@ -2309,13 +2247,14 @@ dados.length;
 
 
 /* =====================================================
-   PRODUTIVIDADE POR FUNCIONÁRIO
+   FUNCIONÁRIOS
 ===================================================== */
 
 const tecnicos = {};
 
 
-dados.forEach(r => {
+dados.forEach(
+r => {
 
 const funcionario =
 r.funcionarios;
@@ -2343,6 +2282,9 @@ minutos:0,
 
 os:0,
 
+dias:
+new Set(),
+
 jornada:
 funcionario
 ?
@@ -2350,10 +2292,7 @@ Number(
 funcionario.jornada_minutos
 )
 :
-480,
-
-dias:
-new Set()
+480
 
 };
 
@@ -2365,17 +2304,25 @@ Number(
 r.minutos_trabalhados
 ) || 0;
 
+
 tecnicos[nome].os++;
+
 
 if(r.data){
 
-tecnicos[nome]
-.dias
-.add(r.data);
+tecnicos[nome].dias.add(
+String(
+r.data
+).slice(
+0,
+10
+)
+);
 
 }
 
-});
+}
+);
 
 
 document
@@ -2388,33 +2335,41 @@ tecnicos
 ).length;
 
 
-/* PRODUTIVIDADE DA EQUIPE */
+/* =====================================================
+   DISPONIBILIDADE
+===================================================== */
 
 let totalDisponivel = 0;
 
 
-Object.keys(tecnicos)
-.forEach(nome => {
+Object.keys(
+tecnicos
+)
+.forEach(
+nome => {
 
-const t =
-tecnicos[nome];
+const jornada =
+tecnicos[nome].jornada || 480;
 
-const dias =
-t.dias
-?
-t.dias.size
-:
-0;
+const diasTrabalhados =
+tecnicos[nome].dias.size;
+
+
+tecnicos[nome].disponivel =
+jornada *
+diasTrabalhados;
+
 
 totalDisponivel +=
-(
-t.jornada || 480
-)
-*
-dias;
+tecnicos[nome].disponivel;
 
-});
+}
+);
 
+
+/* =====================================================
+   PRODUTIVIDADE
+===================================================== */
 
 const produtividade =
 totalDisponivel > 0
@@ -2422,9 +2377,7 @@ totalDisponivel > 0
 (
 totalMinutos /
 totalDisponivel
-)
-*
-100
+) * 100
 :
 0;
 
@@ -2439,6 +2392,10 @@ produtividade.toFixed(1)
 "%";
 
 
+/* =====================================================
+   TABELAS
+===================================================== */
+
 montarTabelaTecnicos(
 tecnicos
 );
@@ -2447,17 +2404,11 @@ montarTabelaSetores(
 dados
 );
 
-montarResumoTipos(
+montarTabelaTipos(
 dados
 );
 
-montarGraficos(
-dados,
-tecnicos
-);
-
 }
-
 catch(erro){
 
 console.error(erro);
@@ -2468,7 +2419,7 @@ console.error(erro);
 
 
 /* =====================================================
-   TABELA TÉCNICOS
+   TABELA FUNCIONÁRIOS
 ===================================================== */
 
 function montarTabelaTecnicos(
@@ -2486,18 +2437,22 @@ tabela.innerHTML = "";
 const nomes =
 Object.keys(
 tecnicos
-)
-.sort();
+).sort();
 
 
 if(nomes.length === 0){
 
-tabela.innerHTML = `
+tabela.innerHTML =
+`
 <tr>
+
 <td colspan="6"
 class="lista-vazia">
+
 Nenhum serviço no período.
+
 </td>
+
 </tr>
 `;
 
@@ -2506,7 +2461,8 @@ return;
 }
 
 
-nomes.forEach(nome => {
+nomes.forEach(
+nome => {
 
 const t =
 tecnicos[nome];
@@ -2514,15 +2470,15 @@ tecnicos[nome];
 const jornada =
 t.jornada || 480;
 
-const dias =
+
+const disponivel =
 t.dias
 ?
+jornada *
 t.dias.size
 :
 0;
 
-const disponivel =
-jornada * dias;
 
 const produtividade =
 disponivel > 0
@@ -2530,9 +2486,7 @@ disponivel > 0
 (
 t.minutos /
 disponivel
-)
-*
-100
+) * 100
 :
 0;
 
@@ -2551,11 +2505,13 @@ classe = "vermelho";
 
 
 const tr =
-document.createElement("tr");
+document.createElement(
+"tr"
+);
 
 
-tr.innerHTML = `
-
+tr.innerHTML =
+`
 <td>
 ${esc(nome)}
 </td>
@@ -2585,19 +2541,21 @@ disponivel
 <td class="${classe}">
 ${produtividade.toFixed(1)}%
 </td>
-
 `;
 
 
-tabela.appendChild(tr);
+tabela.appendChild(
+tr
+);
 
-});
+}
+);
 
 }
 
 
 /* =====================================================
-   HORAS POR SETOR
+   TABELA SETORES
 ===================================================== */
 
 function montarTabelaSetores(
@@ -2615,7 +2573,8 @@ tabela.innerHTML = "";
 const setoresDados = {};
 
 
-dados.forEach(r => {
+dados.forEach(
+r => {
 
 const nome =
 r.setores
@@ -2625,7 +2584,9 @@ r.setores.nome
 "Não identificado";
 
 
-if(!setoresDados[nome]){
+if(
+!setoresDados[nome]
+){
 
 setoresDados[nome] = {
 minutos:0,
@@ -2640,26 +2601,32 @@ Number(
 r.minutos_trabalhados
 ) || 0;
 
+
 setoresDados[nome].os++;
 
-});
+}
+);
 
 
 const nomes =
 Object.keys(
 setoresDados
-)
-.sort();
+).sort();
 
 
 if(nomes.length === 0){
 
-tabela.innerHTML = `
+tabela.innerHTML =
+`
 <tr>
+
 <td colspan="3"
 class="lista-vazia">
+
 Nenhum serviço no período.
+
 </td>
+
 </tr>
 `;
 
@@ -2668,17 +2635,21 @@ return;
 }
 
 
-nomes.forEach(nome => {
+nomes.forEach(
+nome => {
 
 const s =
 setoresDados[nome];
 
+
 const tr =
-document.createElement("tr");
+document.createElement(
+"tr"
+);
 
 
-tr.innerHTML = `
-
+tr.innerHTML =
+`
 <td>
 ${esc(nome)}
 </td>
@@ -2692,51 +2663,69 @@ s.minutos
 <td>
 ${s.os}
 </td>
-
 `;
 
 
-tabela.appendChild(tr);
+tabela.appendChild(
+tr
+);
 
-});
+}
+);
 
 }
 
 
 /* =====================================================
    TIPOS DE MANUTENÇÃO
+   QUANTIDADE + PERCENTUAL
 ===================================================== */
 
-function montarResumoTipos(
+function montarTabelaTipos(
 dados
 ){
 
-const div =
+const tabela =
 document.getElementById(
-"resumoTipos"
+"tabelaTipos"
 );
 
-if(!div)
-return;
+tabela.innerHTML = "";
 
 
 const tipos = {};
 
 
-dados.forEach(r => {
+dados.forEach(
+r => {
 
-const tipo =
+const nome =
 r.tipo ||
 "Não informado";
 
-tipos[tipo] =
-(tipos[tipo] || 0) + 1;
 
-});
+tipos[nome] =
+(tipos[nome] || 0)
++
+1;
+
+}
+);
+
+
+/*
+O percentual é calculado
+sobre o total de OS do mês.
+*/
+
+const total =
+dados.length;
 
 
 const nomes =
-Object.keys(tipos)
+Object.keys(
+tipos
+)
 .sort(
 (a,b) =>
 tipos[b] -
@@ -2746,11 +2735,18 @@ tipos[a]
 
 if(nomes.length === 0){
 
-div.innerHTML =
+tabela.innerHTML =
 `
-<div class="grafico-vazio">
+<tr>
+
+<td colspan="3"
+class="lista-vazia">
+
 Nenhum serviço no período.
-</div>
+
+</td>
+
+</tr>
 `;
 
 return;
@@ -2758,340 +2754,58 @@ return;
 }
 
 
-const maior =
-Math.max(
-...nomes.map(
-nome => tipos[nome]
-),
-1
-);
-
-
-div.innerHTML = "";
-
-nomes.forEach(nome => {
+nomes.forEach(
+nome => {
 
 const quantidade =
 tipos[nome];
 
+
 const percentual =
+total > 0
+?
 (
 quantidade /
-maior
-)
-*
-100;
+total
+) * 100
+:
+0;
 
 
-const item =
+const tr =
 document.createElement(
-"div"
+"tr"
 );
 
-item.className =
-"barra-item";
 
-
-item.innerHTML = `
-
-<div
-class="barra-label"
-title="${esc(nome)}">
-${esc(nome)}
-</div>
-
-<div class="barra-fundo">
-
-<div
-class="barra-preenchimento"
-style="width:${percentual.toFixed(1)}%">
-</div>
-
-</div>
-
-<div class="barra-valor">
-${quantidade} OS
-</div>
-
-`;
-
-
-div.appendChild(item);
-
-});
-
-}
-
-
-/* =====================================================
-   GRÁFICOS
-===================================================== */
-
-function criarGraficoBarras(
-id,
-itens,
-formatarValor
-){
-
-const div =
-document.getElementById(id);
-
-if(!div)
-return;
-
-
-div.innerHTML = "";
-
-
-if(!itens.length){
-
-div.innerHTML =
+tr.innerHTML =
 `
-<div class="grafico-vazio">
-Nenhum dado no período.
-</div>
-`;
+<td>
+${esc(nome)}
+</td>
 
-return;
+<td>
+${quantidade}
+</td>
 
-}
-
-
-const maior =
-Math.max(
-...itens.map(
-i =>
-Number(i.valor) || 0
-),
-1
-);
-
-
-itens.forEach(item => {
-
-const percentual =
-Math.max(
-0,
-Math.min(
-100,
-(
-(Number(item.valor) || 0)
-/
-maior
-)
-*
-100
-)
-);
-
-
-const linha =
-document.createElement(
-"div"
-);
-
-linha.className =
-"barra-item";
-
-
-linha.innerHTML = `
-
-<div
-class="barra-label"
-title="${esc(item.nome)}">
-${esc(item.nome)}
-</div>
-
-<div class="barra-fundo">
-
-<div
-class="barra-preenchimento"
-style="width:${percentual.toFixed(1)}%">
-</div>
-
-</div>
-
-<div class="barra-valor">
-${formatarValor(item.valor)}
-</div>
-
+<td>
+${percentual.toFixed(1)}%
+</td>
 `;
 
 
-div.appendChild(linha);
-
-});
+tabela.appendChild(
+tr
+);
 
 }
-
-
-/* =====================================================
-   GRÁFICOS DA ABA INDICADORES
-===================================================== */
-
-function montarGraficos(
-dados,
-tecnicos
-){
-
-/* DESEMPENHO POR FUNCIONÁRIO */
-
-const produtividade =
-Object.keys(tecnicos)
-
-.map(nome => {
-
-const t =
-tecnicos[nome];
-
-const disponivel =
-t.dias
-?
-(
-(t.jornada || 480)
-*
-t.dias.size
-)
-:
-0;
-
-const valor =
-disponivel > 0
-?
-(
-t.minutos /
-disponivel
-)
-*
-100
-:
-0;
-
-return {
-nome:nome,
-valor:valor
-};
-
-})
-
-.sort(
-(a,b) =>
-b.valor -
-a.valor
-);
-
-
-criarGraficoBarras(
-"graficoProdutividade",
-produtividade,
-valor =>
-`${Number(valor).toFixed(1)}%`
-);
-
-
-/* HORAS POR SETOR */
-
-const setores = {};
-
-
-dados.forEach(r => {
-
-const nome =
-r.setores
-?
-r.setores.nome
-:
-"Não identificado";
-
-
-setores[nome] =
-(
-setores[nome] || 0
-)
-+
-(
-Number(
-r.minutos_trabalhados
-) || 0
-);
-
-});
-
-
-criarGraficoBarras(
-
-"graficoSetores",
-
-Object.keys(setores)
-
-.map(nome => ({
-nome:nome,
-valor:setores[nome]
-}))
-
-.sort(
-(a,b) =>
-b.valor -
-a.valor
-),
-
-valor =>
-formatarTempo(
-Number(valor)
-)
-
-);
-
-
-/* TIPOS DE MANUTENÇÃO */
-
-const tipos = {};
-
-
-dados.forEach(r => {
-
-const nome =
-r.tipo ||
-"Não informado";
-
-
-tipos[nome] =
-(
-tipos[nome] || 0
-)
-+
-1;
-
-});
-
-
-criarGraficoBarras(
-
-"graficoTipos",
-
-Object.keys(tipos)
-
-.map(nome => ({
-nome:nome,
-valor:tipos[nome]
-}))
-
-.sort(
-(a,b) =>
-b.valor -
-a.valor
-),
-
-valor =>
-`${Number(valor)} OS`
-
 );
 
 }
 
 
 /* =====================================================
-   CARREGAMENTO INICIAL
+   INICIALIZAÇÃO
 ===================================================== */
 
 async function carregarTudo(){
@@ -3107,13 +2821,7 @@ await mostrarLancamentos();
 
 /*
 Ao abrir a página,
-usar o mês do lançamento
-mais recente.
-
-Assim os indicadores
-não ficam zerados quando
-os lançamentos existentes
-são de um mês anterior.
+usar o mês do lançamento mais recente.
 */
 
 if(
@@ -3125,7 +2833,10 @@ const mesUltimoLancamento =
 String(
 registros[0].data
 )
-.slice(0,7);
+.slice(
+0,
+7
+);
 
 
 document
@@ -3144,51 +2855,63 @@ await atualizarDashboard();
 
 
 /* =====================================================
-   INICIALIZAÇÃO
+   PRÓXIMO MÊS
+===================================================== */
+
+function proximoMes(
+mes
+){
+
+const partes =
+mes.split("-");
+
+
+let ano =
+Number(
+partes[0]
+);
+
+
+let numero =
+Number(
+partes[1]
+);
+
+
+numero++;
+
+
+if(numero > 12){
+
+numero = 1;
+
+ano++;
+
+}
+
+
+return (
+ano +
+"-" +
+String(
+numero
+).padStart(
+2,
+"0"
+) +
+"-01"
+);
+
+}
+
+
+/* =====================================================
+   INICIAR
 ===================================================== */
 
 document.addEventListener(
 "DOMContentLoaded",
-() => {
-
-const hoje =
-new Date();
-
-const ano =
-hoje.getFullYear();
-
-const mes =
-String(
-hoje.getMonth() + 1
-)
-.padStart(2,"0");
-
-const dia =
-String(
-hoje.getDate()
-)
-.padStart(2,"0");
-
-
-document
-.getElementById(
-"data"
-)
-.value =
-`${ano}-${mes}-${dia}`;
-
-
-document
-.getElementById(
-"mesFiltro"
-)
-.value =
-`${ano}-${mes}`;
-
-
-carregarTudo();
-
-}
+carregarTudo
 );
 
 </script>
