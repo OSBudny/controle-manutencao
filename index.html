@@ -356,9 +356,13 @@ grid-template-columns:1fr;
 <body>
 
 <header>
+
 <h1>🟠 GESTÃO DA MANUTENÇÃO</h1>
+
 <span>CONTROLE</span>
+
 </header>
+
 
 <nav>
 
@@ -366,40 +370,59 @@ grid-template-columns:1fr;
 id="menuLancamento"
 class="ativo"
 onclick="mostrarTela('lancamento')">
+
 📝 Lançar OS
+
 </button>
+
 
 <button
 id="menuIndicadores"
 onclick="mostrarTela('indicadores')">
+
 📊 Indicadores
+
 </button>
+
 
 <button
 id="menuCadastros"
 onclick="mostrarTela('cadastros')">
+
 ⚙️ Cadastros
+
 </button>
 
 </nav>
 
+
 <main>
+
 
 <!-- =====================================================
      LANÇAMENTO
 ===================================================== -->
 
-<section id="lancamento" class="tela ativa">
+<section
+id="lancamento"
+class="tela ativa">
 
 <div class="card">
 
 <h2>Lançar serviço</h2>
 
-<div id="statusConexao" class="status">
+
+<div
+id="statusConexao"
+class="status">
+
 Conectando ao banco de dados...
+
 </div>
 
+
 <div class="formulario">
+
 
 <div class="campo">
 
@@ -415,6 +438,7 @@ Selecione o técnico
 
 </div>
 
+
 <div class="campo">
 
 <label>Nº da OS</label>
@@ -426,6 +450,7 @@ placeholder="Ex.: 1542">
 
 </div>
 
+
 <div class="campo">
 
 <label>Data</label>
@@ -435,6 +460,7 @@ type="date"
 id="data">
 
 </div>
+
 
 <div class="campo">
 
@@ -450,6 +476,7 @@ Selecione o setor
 
 </div>
 
+
 <div class="campo">
 
 <label>Hora início</label>
@@ -459,6 +486,7 @@ type="time"
 id="inicio">
 
 </div>
+
 
 <div class="campo">
 
@@ -470,6 +498,7 @@ id="fim">
 
 </div>
 
+
 <div class="campo">
 
 <label>Tipo de manutenção</label>
@@ -477,14 +506,19 @@ id="fim">
 <select id="tipo">
 
 <option>Preventiva</option>
+
 <option>Corretiva</option>
+
 <option>Melhoria</option>
+
 <option>Inspeção</option>
+
 <option>Outro</option>
 
 </select>
 
 </div>
+
 
 <div class="campo">
 
@@ -493,18 +527,26 @@ id="fim">
 <select id="espera">
 
 <option>Nenhum</option>
+
 <option>Aguardando peça</option>
+
 <option>Aguardando liberação</option>
+
 <option>Aguardando equipamento</option>
+
 <option>Falta de ferramenta</option>
+
 <option>Deslocamento</option>
+
 <option>Outro</option>
 
 </select>
 
 </div>
 
+
 </div>
+
 
 <button
 class="botao"
@@ -514,18 +556,24 @@ onclick="registrar()">
 
 </button>
 
+
 <div
 id="mensagem"
 class="mensagem">
-</div>
 
 </div>
 
-<!-- ÚLTIMOS LANÇAMENTOS -->
+</div>
+
+
+<!-- =====================================================
+     ÚLTIMOS LANÇAMENTOS
+===================================================== -->
 
 <div class="card">
 
 <h2>Últimos lançamentos</h2>
+
 
 <div class="tabela">
 
@@ -536,18 +584,28 @@ class="mensagem">
 <tr>
 
 <th>Data</th>
+
 <th>OS</th>
+
 <th>Técnico</th>
+
 <th>Setor</th>
+
 <th>Tipo</th>
+
 <th>Tempo</th>
+
 <th></th>
 
 </tr>
 
 </thead>
 
-<tbody id="tabelaLancamentos"></tbody>
+
+<tbody
+id="tabelaLancamentos">
+
+</tbody>
 
 </table>
 
@@ -562,11 +620,15 @@ class="mensagem">
      INDICADORES
 ===================================================== -->
 
-<section id="indicadores" class="tela">
+<section
+id="indicadores"
+class="tela">
+
 
 <div class="card">
 
 <h2>Indicadores de produtividade</h2>
+
 
 <div
 class="campo"
@@ -586,14 +648,18 @@ onchange="atualizarDashboard()">
 
 <div class="indicadores">
 
+
 <div class="indicador">
 
 <small>
 Tempo trabalhado
 </small>
 
-<strong id="totalHoras">
+<strong
+id="totalHoras">
+
 0 min
+
 </strong>
 
 </div>
@@ -605,8 +671,11 @@ Tempo trabalhado
 OS realizadas
 </small>
 
-<strong id="totalOS">
+<strong
+id="totalOS">
+
 0
+
 </strong>
 
 </div>
@@ -618,8 +687,11 @@ OS realizadas
 Produtividade da equipe
 </small>
 
-<strong id="produtividade">
+<strong
+id="produtividade">
+
 0%
+
 </strong>
 
 </div>
@@ -631,20 +703,27 @@ Produtividade da equipe
 Técnicos
 </small>
 
-<strong id="numeroTecnicos">
+<strong
+id="numeroTecnicos">
+
 0
+
 </strong>
 
 </div>
 
+
 </div>
 
 
-<!-- DESEMPENHO POR FUNCIONÁRIO -->
+<!-- =====================================================
+     DESEMPENHO POR FUNCIONÁRIO
+===================================================== -->
 
 <div class="card">
 
 <h2>Desempenho por funcionário</h2>
+
 
 <div class="tabela">
 
@@ -655,17 +734,26 @@ Técnicos
 <tr>
 
 <th>Funcionário</th>
+
 <th>Jornada/dia</th>
+
 <th>Tempo manutenção</th>
+
 <th>OS</th>
+
 <th>Disponibilidade</th>
+
 <th>Produtividade</th>
 
 </tr>
 
 </thead>
 
-<tbody id="tabelaTecnicos"></tbody>
+
+<tbody
+id="tabelaTecnicos">
+
+</tbody>
 
 </table>
 
@@ -674,11 +762,14 @@ Técnicos
 </div>
 
 
-<!-- HORAS POR SETOR -->
+<!-- =====================================================
+     HORAS POR SETOR
+===================================================== -->
 
 <div class="card">
 
 <h2>Horas por setor</h2>
+
 
 <div class="tabela">
 
@@ -689,14 +780,20 @@ Técnicos
 <tr>
 
 <th>Setor</th>
+
 <th>Tempo</th>
+
 <th>OS</th>
 
 </tr>
 
 </thead>
 
-<tbody id="tabelaSetores"></tbody>
+
+<tbody
+id="tabelaSetores">
+
+</tbody>
 
 </table>
 
@@ -705,11 +802,14 @@ Técnicos
 </div>
 
 
-<!-- TIPOS DE MANUTENÇÃO -->
+<!-- =====================================================
+     TIPOS DE MANUTENÇÃO
+===================================================== -->
 
 <div class="card">
 
 <h2>Tipos de manutenção</h2>
+
 
 <div class="tabela">
 
@@ -720,20 +820,27 @@ Técnicos
 <tr>
 
 <th>Tipo</th>
+
 <th>OS</th>
+
 <th>Percentual</th>
 
 </tr>
 
 </thead>
 
-<tbody id="tabelaTipos"></tbody>
+
+<tbody
+id="tabelaTipos">
+
+</tbody>
 
 </table>
 
 </div>
 
 </div>
+
 
 </section>
 
@@ -742,13 +849,17 @@ Técnicos
      CADASTROS
 ===================================================== -->
 
-<section id="cadastros" class="tela">
+<section
+id="cadastros"
+class="tela">
+
 
 <!-- FUNCIONÁRIOS -->
 
 <div class="card">
 
 <h2>👷 Funcionários</h2>
+
 
 <div class="aviso-jornada">
 
@@ -765,6 +876,7 @@ Exemplo:
 
 
 <div class="linha-cadastro">
+
 
 <div class="campo">
 
@@ -800,7 +912,9 @@ id="jornadaFuncionario"
 value="08:48">
 
 <span class="ajuda">
+
 Ex.: 08:48
+
 </span>
 
 </div>
@@ -814,6 +928,7 @@ onclick="cadastrarFuncionario()">
 
 </button>
 
+
 </div>
 
 
@@ -826,15 +941,22 @@ onclick="cadastrarFuncionario()">
 <tr>
 
 <th>Nome</th>
+
 <th>Função</th>
+
 <th>Jornada</th>
+
 <th></th>
 
 </tr>
 
 </thead>
 
-<tbody id="tabelaFuncionarios"></tbody>
+
+<tbody
+id="tabelaFuncionarios">
+
+</tbody>
 
 </table>
 
@@ -849,7 +971,9 @@ onclick="cadastrarFuncionario()">
 
 <h2>🏭 Setores</h2>
 
+
 <div class="linha-setor">
+
 
 <div class="campo">
 
@@ -871,6 +995,7 @@ onclick="cadastrarSetor()">
 
 </button>
 
+
 </div>
 
 
@@ -883,19 +1008,25 @@ onclick="cadastrarSetor()">
 <tr>
 
 <th>Setor</th>
+
 <th></th>
 
 </tr>
 
 </thead>
 
-<tbody id="tabelaSetoresCadastro"></tbody>
+
+<tbody
+id="tabelaSetoresCadastro">
+
+</tbody>
 
 </table>
 
 </div>
 
 </div>
+
 
 </section>
 
@@ -904,12 +1035,14 @@ onclick="cadastrarSetor()">
 
 <script>
 
+
 /* =====================================================
    SUPABASE
 ===================================================== */
 
 const SUPABASE_URL =
 "https://qwaibjzdpwebddvbfkoj.supabase.co";
+
 
 const SUPABASE_KEY =
 "sb_publishable_oIe4-XsdKOYhvPFdkAnPrw_wzAA95rG";
@@ -939,6 +1072,7 @@ const resposta =
 await fetch(
 `${SUPABASE_URL}/rest/v1/${tabela}`,
 {
+
 method:
 opcoes.method || "GET",
 
@@ -952,6 +1086,7 @@ SUPABASE_KEY,
 "Prefer":
 opcoes.prefer ||
 "return=representation"
+
 },
 
 body:
@@ -962,11 +1097,14 @@ opcoes.body
 )
 :
 undefined
+
 }
 );
 
+
 const texto =
 await resposta.text();
+
 
 if(!resposta.ok){
 
@@ -975,6 +1113,7 @@ throw new Error(
 );
 
 }
+
 
 return texto
 ?
@@ -986,7 +1125,7 @@ JSON.parse(texto)
 
 
 /* =====================================================
-   CONEXÃO
+   TESTAR CONEXÃO
 ===================================================== */
 
 async function testarConexao(){
@@ -996,25 +1135,31 @@ document.getElementById(
 "statusConexao"
 );
 
+
 try{
 
 await supabaseRequest(
 "funcionarios?select=id&limit=1"
 );
 
+
 status.innerHTML =
 "✓ Conexão funcionando!";
 
+
 status.className =
 "status ok";
+
 
 }
 catch(erro){
 
 console.error(erro);
 
+
 status.innerHTML =
 "✗ " + erro.message;
+
 
 status.className =
 "status erro";
@@ -1043,6 +1188,7 @@ tela.classList.remove(
 )
 );
 
+
 document
 .getElementById(
 nome
@@ -1064,7 +1210,9 @@ botao.classList.remove(
 );
 
 
-if(nome === "lancamento"){
+if(
+nome === "lancamento"
+){
 
 document
 .getElementById(
@@ -1076,7 +1224,10 @@ document
 
 }
 
-if(nome === "indicadores"){
+
+if(
+nome === "indicadores"
+){
 
 document
 .getElementById(
@@ -1088,7 +1239,10 @@ document
 
 }
 
-if(nome === "cadastros"){
+
+if(
+nome === "cadastros"
+){
 
 document
 .getElementById(
@@ -1114,8 +1268,10 @@ hora
 if(!hora)
 return 0;
 
+
 const partes =
 hora.split(":");
+
 
 return (
 Number(partes[0]) * 60
@@ -1133,19 +1289,28 @@ minutos
 minutos =
 Number(minutos) || 0;
 
+
 const horas =
 Math.floor(
 minutos / 60
 );
 
+
 const mins =
 minutos % 60;
 
-if(horas === 0)
+
+if(
+horas === 0
+)
 return `${mins} min`;
 
-if(mins === 0)
+
+if(
+mins === 0
+)
 return `${horas} h`;
+
 
 return `${horas} h ${mins} min`;
 
@@ -1159,20 +1324,29 @@ minutos
 minutos =
 Number(minutos) || 0;
 
+
 const horas =
 Math.floor(
 minutos / 60
 );
 
+
 const mins =
 minutos % 60;
 
+
 return (
-String(horas).padStart(2,"0")
+String(horas).padStart(
+2,
+"0"
+)
 +
 ":"
 +
-String(mins).padStart(2,"0")
+String(mins).padStart(
+2,
+"0"
+)
 );
 
 }
@@ -1185,17 +1359,26 @@ data
 if(!data)
 return "";
 
+
 const partes =
 String(data).split("-");
 
-if(partes.length !== 3)
+
+if(
+partes.length !== 3
+)
 return data;
 
+
 return (
-partes[2] +
-"/" +
-partes[1] +
-"/" +
+partes[2]
++
+"/"
++
+partes[1]
++
+"/"
++
 partes[0]
 );
 
@@ -1213,22 +1396,27 @@ valor
 return String(
 valor ?? ""
 )
+
 .replace(
 /&/g,
 "&amp;"
 )
+
 .replace(
 /</g,
 "&lt;"
 )
+
 .replace(
 />/g,
 "&gt;"
 )
+
 .replace(
 /"/g,
 "&quot;"
 )
+
 .replace(
 /'/g,
 "&#039;"
@@ -1250,9 +1438,11 @@ await supabaseRequest(
 "funcionarios?select=*&ativo=eq.true&order=nome.asc"
 );
 
+
 atualizarSelectTecnicos();
 
 montarTabelaFuncionarios();
+
 
 }
 catch(erro){
@@ -1264,6 +1454,10 @@ console.error(erro);
 }
 
 
+/* =====================================================
+   SELECT TÉCNICOS
+===================================================== */
+
 function atualizarSelectTecnicos(){
 
 const select =
@@ -1271,12 +1465,14 @@ document.getElementById(
 "tecnico"
 );
 
+
 select.innerHTML =
 `
 <option value="">
 Selecione o técnico
 </option>
 `;
+
 
 funcionarios.forEach(
 f => {
@@ -1294,6 +1490,10 @@ ${esc(f.nome)}
 }
 
 
+/* =====================================================
+   TABELA FUNCIONÁRIOS
+===================================================== */
+
 function montarTabelaFuncionarios(){
 
 const tabela =
@@ -1301,17 +1501,26 @@ document.getElementById(
 "tabelaFuncionarios"
 );
 
+
 tabela.innerHTML = "";
 
-if(funcionarios.length === 0){
+
+if(
+funcionarios.length === 0
+){
 
 tabela.innerHTML =
 `
 <tr>
-<td colspan="4"
+
+<td
+colspan="4"
 class="lista-vazia">
+
 Nenhum funcionário cadastrado.
+
 </td>
+
 </tr>
 `;
 
@@ -1327,6 +1536,7 @@ const tr =
 document.createElement(
 "tr"
 );
+
 
 tr.innerHTML =
 `
@@ -1357,6 +1567,7 @@ X
 </td>
 `;
 
+
 tabela.appendChild(
 tr
 );
@@ -1381,6 +1592,7 @@ document
 .value
 .trim();
 
+
 const funcao =
 document
 .getElementById(
@@ -1388,6 +1600,7 @@ document
 )
 .value
 .trim();
+
 
 const jornada =
 document
@@ -1419,10 +1632,13 @@ try{
 await supabaseRequest(
 "funcionarios",
 {
-method:"POST",
+
+method:
+"POST",
 
 body:{
-nome:nome,
+nome:
+nome,
 
 funcao:
 funcao,
@@ -1430,8 +1646,10 @@ funcao,
 jornada_minutos:
 jornadaMinutos,
 
-ativo:true
+ativo:
+true
 }
+
 }
 );
 
@@ -1447,6 +1665,7 @@ document
 )
 .value = "";
 
+
 document
 .getElementById(
 "funcaoFuncionario"
@@ -1461,8 +1680,10 @@ catch(erro){
 
 console.error(erro);
 
+
 alert(
-"Erro ao cadastrar funcionário:\n" +
+"Erro ao cadastrar funcionário:\n"
++
 erro.message
 );
 
@@ -1484,9 +1705,11 @@ await supabaseRequest(
 "setores?select=*&ativo=eq.true&order=nome.asc"
 );
 
+
 atualizarSelectSetores();
 
 montarTabelaSetoresCadastro();
+
 
 }
 catch(erro){
@@ -1498,6 +1721,10 @@ console.error(erro);
 }
 
 
+/* =====================================================
+   SELECT SETORES
+===================================================== */
+
 function atualizarSelectSetores(){
 
 const select =
@@ -1505,12 +1732,14 @@ document.getElementById(
 "setor"
 );
 
+
 select.innerHTML =
 `
 <option value="">
 Selecione o setor
 </option>
 `;
+
 
 setores.forEach(
 s => {
@@ -1528,6 +1757,10 @@ ${esc(s.nome)}
 }
 
 
+/* =====================================================
+   TABELA SETORES CADASTRO
+===================================================== */
+
 function montarTabelaSetoresCadastro(){
 
 const tabela =
@@ -1535,17 +1768,26 @@ document.getElementById(
 "tabelaSetoresCadastro"
 );
 
+
 tabela.innerHTML = "";
 
-if(setores.length === 0){
+
+if(
+setores.length === 0
+){
 
 tabela.innerHTML =
 `
 <tr>
-<td colspan="2"
+
+<td
+colspan="2"
 class="lista-vazia">
+
 Nenhum setor cadastrado.
+
 </td>
+
 </tr>
 `;
 
@@ -1561,6 +1803,7 @@ const tr =
 document.createElement(
 "tr"
 );
+
 
 tr.innerHTML =
 `
@@ -1580,6 +1823,7 @@ X
 
 </td>
 `;
+
 
 tabela.appendChild(
 tr
@@ -1622,12 +1866,18 @@ try{
 await supabaseRequest(
 "setores",
 {
-method:"POST",
+
+method:
+"POST",
 
 body:{
-nome:nome,
-ativo:true
+nome:
+nome,
+
+ativo:
+true
 }
+
 }
 );
 
@@ -1651,8 +1901,10 @@ catch(erro){
 
 console.error(erro);
 
+
 alert(
-"Erro ao cadastrar setor:\n" +
+"Erro ao cadastrar setor:\n"
++
 erro.message
 );
 
@@ -1662,7 +1914,7 @@ erro.message
 
 
 /* =====================================================
-   LANÇAR OS
+   REGISTRAR OS
 ===================================================== */
 
 async function registrar(){
@@ -1674,6 +1926,7 @@ document
 )
 .value;
 
+
 const os =
 document
 .getElementById(
@@ -1682,12 +1935,14 @@ document
 .value
 .trim();
 
+
 const data =
 document
 .getElementById(
 "data"
 )
 .value;
+
 
 const setorId =
 document
@@ -1696,12 +1951,14 @@ document
 )
 .value;
 
+
 const inicio =
 document
 .getElementById(
 "inicio"
 )
 .value;
+
 
 const fim =
 document
@@ -1710,12 +1967,14 @@ document
 )
 .value;
 
+
 const tipo =
 document
 .getElementById(
 "tipo"
 )
 .value;
+
 
 const espera =
 document
@@ -1748,20 +2007,27 @@ converterHora(
 inicio
 );
 
+
 const fimMin =
 converterHora(
 fim
 );
 
+
 let minutos =
-fimMin - inicioMin;
+fimMin -
+inicioMin;
 
 
-if(minutos < 0)
+if(
+minutos < 0
+)
 minutos += 1440;
 
 
-if(minutos === 0){
+if(
+minutos === 0
+){
 
 alert(
 "O horário inicial e final não podem ser iguais."
@@ -1777,30 +2043,42 @@ try{
 await supabaseRequest(
 "registros",
 {
-method:"POST",
+
+method:
+"POST",
 
 body:{
 
 funcionario_id:
-Number(funcionarioId),
+Number(
+funcionarioId
+),
 
-os:os,
+os:
+os,
 
-data:data,
+data:
+data,
 
 setor_id:
-Number(setorId),
+Number(
+setorId
+),
 
-inicio:inicio,
+inicio:
+inicio,
 
-fim:fim,
+fim:
+fim,
 
 minutos_trabalhados:
 minutos,
 
-tipo:tipo,
+tipo:
+tipo,
 
-espera:espera
+espera:
+espera
 
 }
 
@@ -1814,17 +2092,20 @@ document
 )
 .value = "";
 
+
 document
 .getElementById(
 "setor"
 )
 .selectedIndex = 0;
 
+
 document
 .getElementById(
 "inicio"
 )
 .value = "";
+
 
 document
 .getElementById(
@@ -1859,13 +2140,16 @@ document
 3000
 );
 
+
 }
 catch(erro){
 
 console.error(erro);
 
+
 alert(
-"Erro ao registrar serviço:\n" +
+"Erro ao registrar serviço:\n"
++
 erro.message
 );
 
@@ -1885,6 +2169,7 @@ document.getElementById(
 "tabelaLancamentos"
 );
 
+
 tabela.innerHTML = "";
 
 
@@ -1895,20 +2180,27 @@ await supabaseRequest(
 "registros?select=*,funcionarios(nome),setores(nome)&order=data.desc&limit=30"
 );
 
-registros = dados;
+
+registros =
+dados;
 
 
-if(dados.length === 0){
+if(
+dados.length === 0
+){
 
 tabela.innerHTML =
 `
 <tr>
-<td colspan="7"
+
+<td
+colspan="7"
 class="lista-vazia">
 
 Nenhum lançamento ainda.
 
 </td>
+
 </tr>
 `;
 
@@ -1926,6 +2218,7 @@ r.funcionarios
 r.funcionarios.nome
 :
 "—";
+
 
 const setor =
 r.setores
@@ -1994,16 +2287,19 @@ tr
 }
 );
 
+
 }
 catch(erro){
 
 console.error(erro);
 
+
 tabela.innerHTML =
 `
 <tr>
 
-<td colspan="7"
+<td
+colspan="7"
 class="lista-vazia">
 
 Não foi possível carregar os lançamentos.
@@ -2039,8 +2335,13 @@ try{
 await supabaseRequest(
 `registros?id=eq.${id}`,
 {
-method:"DELETE",
-prefer:"return=minimal"
+
+method:
+"DELETE",
+
+prefer:
+"return=minimal"
+
 }
 );
 
@@ -2049,13 +2350,16 @@ await mostrarLancamentos();
 
 await atualizarDashboard();
 
+
 }
 catch(erro){
 
 console.error(erro);
 
+
 alert(
-"Erro ao excluir lançamento:\n" +
+"Erro ao excluir lançamento:\n"
++
 erro.message
 );
 
@@ -2074,8 +2378,10 @@ id
 
 const funcionario =
 funcionarios.find(
-f => f.id === id
+f =>
+f.id === id
 );
+
 
 if(!funcionario)
 return;
@@ -2096,26 +2402,34 @@ try{
 await supabaseRequest(
 `funcionarios?id=eq.${id}`,
 {
-method:"PATCH",
+
+method:
+"PATCH",
 
 body:{
-ativo:false
+ativo:
+false
 },
 
-prefer:"return=minimal"
+prefer:
+"return=minimal"
+
 }
 );
 
 
 await carregarFuncionarios();
 
+
 }
 catch(erro){
 
 console.error(erro);
 
+
 alert(
-"Erro ao excluir funcionário:\n" +
+"Erro ao excluir funcionário:\n"
++
 erro.message
 );
 
@@ -2134,8 +2448,10 @@ id
 
 const setor =
 setores.find(
-s => s.id === id
+s =>
+s.id === id
 );
+
 
 if(!setor)
 return;
@@ -2156,26 +2472,34 @@ try{
 await supabaseRequest(
 `setores?id=eq.${id}`,
 {
-method:"PATCH",
+
+method:
+"PATCH",
 
 body:{
-ativo:false
+ativo:
+false
 },
 
-prefer:"return=minimal"
+prefer:
+"return=minimal"
+
 }
 );
 
 
 await carregarSetores();
 
+
 }
 catch(erro){
 
 console.error(erro);
 
+
 alert(
-"Erro ao excluir setor:\n" +
+"Erro ao excluir setor:\n"
++
 erro.message
 );
 
@@ -2210,10 +2534,12 @@ await supabaseRequest(
 );
 
 
-registros = dados;
+registros =
+dados;
 
 
-let totalMinutos = 0;
+let totalMinutos =
+0;
 
 
 dados.forEach(
@@ -2222,7 +2548,9 @@ r => {
 totalMinutos +=
 Number(
 r.minutos_trabalhados
-) || 0;
+)
+||
+0;
 
 }
 );
@@ -2259,6 +2587,7 @@ r => {
 const funcionario =
 r.funcionarios;
 
+
 const nome =
 funcionario
 ?
@@ -2267,7 +2596,9 @@ funcionario.nome
 "Não identificado";
 
 
-if(!tecnicos[nome]){
+if(
+!tecnicos[nome]
+){
 
 tecnicos[nome] = {
 
@@ -2278,9 +2609,11 @@ funcionario.id
 :
 null,
 
-minutos:0,
+minutos:
+0,
 
-os:0,
+os:
+0,
 
 dias:
 new Set(),
@@ -2302,13 +2635,17 @@ funcionario.jornada_minutos
 tecnicos[nome].minutos +=
 Number(
 r.minutos_trabalhados
-) || 0;
+)
+||
+0;
 
 
 tecnicos[nome].os++;
 
 
-if(r.data){
+if(
+r.data
+){
 
 tecnicos[nome].dias.add(
 String(
@@ -2339,7 +2676,8 @@ tecnicos
    DISPONIBILIDADE
 ===================================================== */
 
-let totalDisponivel = 0;
+let totalDisponivel =
+0;
 
 
 Object.keys(
@@ -2349,7 +2687,10 @@ tecnicos
 nome => {
 
 const jornada =
-tecnicos[nome].jornada || 480;
+tecnicos[nome].jornada
+||
+480;
+
 
 const diasTrabalhados =
 tecnicos[nome].dias.size;
@@ -2377,7 +2718,9 @@ totalDisponivel > 0
 (
 totalMinutos /
 totalDisponivel
-) * 100
+)
+*
+100
 :
 0;
 
@@ -2387,7 +2730,9 @@ document
 "produtividade"
 )
 .innerText =
-produtividade.toFixed(1)
+produtividade.toFixed(
+1
+)
 +
 "%";
 
@@ -2400,9 +2745,11 @@ montarTabelaTecnicos(
 tecnicos
 );
 
+
 montarTabelaSetores(
 dados
 );
+
 
 montarTabelaTipos(
 dados
@@ -2419,7 +2766,7 @@ console.error(erro);
 
 
 /* =====================================================
-   TABELA FUNCIONÁRIOS
+   TABELA DESEMPENHO
 ===================================================== */
 
 function montarTabelaTecnicos(
@@ -2431,22 +2778,27 @@ document.getElementById(
 "tabelaTecnicos"
 );
 
+
 tabela.innerHTML = "";
 
 
 const nomes =
 Object.keys(
 tecnicos
-).sort();
+)
+.sort();
 
 
-if(nomes.length === 0){
+if(
+nomes.length === 0
+){
 
 tabela.innerHTML =
 `
 <tr>
 
-<td colspan="6"
+<td
+colspan="6"
 class="lista-vazia">
 
 Nenhum serviço no período.
@@ -2467,8 +2819,11 @@ nome => {
 const t =
 tecnicos[nome];
 
+
 const jornada =
-t.jornada || 480;
+t.jornada
+||
+480;
 
 
 const disponivel =
@@ -2486,22 +2841,39 @@ disponivel > 0
 (
 t.minutos /
 disponivel
-) * 100
+)
+*
+100
 :
 0;
 
 
-let classe = "";
+let classe =
+"";
 
 
-if(produtividade >= 80)
-classe = "verde";
+if(
+produtividade >= 80
+){
 
-else if(produtividade >= 70)
-classe = "amarelo";
+classe =
+"verde";
 
-else
-classe = "vermelho";
+}
+else if(
+produtividade >= 70
+){
+
+classe =
+"amarelo";
+
+}
+else{
+
+classe =
+"vermelho";
+
+}
 
 
 const tr =
@@ -2567,6 +2939,7 @@ document.getElementById(
 "tabelaSetores"
 );
 
+
 tabela.innerHTML = "";
 
 
@@ -2589,8 +2962,13 @@ if(
 ){
 
 setoresDados[nome] = {
-minutos:0,
-os:0
+
+minutos:
+0,
+
+os:
+0
+
 };
 
 }
@@ -2599,7 +2977,9 @@ os:0
 setoresDados[nome].minutos +=
 Number(
 r.minutos_trabalhados
-) || 0;
+)
+||
+0;
 
 
 setoresDados[nome].os++;
@@ -2611,16 +2991,20 @@ setoresDados[nome].os++;
 const nomes =
 Object.keys(
 setoresDados
-).sort();
+)
+.sort();
 
 
-if(nomes.length === 0){
+if(
+nomes.length === 0
+){
 
 tabela.innerHTML =
 `
 <tr>
 
-<td colspan="3"
+<td
+colspan="3"
 class="lista-vazia">
 
 Nenhum serviço no período.
@@ -2678,7 +3062,7 @@ tr
 
 /* =====================================================
    TIPOS DE MANUTENÇÃO
-   QUANTIDADE + PERCENTUAL
+   QUANTIDADE + PERCENTUAL + BARRA
 ===================================================== */
 
 function montarTabelaTipos(
@@ -2689,6 +3073,7 @@ const tabela =
 document.getElementById(
 "tabelaTipos"
 );
+
 
 tabela.innerHTML = "";
 
@@ -2705,18 +3090,16 @@ r.tipo ||
 
 
 tipos[nome] =
-(tipos[nome] || 0)
+(
+tipos[nome]
+||
+0
+)
 +
 1;
 
-}
-);
+});
 
-
-/*
-O percentual é calculado
-sobre o total de OS do mês.
-*/
 
 const total =
 dados.length;
@@ -2733,13 +3116,16 @@ tipos[a]
 );
 
 
-if(nomes.length === 0){
+if(
+nomes.length === 0
+){
 
 tabela.innerHTML =
 `
 <tr>
 
-<td colspan="3"
+<td
+colspan="3"
 class="lista-vazia">
 
 Nenhum serviço no período.
@@ -2767,7 +3153,9 @@ total > 0
 (
 quantidade /
 total
-) * 100
+)
+*
+100
 :
 0;
 
@@ -2789,7 +3177,48 @@ ${quantidade}
 </td>
 
 <td>
+
+<div
+style="
+display:flex;
+align-items:center;
+gap:10px;
+min-width:220px;
+">
+
+<div
+style="
+flex:1;
+height:18px;
+background:#3a3c3f;
+border-radius:5px;
+overflow:hidden;
+">
+
+<div
+style="
+width:${percentual}%;
+height:100%;
+background:var(--laranja);
+border-radius:5px;
+transition:width .4s ease;
+">
+</div>
+
+</div>
+
+<strong
+style="
+min-width:55px;
+text-align:right;
+">
+
 ${percentual.toFixed(1)}%
+
+</strong>
+
+</div>
+
 </td>
 `;
 
@@ -2805,16 +3234,19 @@ tr
 
 
 /* =====================================================
-   INICIALIZAÇÃO
+   CARREGAR TUDO
 ===================================================== */
 
 async function carregarTudo(){
 
 testarConexao();
 
+
 await carregarFuncionarios();
 
+
 await carregarSetores();
+
 
 await mostrarLancamentos();
 
@@ -2881,9 +3313,13 @@ partes[1]
 numero++;
 
 
-if(numero > 12){
+if(
+numero > 12
+){
 
-numero = 1;
+numero =
+1;
+
 
 ano++;
 
@@ -2891,14 +3327,18 @@ ano++;
 
 
 return (
-ano +
-"-" +
+ano
++
+"-"
++
 String(
 numero
-).padStart(
+)
+.padStart(
 2,
 "0"
-) +
+)
++
 "-01"
 );
 
@@ -2906,7 +3346,7 @@ numero
 
 
 /* =====================================================
-   INICIAR
+   INICIALIZAÇÃO
 ===================================================== */
 
 document.addEventListener(
