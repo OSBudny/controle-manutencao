@@ -33,38 +33,36 @@ color:var(--texto);
 
 header{
 background:var(--fundo2);
-border-bottom:1px solid var(--borda);
-padding:20px 30px;
+border-bottom:3px solid var(--laranja);
+padding:17px 25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
 header h1{
 margin:0;
-font-size:24px;
+font-size:21px;
 }
 
 header span{
 color:var(--laranja);
-}
-
-.container{
-max-width:1400px;
-margin:auto;
-padding:25px;
+font-weight:bold;
 }
 
 nav{
+background:#252627;
+padding:12px 25px;
 display:flex;
-gap:10px;
-margin-bottom:25px;
-flex-wrap:wrap;
+gap:8px;
 }
 
 nav button{
-background:var(--card);
+border:none;
+background:var(--campo);
 color:white;
-border:1px solid var(--borda);
-padding:12px 20px;
-border-radius:6px;
+padding:11px 16px;
+border-radius:7px;
 cursor:pointer;
 font-weight:bold;
 }
@@ -72,7 +70,12 @@ font-weight:bold;
 nav button:hover,
 nav button.ativo{
 background:var(--laranja);
-border-color:var(--laranja);
+}
+
+main{
+max-width:1200px;
+margin:auto;
+padding:25px;
 }
 
 .tela{
@@ -85,44 +88,49 @@ display:block;
 
 .card{
 background:var(--card);
-border:1px solid var(--borda);
 border-radius:10px;
-padding:22px;
+padding:20px;
 margin-bottom:20px;
+box-shadow:0 3px 12px rgba(0,0,0,.20);
 }
 
 .card h2{
 margin-top:0;
-margin-bottom:20px;
-font-size:19px;
+border-left:4px solid var(--laranja);
+padding-left:10px;
 }
 
-.form-grid{
+.formulario{
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:15px;
+gap:14px;
 }
 
 .campo{
 display:flex;
 flex-direction:column;
-gap:7px;
 }
 
 .campo label{
-font-size:12px;
 color:var(--cinza);
-font-weight:bold;
+font-size:13px;
+margin-bottom:6px;
+}
+
+.campo .ajuda{
+color:#888;
+font-size:11px;
+margin-top:5px;
 }
 
 input,
 select{
 width:100%;
-padding:11px;
-border-radius:6px;
-border:1px solid var(--borda);
 background:var(--campo);
 color:white;
+border:1px solid var(--borda);
+padding:11px;
+border-radius:6px;
 outline:none;
 }
 
@@ -132,143 +140,51 @@ border-color:var(--laranja);
 }
 
 .botao{
-border:none;
 background:var(--laranja);
+border:none;
 color:white;
-padding:11px 18px;
-border-radius:6px;
+padding:12px 20px;
+border-radius:7px;
 cursor:pointer;
 font-weight:bold;
+margin-top:20px;
 }
 
 .botao:hover{
 background:var(--laranja2);
 }
 
+.botao.pequeno{
+padding:8px 12px;
+margin-top:0;
+}
+
 .botao.vermelho{
 background:var(--vermelho);
 }
 
-.botao.pequeno{
-padding:6px 10px;
-font-size:11px;
-}
-
-.acoes{
-margin-top:20px;
-display:flex;
-gap:10px;
-align-items:center;
-}
-
-.mensagem{
-color:var(--verde);
-font-weight:bold;
-}
-
-.status{
-padding:10px 14px;
-border-radius:6px;
-margin-bottom:20px;
-font-size:13px;
-}
-
-.status.ok{
-background:#153c29;
-color:#5ee89a;
-border:1px solid #28734a;
-}
-
-.status.erro{
-background:#421d1d;
-color:#ff8f8f;
-border:1px solid #873636;
-}
-
-.resumo{
+.indicadores{
 display:grid;
 grid-template-columns:repeat(4,1fr);
 gap:15px;
 margin-bottom:20px;
 }
 
-.resumo-box{
-background:#252627;
-border:1px solid #3a3c3f;
-border-radius:8px;
-padding:18px;
+.indicador{
+background:var(--card);
+border-radius:10px;
+padding:20px;
+border-top:4px solid var(--laranja);
 }
 
-.resumo-box small{
+.indicador small{
+color:var(--cinza);
+}
+
+.indicador strong{
 display:block;
-color:var(--cinza);
-font-size:12px;
-margin-bottom:8px;
-}
-
-.resumo-box strong{
-font-size:24px;
-color:white;
-}
-
-.filtro{
-display:flex;
-align-items:end;
-gap:10px;
-margin-bottom:20px;
-}
-
-.filtro .campo{
-max-width:220px;
-}
-
-.graficos{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:20px;
-}
-
-.grafico{
-background:#252627;
-border:1px solid #3a3c3f;
-border-radius:8px;
-padding:18px;
-}
-
-.grafico h3{
-margin-top:0;
-font-size:15px;
-}
-
-.barra-item{
-margin-bottom:15px;
-}
-
-.barra-topo{
-display:flex;
-justify-content:space-between;
-gap:10px;
-font-size:12px;
-margin-bottom:6px;
-}
-
-.barra-fundo{
-height:10px;
-background:#3a3c3f;
-border-radius:20px;
-overflow:hidden;
-}
-
-.barra-preenchimento{
-height:100%;
-background:var(--laranja);
-border-radius:20px;
-}
-
-.grafico-vazio{
-color:var(--cinza);
-text-align:center;
-padding:25px;
+font-size:28px;
+margin-top:8px;
 }
 
 .tabela{
@@ -280,24 +196,20 @@ width:100%;
 border-collapse:collapse;
 }
 
-th,
-td{
-padding:12px;
-border-bottom:1px solid #3a3c3f;
-text-align:left;
-font-size:13px;
-}
-
 th{
-color:var(--cinza);
-font-size:11px;
-text-transform:uppercase;
+background:var(--fundo2);
+color:var(--laranja);
+text-align:left;
+padding:12px;
 }
 
-.lista-vazia{
-text-align:center;
-color:var(--cinza);
-padding:25px;
+td{
+padding:11px;
+border-bottom:1px solid #444;
+}
+
+tr:hover{
+background:#36383a;
 }
 
 .verde{
@@ -306,13 +218,176 @@ font-weight:bold;
 }
 
 .amarelo{
-color:#ffc107;
+color:var(--laranja2);
 font-weight:bold;
 }
 
 .vermelho{
 color:var(--vermelho);
 font-weight:bold;
+}
+
+.mensagem{
+margin-top:15px;
+color:var(--verde);
+font-weight:bold;
+}
+
+.linha-cadastro{
+display:grid;
+grid-template-columns:2fr 1fr 1fr auto;
+gap:10px;
+align-items:end;
+margin-bottom:20px;
+}
+
+.linha-setor{
+display:grid;
+grid-template-columns:1fr auto;
+gap:10px;
+align-items:end;
+margin-bottom:20px;
+}
+
+.lista-vazia{
+color:var(--cinza);
+text-align:center;
+padding:20px;
+}
+
+.aviso-jornada{
+background:#3a3c3f;
+border-left:4px solid var(--laranja);
+padding:12px;
+margin-bottom:20px;
+border-radius:5px;
+color:var(--cinza);
+}
+
+.aviso-jornada strong{
+color:white;
+}
+
+.status{
+padding:10px;
+margin-bottom:15px;
+border-radius:6px;
+background:#3a3c3f;
+color:var(--cinza);
+}
+
+.status.ok{
+color:var(--verde);
+}
+
+.status.erro{
+color:var(--vermelho);
+}
+
+.explicacao{
+background:#252627;
+border-left:4px solid var(--verde);
+padding:14px;
+border-radius:6px;
+color:var(--cinza);
+margin-top:15px;
+}
+
+.explicacao strong{
+color:white;
+}
+
+.resumo-produtividade{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-top:15px;
+}
+
+.resumo-box{
+background:#3a3c3f;
+padding:15px;
+border-radius:7px;
+}
+
+.resumo-box small{
+color:var(--cinza);
+}
+
+.resumo-box strong{
+display:block;
+font-size:22px;
+margin-top:5px;
+}
+
+.graficos-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.grafico-card{
+background:#252627;
+border-radius:8px;
+padding:18px;
+border:1px solid #3a3c3f;
+}
+
+.grafico-largo{
+grid-column:1 / -1;
+}
+
+.grafico-card h3{
+margin:0 0 18px;
+font-size:16px;
+}
+
+.grafico-barras{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.barra-item{
+display:grid;
+grid-template-columns:minmax(100px,150px) 1fr 70px;
+gap:10px;
+align-items:center;
+}
+
+.barra-label{
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+color:#ddd;
+font-size:13px;
+}
+
+.barra-fundo{
+height:14px;
+background:#3a3c3f;
+border-radius:20px;
+overflow:hidden;
+}
+
+.barra-preenchimento{
+height:100%;
+width:0;
+background:var(--laranja);
+border-radius:20px;
+transition:width .5s ease;
+}
+
+.barra-valor{
+text-align:right;
+font-weight:bold;
+font-size:13px;
+}
+
+.grafico-vazio{
+color:var(--cinza);
+text-align:center;
+padding:25px 10px;
 }
 
 .ranking-setores{
@@ -374,72 +449,87 @@ display:block;
 margin-top:3px;
 }
 
-.explicacao{
-background:#252627;
-border-left:4px solid var(--laranja);
-padding:15px;
-border-radius:6px;
-color:var(--cinza);
-font-size:13px;
-line-height:1.6;
-margin-bottom:20px;
-}
+@media(max-width:850px){
 
-.cadastros-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-@media(max-width:1000px){
-.form-grid{
+.formulario{
 grid-template-columns:repeat(2,1fr);
 }
 
-.resumo{
+.indicadores{
 grid-template-columns:repeat(2,1fr);
 }
 
-.graficos{
-grid-template-columns:1fr;
-}
-}
-
-@media(max-width:700px){
-.container{
-padding:15px;
-}
-
-.form-grid,
-.cadastros-grid{
-grid-template-columns:1fr;
-}
-
-.resumo{
+.linha-cadastro{
 grid-template-columns:1fr 1fr;
 }
 
-.setor-ranking-info{
-grid-template-columns:1fr 1fr;
+.resumo-produtividade{
+grid-template-columns:1fr;
 }
+
+.graficos-grid{
+grid-template-columns:1fr;
+}
+
+.grafico-largo{
+grid-column:auto;
+}
+
+}
+
+@media(max-width:500px){
 
 header{
 padding:15px;
 }
 
 header h1{
-font-size:20px;
-}
+font-size:17px;
 }
 
-@media(max-width:450px){
-.resumo{
-grid-template-columns:1fr;
+header span{
+display:none;
+}
+
+nav{
+padding:10px;
 }
 
 nav button{
-width:100%;
+flex:1;
+font-size:12px;
+padding:10px 5px;
 }
+
+main{
+padding:15px;
+}
+
+.formulario{
+grid-template-columns:1fr;
+}
+
+.indicadores{
+grid-template-columns:1fr 1fr;
+}
+
+.indicador{
+padding:15px;
+}
+
+.indicador strong{
+font-size:22px;
+}
+
+.linha-cadastro,
+.linha-setor{
+grid-template-columns:1fr;
+}
+
+.setor-ranking-info{
+grid-template-columns:1fr 1fr;
+}
+
 }
 </style>
 </head>
@@ -447,161 +537,172 @@ width:100%;
 <body>
 
 <header>
-<h1>🟠 GESTÃO DA MANUTENÇÃO <span>CONTROLE</span></h1>
+<h1>🟠 GESTÃO DA MANUTENÇÃO</h1>
+<span>CONTROLE</span>
 </header>
 
-<div class="container">
-
 <nav>
-<button class="ativo" onclick="mostrarTela('lancamento',this)">
-Lançar OS
+
+<button
+id="menuLancamento"
+class="ativo"
+onclick="mostrarTela('lancamento')">
+📝 Lançar OS
 </button>
 
-<button onclick="mostrarTela('indicadores',this)">
-Indicadores
+<button
+id="menuIndicadores"
+onclick="mostrarTela('indicadores')">
+📊 Indicadores
 </button>
 
-<button onclick="mostrarTela('cadastros',this)">
-Cadastros
+<button
+id="menuCadastros"
+onclick="mostrarTela('cadastros')">
+⚙️ Cadastros
 </button>
+
 </nav>
 
-<div id="statusConexao" class="status">
-Conectando ao Supabase...
-</div>
+<main>
 
-<!-- =====================================================
-     LANÇAMENTO
-===================================================== -->
-
-<section id="lancamento" class="tela ativa">
+<section
+id="lancamento"
+class="tela ativa">
 
 <div class="card">
 
-<h2>🔧 Registrar ordem de serviço</h2>
+<h2>Lançar serviço</h2>
 
-<div class="form-grid">
+<div
+id="statusConexao"
+class="status">
+Conectando ao banco de dados...
+</div>
+
+<div class="formulario">
 
 <div class="campo">
-<label>TÉCNICO</label>
+<label>Técnico</label>
 
 <select id="tecnico">
-<option value="">Selecione o técnico</option>
+<option value="">
+Selecione o técnico
+</option>
 </select>
+
 </div>
 
 <div class="campo">
-<label>OS</label>
+
+<label>Nº da OS</label>
 
 <input
-id="os"
 type="text"
-placeholder="Número da OS">
+id="os"
+placeholder="Ex.: 1542">
+
 </div>
 
 <div class="campo">
-<label>DATA</label>
+
+<label>Data</label>
 
 <input
-id="data"
-type="date">
+type="date"
+id="data">
+
 </div>
 
 <div class="campo">
-<label>SETOR</label>
+
+<label>Setor</label>
 
 <select id="setor">
-<option value="">Selecione o setor</option>
+<option value="">
+Selecione o setor
+</option>
 </select>
+
 </div>
 
 <div class="campo">
-<label>HORA INÍCIO</label>
+
+<label>Hora início</label>
 
 <input
-id="inicio"
-type="time">
+type="time"
+id="inicio">
+
 </div>
 
 <div class="campo">
-<label>HORA FIM</label>
+
+<label>Hora fim</label>
 
 <input
-id="fim"
-type="time">
+type="time"
+id="fim">
+
 </div>
 
 <div class="campo">
-<label>TIPO DE MANUTENÇÃO</label>
+
+<label>Tipo de manutenção</label>
 
 <select id="tipo">
 
-<option value="Preventiva">
-Preventiva
-</option>
-
-<option value="Corretiva">
-Corretiva
-</option>
-
-<option value="Melhoria">
-Melhoria
-</option>
-
-<option value="Inspeção">
-Inspeção
-</option>
-
-<option value="Instalação">
-Instalação
-</option>
-
-<option value="Montagem">
-Montagem
-</option>
-
-<option value="Desenvolvimento">
-Desenvolvimento
-</option>
-
-<option value="Outro">
-Outro
-</option>
+<option>Preventiva</option>
+<option>Corretiva</option>
+<option>Melhoria</option>
+<option>Inspeção</option>
+<option>Instalação</option>
+<option>Montagem</option>
+<option>Desenvolvimento</option>
+<option>Outro</option>
 
 </select>
+
 </div>
 
 <div class="campo">
-<label>MOTIVO DE ESPERA</label>
 
-<input
-id="espera"
-type="text"
-placeholder="Opcional">
+<label>Motivo de espera</label>
+
+<select id="espera">
+
+<option>Nenhum</option>
+<option>Aguardando peça</option>
+<option>Aguardando liberação</option>
+<option>Aguardando equipamento</option>
+<option>Falta de ferramenta</option>
+<option>Deslocamento</option>
+<option>Outro</option>
+
+</select>
+
 </div>
 
 </div>
-
-<div class="acoes">
 
 <button
 class="botao"
 onclick="registrar()">
-Registrar OS
+
+🟠 REGISTRAR SERVIÇO
+
 </button>
 
-<span
+<div
 id="mensagem"
 class="mensagem">
-</span>
-
 </div>
 
 </div>
 
 <div class="card">
 
-<h2>📋 Últimos lançamentos</h2>
+<h2>Últimos lançamentos</h2>
 
 <div class="tabela">
 
@@ -617,13 +718,14 @@ class="mensagem">
 <th>Setor</th>
 <th>Tipo</th>
 <th>Tempo</th>
-<th>Ação</th>
+<th></th>
 
 </tr>
 
 </thead>
 
-<tbody id="tabelaLancamentos">
+<tbody
+id="tabelaLancamentos">
 </tbody>
 
 </table>
@@ -635,37 +737,66 @@ class="mensagem">
 </section>
 
 
-<!-- =====================================================
-     INDICADORES
-===================================================== -->
-
-<section id="indicadores" class="tela">
+<section
+id="indicadores"
+class="tela">
 
 <div class="card">
 
-<h2>📊 Indicadores da manutenção</h2>
+<h2>Indicadores de produtividade</h2>
 
-<div class="filtro">
+<div
+class="campo"
+style="max-width:220px;">
 
-<div class="campo">
-
-<label>MÊS DE ANÁLISE</label>
+<label>Mês</label>
 
 <input
-id="mesFiltro"
 type="month"
+id="mesFiltro"
 onchange="atualizarDashboard()">
 
 </div>
 
+<div class="explicacao">
+
+<strong>
+Como a produtividade é calculada?
+</strong>
+
+<br><br>
+
+Produtividade =
+<strong>
+Tempo de manutenção ÷ Tempo disponível × 100
+</strong>.
+
+<br><br>
+
+O tempo disponível considera a jornada diária cadastrada para cada técnico multiplicada pela quantidade de
+<strong>
+dias com pelo menos um lançamento no mês selecionado
+</strong>.
+
+<br><br>
+
+Assim, vários lançamentos no mesmo dia contam como
+<strong>
+1 dia
+</strong>
+de disponibilidade.
+
 </div>
 
-<div class="resumo">
+</div>
 
-<div class="resumo-box">
+
+<div class="indicadores">
+
+<div class="indicador">
 
 <small>
-TEMPO TRABALHADO
+Tempo trabalhado
 </small>
 
 <strong id="totalHoras">
@@ -674,10 +805,10 @@ TEMPO TRABALHADO
 
 </div>
 
-<div class="resumo-box">
+<div class="indicador">
 
 <small>
-OS REALIZADAS
+OS realizadas
 </small>
 
 <strong id="totalOS">
@@ -686,22 +817,22 @@ OS REALIZADAS
 
 </div>
 
-<div class="resumo-box">
+<div class="indicador">
 
 <small>
-PRODUTIVIDADE DA EQUIPE
+Produtividade da equipe
 </small>
 
 <strong id="produtividade">
-0.0%
+0%
 </strong>
 
 </div>
 
-<div class="resumo-box">
+<div class="indicador">
 
 <small>
-TÉCNICOS
+Técnicos
 </small>
 
 <strong id="numeroTecnicos">
@@ -712,60 +843,53 @@ TÉCNICOS
 
 </div>
 
-<div class="explicacao">
 
-<strong>Como a produtividade é calculada?</strong>
+<div class="card">
 
-<br>
+<h2>📊 Gráficos de desempenho</h2>
 
-Produtividade =
-tempo de manutenção realizado ÷ tempo disponível × 100.
+<div class="graficos-grid">
 
-<br><br>
+<div class="grafico-card">
 
-O tempo disponível considera a jornada diária cadastrada
-para cada técnico multiplicada pela quantidade de
-<strong>dias do mês em que aquele técnico possui pelo menos
-um lançamento de OS</strong>.
+<h3>
+Produtividade por funcionário
+</h3>
 
-<br><br>
-
-Assim, uma OS lançada hoje conta 1 dia.
-Se houver lançamento amanhã, passam a ser 2 dias.
-Várias OS no mesmo dia continuam contando apenas 1 dia.
-
+<div
+id="graficoProdutividade"
+class="grafico-barras">
 </div>
 
 </div>
 
 
-<div class="graficos">
+<div class="grafico-card">
 
-<div class="grafico">
+<h3>
+Horas por setor
+</h3>
 
-<h3>👨‍🔧 Produtividade por funcionário</h3>
-
-<div id="graficoTecnicos">
+<div
+id="graficoSetores"
+class="grafico-barras">
 </div>
 
 </div>
 
 
-<div class="grafico">
+<div
+class="grafico-card grafico-largo">
 
-<h3>🏭 Horas por setor</h3>
+<h3>
+Tipos de manutenção
+</h3>
 
-<div id="graficoSetores">
+<div
+id="graficoTipos"
+class="grafico-barras">
 </div>
 
-</div>
-
-
-<div class="grafico">
-
-<h3>🔧 Tipos de manutenção</h3>
-
-<div id="graficoTipos">
 </div>
 
 </div>
@@ -775,7 +899,9 @@ Várias OS no mesmo dia continuam contando apenas 1 dia.
 
 <div class="card">
 
-<h2>👨‍🔧 Desempenho dos técnicos</h2>
+<h2>
+Desempenho por funcionário
+</h2>
 
 <div class="tabela">
 
@@ -787,9 +913,9 @@ Várias OS no mesmo dia continuam contando apenas 1 dia.
 
 <th>Técnico</th>
 <th>Jornada</th>
-<th>Tempo trabalhado</th>
+<th>Tempo</th>
 <th>OS</th>
-<th>Disponibilidade</th>
+<th>Disponível</th>
 <th>Produtividade</th>
 
 </tr>
@@ -805,10 +931,6 @@ Várias OS no mesmo dia continuam contando apenas 1 dia.
 
 </div>
 
-
-<!-- =====================================================
-     OS POR SETOR
-===================================================== -->
 
 <div class="card">
 
@@ -830,6 +952,7 @@ Total de OS
 
 </div>
 
+
 <div class="resumo-box">
 
 <small>
@@ -841,6 +964,7 @@ Setor com mais OS
 </strong>
 
 </div>
+
 
 <div class="resumo-box">
 
@@ -894,6 +1018,38 @@ style="margin-top:25px;">
 
 </thead>
 
+<tbody id="tabelaOSSetores">
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h2>
+Horas por setor
+</h2>
+
+<div class="tabela">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Setor</th>
+<th>Tempo</th>
+<th>OS</th>
+
+</tr>
+
+</thead>
+
 <tbody id="tabelaSetores">
 </tbody>
 
@@ -906,37 +1062,9 @@ style="margin-top:25px;">
 
 <div class="card">
 
-<h2>⏱️ Horas por setor</h2>
-
-<div class="tabela">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Setor</th>
-<th>Horas</th>
-<th>OS</th>
-
-</tr>
-
-</thead>
-
-<tbody id="tabelaSetoresHoras">
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>🔧 Resumo dos tipos de manutenção</h2>
+<h2>
+Tipos de manutenção
+</h2>
 
 <div id="resumoTipos">
 </div>
@@ -946,21 +1074,23 @@ style="margin-top:25px;">
 </section>
 
 
-<!-- =====================================================
-     CADASTROS
-===================================================== -->
-
-<section id="cadastros" class="tela">
-
-<div class="cadastros-grid">
+<section
+id="cadastros"
+class="tela">
 
 <div class="card">
 
-<h2>👨‍🔧 Cadastrar funcionário</h2>
+<h2>
+Cadastrar funcionário
+</h2>
+
+<div class="linha-cadastro">
 
 <div class="campo">
 
-<label>NOME</label>
+<label>
+Nome
+</label>
 
 <input
 id="novoFuncionario"
@@ -969,24 +1099,24 @@ placeholder="Nome do funcionário">
 
 </div>
 
-<br>
-
 <div class="campo">
 
-<label>FUNÇÃO</label>
+<label>
+Função
+</label>
 
 <input
 id="funcaoFuncionario"
 type="text"
-placeholder="Ex.: Mecânico">
+placeholder="Função">
 
 </div>
 
-<br>
-
 <div class="campo">
 
-<label>JORNADA DIÁRIA</label>
+<label>
+Jornada
+</label>
 
 <input
 id="jornadaFuncionario"
@@ -995,56 +1125,15 @@ value="08:48">
 
 </div>
 
-<div class="acoes">
-
 <button
 class="botao"
 onclick="cadastrarFuncionario()">
 
-Cadastrar funcionário
+Cadastrar
 
 </button>
 
 </div>
-
-</div>
-
-
-<div class="card">
-
-<h2>🏭 Cadastrar setor</h2>
-
-<div class="campo">
-
-<label>NOME DO SETOR</label>
-
-<input
-id="novoSetor"
-type="text"
-placeholder="Nome do setor">
-
-</div>
-
-<div class="acoes">
-
-<button
-class="botao"
-onclick="cadastrarSetor()">
-
-Cadastrar setor
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<h2>👨‍🔧 Funcionários cadastrados</h2>
 
 <div class="tabela">
 
@@ -1057,7 +1146,7 @@ Cadastrar setor
 <th>Nome</th>
 <th>Função</th>
 <th>Jornada</th>
-<th>Ação</th>
+<th></th>
 
 </tr>
 
@@ -1075,7 +1164,34 @@ Cadastrar setor
 
 <div class="card">
 
-<h2>🏭 Setores cadastrados</h2>
+<h2>
+Cadastrar setor
+</h2>
+
+<div class="linha-setor">
+
+<div class="campo">
+
+<label>
+Nome do setor
+</label>
+
+<input
+id="novoSetor"
+type="text"
+placeholder="Nome do setor">
+
+</div>
+
+<button
+class="botao"
+onclick="cadastrarSetor()">
+
+Cadastrar
+
+</button>
+
+</div>
 
 <div class="tabela">
 
@@ -1086,7 +1202,7 @@ Cadastrar setor
 <tr>
 
 <th>Setor</th>
-<th>Ação</th>
+<th></th>
 
 </tr>
 
@@ -1103,14 +1219,10 @@ Cadastrar setor
 
 </section>
 
-</div>
+</main>
 
 
 <script>
-
-/* =====================================================
-   SUPABASE
-===================================================== */
 
 const SUPABASE_URL =
 "https://qwaibjzdpwebddvbfkoj.supabase.co";
@@ -1123,10 +1235,6 @@ let funcionarios = [];
 let setores = [];
 let registros = [];
 
-
-/* =====================================================
-   SUPABASE REQUEST
-===================================================== */
 
 async function supabaseRequest(
 tabela,
@@ -1154,12 +1262,8 @@ opcoes.prefer ||
 
 body:
 opcoes.body
-?
-JSON.stringify(
-opcoes.body
-)
-:
-undefined
+? JSON.stringify(opcoes.body)
+: undefined
 }
 );
 
@@ -1175,17 +1279,11 @@ throw new Error(
 }
 
 return texto
-?
-JSON.parse(texto)
-:
-[];
+? JSON.parse(texto)
+: [];
 
 }
 
-
-/* =====================================================
-   TESTAR CONEXÃO
-===================================================== */
 
 async function testarConexao(){
 
@@ -1201,18 +1299,16 @@ await supabaseRequest(
 );
 
 status.innerHTML =
-"✓ Conexão com o Supabase funcionando!";
+"✓ Conexão funcionando!";
 
 status.className =
 "status ok";
 
 }
+
 catch(erro){
 
-console.error(
-"ERRO SUPABASE:",
-erro
-);
+console.error(erro);
 
 status.innerHTML =
 "✗ " + erro.message;
@@ -1225,166 +1321,19 @@ status.className =
 }
 
 
-/* =====================================================
-   TROCAR TELA
-===================================================== */
+document
+.getElementById("data")
+.valueAsDate =
+new Date();
 
-function mostrarTela(
-nome,
-botao
-){
 
 document
-.querySelectorAll(".tela")
-.forEach(
-t => t.classList.remove("ativa")
-);
+.getElementById("mesFiltro")
+.value =
+new Date()
+.toISOString()
+.substring(0,7);
 
-document
-.getElementById(nome)
-.classList.add("ativa");
-
-document
-.querySelectorAll("nav button")
-.forEach(
-b => b.classList.remove("ativo")
-);
-
-if(botao)
-botao.classList.add("ativo");
-
-}
-
-
-/* =====================================================
-   JORNADA
-===================================================== */
-
-function jornadaParaMinutos(
-jornada
-){
-
-if(!jornada)
-return 0;
-
-const p =
-jornada.split(":");
-
-return (
-Number(p[0]) * 60 +
-Number(p[1])
-);
-
-}
-
-
-function minutosParaJornada(
-minutos
-){
-
-minutos =
-Number(minutos) || 0;
-
-const horas =
-Math.floor(
-minutos / 60
-);
-
-const mins =
-minutos % 60;
-
-return (
-String(horas)
-.padStart(2,"0")
-+
-":"
-+
-String(mins)
-.padStart(2,"0")
-);
-
-}
-
-
-/* =====================================================
-   HORA
-===================================================== */
-
-function converterHora(
-hora
-){
-
-const p =
-hora.split(":");
-
-return (
-Number(p[0]) * 60 +
-Number(p[1])
-);
-
-}
-
-
-/* =====================================================
-   FORMATAR TEMPO
-===================================================== */
-
-function formatarTempo(
-minutos
-){
-
-minutos =
-Math.round(
-minutos || 0
-);
-
-const horas =
-Math.floor(
-minutos / 60
-);
-
-const mins =
-minutos % 60;
-
-if(horas === 0)
-return `${mins} min`;
-
-if(mins === 0)
-return `${horas} h`;
-
-return `${horas} h ${mins} min`;
-
-}
-
-
-/* =====================================================
-   FORMATAR DATA
-===================================================== */
-
-function formatarData(
-data
-){
-
-if(!data)
-return "";
-
-const p =
-String(data).split("-");
-
-return (
-p[2] +
-"/" +
-p[1] +
-"/" +
-p[0]
-);
-
-}
-
-
-/* =====================================================
-   FUNCIONÁRIOS
-===================================================== */
 
 async function carregarFuncionarios(){
 
@@ -1396,6 +1345,7 @@ await supabaseRequest(
 );
 
 }
+
 catch(erro){
 
 console.error(erro);
@@ -1415,7 +1365,8 @@ if(funcionarios.length === 0){
 
 tabela.innerHTML = `
 <tr>
-<td colspan="4"
+<td
+colspan="4"
 class="lista-vazia">
 Nenhum funcionário cadastrado.
 </td>
@@ -1429,9 +1380,7 @@ funcionarios.forEach(
 f => {
 
 const tr =
-document.createElement(
-"tr"
-);
+document.createElement("tr");
 
 tr.innerHTML = `
 
@@ -1476,10 +1425,6 @@ atualizarSelectTecnicos();
 
 }
 
-
-/* =====================================================
-   CADASTRAR FUNCIONÁRIO
-===================================================== */
 
 async function cadastrarFuncionario(){
 
@@ -1598,13 +1543,13 @@ await carregarFuncionarios();
 await atualizarDashboard();
 
 }
+
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao cadastrar funcionário:\n"
-+
+"Erro ao cadastrar funcionário:\n" +
 erro.message
 );
 
@@ -1612,10 +1557,6 @@ erro.message
 
 }
 
-
-/* =====================================================
-   SETORES
-===================================================== */
 
 async function carregarSetores(){
 
@@ -1627,6 +1568,7 @@ await supabaseRequest(
 );
 
 }
+
 catch(erro){
 
 console.error(erro);
@@ -1646,7 +1588,8 @@ if(setores.length === 0){
 
 tabela.innerHTML = `
 <tr>
-<td colspan="2"
+<td
+colspan="2"
 class="lista-vazia">
 Nenhum setor cadastrado.
 </td>
@@ -1654,15 +1597,14 @@ Nenhum setor cadastrado.
 `;
 
 }
+
 else{
 
 setores.forEach(
 s => {
 
 const tr =
-document.createElement(
-"tr"
-);
+document.createElement("tr");
 
 tr.innerHTML = `
 
@@ -1694,10 +1636,6 @@ atualizarSelectSetores();
 
 }
 
-
-/* =====================================================
-   CADASTRAR SETOR
-===================================================== */
 
 async function cadastrarSetor(){
 
@@ -1764,13 +1702,13 @@ document
 await carregarSetores();
 
 }
+
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao cadastrar setor:\n"
-+
+"Erro ao cadastrar setor:\n" +
 erro.message
 );
 
@@ -1778,10 +1716,6 @@ erro.message
 
 }
 
-
-/* =====================================================
-   SELECT TÉCNICOS
-===================================================== */
 
 function atualizarSelectTecnicos(){
 
@@ -1811,10 +1745,6 @@ ${esc(f.nome)}
 }
 
 
-/* =====================================================
-   SELECT SETORES
-===================================================== */
-
 function atualizarSelectSetores(){
 
 const select =
@@ -1842,10 +1772,6 @@ ${esc(s.nome)}
 
 }
 
-
-/* =====================================================
-   REGISTRAR OS
-===================================================== */
 
 async function registrar(){
 
@@ -1906,7 +1832,6 @@ document
 )
 .value;
 
-
 if(
 !funcionarioId ||
 !os ||
@@ -1954,7 +1879,6 @@ await supabaseRequest(
 method:"POST",
 
 body:{
-
 funcionario_id:
 Number(funcionarioId),
 
@@ -1975,7 +1899,6 @@ minutos,
 tipo:tipo,
 
 espera:espera
-
 }
 }
 );
@@ -2019,13 +1942,13 @@ document
 );
 
 }
+
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao registrar serviço:\n"
-+
+"Erro ao registrar serviço:\n" +
 erro.message
 );
 
@@ -2033,10 +1956,6 @@ erro.message
 
 }
 
-
-/* =====================================================
-   LANÇAMENTOS
-===================================================== */
 
 async function mostrarLancamentos(){
 
@@ -2060,7 +1979,8 @@ if(dados.length === 0){
 
 tabela.innerHTML = `
 <tr>
-<td colspan="7"
+<td
+colspan="7"
 class="lista-vazia">
 
 Nenhum lançamento ainda.
@@ -2078,22 +1998,16 @@ r => {
 
 const tecnico =
 r.funcionarios
-?
-r.funcionarios.nome
-:
-"—";
+? r.funcionarios.nome
+: "—";
 
 const setor =
 r.setores
-?
-r.setores.nome
-:
-"—";
+? r.setores.nome
+: "—";
 
 const tr =
-document.createElement(
-"tr"
-);
+document.createElement("tr");
 
 tr.innerHTML = `
 
@@ -2146,13 +2060,15 @@ tabela.appendChild(tr);
 });
 
 }
+
 catch(erro){
 
 console.error(erro);
 
 tabela.innerHTML = `
 <tr>
-<td colspan="7"
+<td
+colspan="7"
 class="lista-vazia">
 
 Não foi possível carregar os lançamentos.
@@ -2166,13 +2082,7 @@ Não foi possível carregar os lançamentos.
 }
 
 
-/* =====================================================
-   EXCLUIR REGISTRO
-===================================================== */
-
-async function excluirRegistro(
-id
-){
+async function excluirRegistro(id){
 
 if(
 !confirm(
@@ -2196,13 +2106,13 @@ await mostrarLancamentos();
 await atualizarDashboard();
 
 }
+
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao excluir lançamento:\n"
-+
+"Erro ao excluir lançamento:\n" +
 erro.message
 );
 
@@ -2211,13 +2121,7 @@ erro.message
 }
 
 
-/* =====================================================
-   EXCLUIR FUNCIONÁRIO
-===================================================== */
-
-async function excluirFuncionario(
-id
-){
+async function excluirFuncionario(id){
 
 const funcionario =
 funcionarios.find(
@@ -2254,13 +2158,13 @@ prefer:"return=minimal"
 await carregarFuncionarios();
 
 }
+
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao excluir funcionário:\n"
-+
+"Erro ao excluir funcionário:\n" +
 erro.message
 );
 
@@ -2269,13 +2173,7 @@ erro.message
 }
 
 
-/* =====================================================
-   EXCLUIR SETOR
-===================================================== */
-
-async function excluirSetor(
-id
-){
+async function excluirSetor(id){
 
 const setor =
 setores.find(
@@ -2312,13 +2210,13 @@ prefer:"return=minimal"
 await carregarSetores();
 
 }
+
 catch(erro){
 
 console.error(erro);
 
 alert(
-"Erro ao excluir setor:\n"
-+
+"Erro ao excluir setor:\n" +
 erro.message
 );
 
@@ -2326,10 +2224,6 @@ erro.message
 
 }
 
-
-/* =====================================================
-   DASHBOARD
-===================================================== */
 
 async function atualizarDashboard(){
 
@@ -2347,9 +2241,7 @@ try{
 
 const dados =
 await supabaseRequest(
-
-`registros?select=*,funcionarios(id,nome,jornada_minutos,jornada),setores(id,nome)&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.asc`
-
+`registros?select=*,funcionarios(id,nome,jornada_minutos),setores(id,nome)&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.desc`
 );
 
 registros = dados;
@@ -2364,7 +2256,8 @@ Number(
 r.minutos_trabalhados
 ) || 0;
 
-});
+}
+);
 
 
 document
@@ -2385,10 +2278,6 @@ document
 dados.length;
 
 
-/* =================================================
-   PRODUTIVIDADE
-================================================= */
-
 const tecnicos = {};
 
 
@@ -2400,10 +2289,8 @@ r.funcionarios;
 
 const nome =
 funcionario
-?
-funcionario.nome
-:
-"Não identificado";
+? funcionario.nome
+: "Não identificado";
 
 
 if(!tecnicos[nome]){
@@ -2412,26 +2299,22 @@ tecnicos[nome] = {
 
 id:
 funcionario
-?
-funcionario.id
-:
-null,
+? funcionario.id
+: null,
 
 minutos:0,
 
 os:0,
 
+dias:
+new Set(),
+
 jornada:
 funcionario
-?
-Number(
-funcionario.jornada_minutos ||
-funcionario.jornada
+? Number(
+funcionario.jornada_minutos
 )
-:
-480,
-
-dias:new Set()
+: 480
 
 };
 
@@ -2443,13 +2326,15 @@ Number(
 r.minutos_trabalhados
 ) || 0;
 
+
 tecnicos[nome].os++;
+
 
 if(r.data){
 
-tecnicos[nome]
-.dias
-.add(r.data);
+tecnicos[nome].dias.add(
+String(r.data).slice(0,10)
+);
 
 }
 
@@ -2467,44 +2352,37 @@ tecnicos
 ).length;
 
 
-/*
-Disponibilidade:
-
-jornada diária × quantidade
-de dias distintos com lançamento.
-*/
-
 let totalDisponivel = 0;
 
 
-Object.keys(
-tecnicos
-)
+Object.keys(tecnicos)
 .forEach(
 nome => {
 
-totalDisponivel +=
-(
+const jornada =
 tecnicos[nome].jornada ||
-480
-)
-*
+480;
+
+const diasTrabalhados =
 tecnicos[nome].dias.size;
+
+tecnicos[nome].disponivel =
+jornada *
+diasTrabalhados;
+
+totalDisponivel +=
+tecnicos[nome].disponivel;
 
 });
 
 
 const produtividade =
 totalDisponivel > 0
-?
-(
+? (
 totalMinutos /
 totalDisponivel
-)
-*
-100
-:
-0;
+) * 100
+: 0;
 
 
 document
@@ -2512,8 +2390,7 @@ document
 "produtividade"
 )
 .innerText =
-produtividade.toFixed(1)
-+
+produtividade.toFixed(1) +
 "%";
 
 
@@ -2522,6 +2399,10 @@ tecnicos
 );
 
 montarTabelaSetores(
+dados
+);
+
+montarTabelaOSSetores(
 dados
 );
 
@@ -2535,21 +2416,15 @@ tecnicos
 );
 
 }
+
 catch(erro){
 
-console.error(
-"Erro dashboard:",
-erro
-);
+console.error(erro);
 
 }
 
 }
 
-
-/* =====================================================
-   TABELA TÉCNICOS
-===================================================== */
 
 function montarTabelaTecnicos(
 tecnicos
@@ -2565,8 +2440,7 @@ tabela.innerHTML = "";
 const nomes =
 Object.keys(
 tecnicos
-)
-.sort();
+).sort();
 
 
 if(nomes.length === 0){
@@ -2574,7 +2448,8 @@ if(nomes.length === 0){
 tabela.innerHTML = `
 <tr>
 
-<td colspan="6"
+<td
+colspan="6"
 class="lista-vazia">
 
 Nenhum serviço no período.
@@ -2598,23 +2473,18 @@ tecnicos[nome];
 const jornada =
 t.jornada || 480;
 
-const dias =
-t.dias.size;
-
 const disponivel =
-jornada * dias;
+t.dias
+? jornada * t.dias.size
+: 0;
 
 const produtividade =
 disponivel > 0
-?
-(
+? (
 t.minutos /
 disponivel
-)
-*
-100
-:
-0;
+) * 100
+: 0;
 
 
 let classe = "";
@@ -2633,6 +2503,7 @@ const tr =
 document.createElement(
 "tr"
 );
+
 
 tr.innerHTML = `
 
@@ -2668,16 +2539,15 @@ ${produtividade.toFixed(1)}%
 
 `;
 
-tabela.appendChild(tr);
+
+tabela.appendChild(
+tr
+);
 
 });
 
 }
 
-
-/* =====================================================
-   TABELA / RANKING OS POR SETOR
-===================================================== */
 
 function montarTabelaSetores(
 dados
@@ -2688,9 +2558,112 @@ document.getElementById(
 "tabelaSetores"
 );
 
-const tabelaHoras =
+tabela.innerHTML = "";
+
+const setoresDados = {};
+
+
+dados.forEach(
+r => {
+
+const nome =
+r.setores
+? r.setores.nome
+: "Não identificado";
+
+
+if(!setoresDados[nome])
+setoresDados[nome] = {
+minutos:0,
+os:0
+};
+
+
+setoresDados[nome]
+.minutos +=
+Number(
+r.minutos_trabalhados
+) || 0;
+
+
+setoresDados[nome]
+.os++;
+
+});
+
+
+const nomes =
+Object.keys(
+setoresDados
+).sort();
+
+
+if(nomes.length === 0){
+
+tabela.innerHTML = `
+<tr>
+
+<td
+colspan="3"
+class="lista-vazia">
+
+Nenhum serviço no período.
+
+</td>
+
+</tr>
+`;
+
+return;
+
+}
+
+
+nomes.forEach(
+nome => {
+
+const s =
+setoresDados[nome];
+
+const tr =
+document.createElement(
+"tr"
+);
+
+tr.innerHTML = `
+
+<td>
+${esc(nome)}
+</td>
+
+<td>
+${formatarTempo(
+s.minutos
+)}
+</td>
+
+<td>
+${s.os}
+</td>
+
+`;
+
+tabela.appendChild(
+tr
+);
+
+});
+
+}
+
+
+function montarTabelaOSSetores(
+dados
+){
+
+const tabela =
 document.getElementById(
-"tabelaSetoresHoras"
+"tabelaOSSetores"
 );
 
 const ranking =
@@ -2700,11 +2673,7 @@ document.getElementById(
 
 tabela.innerHTML = "";
 
-if(tabelaHoras)
-tabelaHoras.innerHTML = "";
-
 ranking.innerHTML = "";
-
 
 const setoresDados = {};
 
@@ -2716,23 +2685,15 @@ r => {
 
 const nome =
 r.setores
-?
-r.setores.nome
-:
-"Não identificado";
+? r.setores.nome
+: "Não identificado";
 
 
-if(!setoresDados[nome]){
-
+if(!setoresDados[nome])
 setoresDados[nome] = {
-
 minutos:0,
-
 os:0
-
 };
-
-}
 
 
 const minutos =
@@ -2742,11 +2703,12 @@ r.minutos_trabalhados
 
 
 setoresDados[nome]
-.minutos +=
-minutos;
+.minutos += minutos;
+
 
 setoresDados[nome]
 .os++;
+
 
 totalMinutos +=
 minutos;
@@ -2757,26 +2719,22 @@ minutos;
 const nomes =
 Object.keys(
 setoresDados
-)
-.sort(
+).sort(
 (a,b) => {
 
 if(
 setoresDados[b].os !==
 setoresDados[a].os
-){
+)
 
-return (
+return
 setoresDados[b].os -
-setoresDados[a].os
-);
+setoresDados[a].os;
 
-}
 
-return (
+return
 setoresDados[b].minutos -
-setoresDados[a].minutos
-);
+setoresDados[a].minutos;
 
 });
 
@@ -2805,18 +2763,17 @@ document
 )
 .innerText =
 nomes.length
-?
-nomes[0]
-:
-"—";
+? nomes[0]
+: "—";
 
 
-if(nomes.length === 0){
+if(!nomes.length){
 
 tabela.innerHTML = `
 <tr>
 
-<td colspan="6"
+<td
+colspan="6"
 class="lista-vazia">
 
 Nenhum serviço no período.
@@ -2825,6 +2782,7 @@ Nenhum serviço no período.
 
 </tr>
 `;
+
 
 ranking.innerHTML = `
 <div class="grafico-vazio">
@@ -2833,23 +2791,6 @@ Nenhum serviço no período.
 
 </div>
 `;
-
-if(tabelaHoras){
-
-tabelaHoras.innerHTML = `
-<tr>
-
-<td colspan="3"
-class="lista-vazia">
-
-Nenhum serviço no período.
-
-</td>
-
-</tr>
-`;
-
-}
 
 return;
 
@@ -2872,52 +2813,37 @@ nomes.forEach(
 const s =
 setoresDados[nome];
 
-
 const percentual =
-dados.length > 0
-?
-(
+dados.length
+? (
 s.os /
 dados.length
-)
-*
-100
-:
-0;
+) * 100
+: 0;
 
 
 const media =
-s.os > 0
-?
-s.minutos /
 s.os
-:
-0;
+? s.minutos /
+s.os
+: 0;
 
 
 const largura =
 (
 s.os /
 maiorQuantidade
-)
-*
-100;
+) * 100;
 
 
 const posicao =
 index === 0
-?
-"🥇"
-:
-index === 1
-?
-"🥈"
-:
-index === 2
-?
-"🥉"
-:
-String(index + 1);
+? "🥇"
+: index === 1
+? "🥈"
+: index === 2
+? "🥉"
+: String(index + 1);
 
 
 const rankingItem =
@@ -2931,17 +2857,19 @@ rankingItem.className =
 
 rankingItem.innerHTML = `
 
-<div class="setor-ranking-topo">
+<div
+class="setor-ranking-topo">
 
-<div class="setor-ranking-nome">
+<div
+class="setor-ranking-nome">
 
-${posicao}
-&nbsp;
+${posicao}&nbsp;
 ${esc(nome)}
 
 </div>
 
-<div class="setor-ranking-numero">
+<div
+class="setor-ranking-numero">
 
 ${s.os} OS
 
@@ -2950,20 +2878,20 @@ ${s.os} OS
 </div>
 
 
-<div class="setor-ranking-barra">
+<div
+class="setor-ranking-barra">
 
 <div
 class="setor-ranking-preenchimento"
-style="
-width:${largura.toFixed(1)}%;
-">
+style="width:${largura.toFixed(1)}%;">
 
 </div>
 
 </div>
 
 
-<div class="setor-ranking-info">
+<div
+class="setor-ranking-info">
 
 <div>
 
@@ -2975,28 +2903,22 @@ ${percentual.toFixed(1)}%
 
 </div>
 
-
 <div>
 
 Horas
 
 <strong>
-${formatarTempo(
-s.minutos
-)}
+${formatarTempo(s.minutos)}
 </strong>
 
 </div>
-
 
 <div>
 
 Média por OS
 
 <strong>
-${formatarTempo(
-media
-)}
+${formatarTempo(media)}
 </strong>
 
 </div>
@@ -3016,24 +2938,19 @@ document.createElement(
 "tr"
 );
 
+
 tr.innerHTML = `
 
 <td>
-<strong>
-${posicao}
-</strong>
+<strong>${posicao}</strong>
 </td>
 
 <td>
-<strong>
-${esc(nome)}
-</strong>
+<strong>${esc(nome)}</strong>
 </td>
 
 <td>
-<strong>
-${s.os}
-</strong>
+<strong>${s.os}</strong>
 </td>
 
 <td>
@@ -3041,15 +2958,11 @@ ${percentual.toFixed(1)}%
 </td>
 
 <td>
-${formatarTempo(
-s.minutos
-)}
+${formatarTempo(s.minutos)}
 </td>
 
 <td>
-${formatarTempo(
-media
-)}
+${formatarTempo(media)}
 </td>
 
 `;
@@ -3059,48 +2972,10 @@ tabela.appendChild(
 tr
 );
 
-
-/* tabela antiga de horas por setor */
-
-if(tabelaHoras){
-
-const trHoras =
-document.createElement(
-"tr"
-);
-
-trHoras.innerHTML = `
-
-<td>
-${esc(nome)}
-</td>
-
-<td>
-${formatarTempo(
-s.minutos
-)}
-</td>
-
-<td>
-${s.os}
-</td>
-
-`;
-
-tabelaHoras.appendChild(
-trHoras
-);
-
-}
-
 });
 
 }
 
-
-/* =====================================================
-   TIPOS
-===================================================== */
 
 function montarResumoTipos(
 dados
@@ -3119,17 +2994,11 @@ const tipos = {};
 dados.forEach(
 r => {
 
-const tipo =
-r.tipo ||
-"Não informado";
+if(!tipos[r.tipo]){
 
-
-if(!tipos[tipo]){
-
-tipos[tipo] = {
+tipos[r.tipo] = {
 
 minutos:0,
-
 os:0
 
 };
@@ -3137,13 +3006,14 @@ os:0
 }
 
 
-tipos[tipo]
+tipos[r.tipo]
 .minutos +=
 Number(
 r.minutos_trabalhados
 ) || 0;
 
-tipos[tipo]
+
+tipos[r.tipo]
 .os++;
 
 });
@@ -3168,10 +3038,10 @@ tipos
 
 if(nomes.length === 0){
 
-div.innerHTML =
-`
+div.innerHTML = `
 
-<div class="lista-vazia">
+<div
+class="lista-vazia">
 
 Nenhum serviço no período.
 
@@ -3184,32 +3054,22 @@ return;
 }
 
 
-nomes.sort(
-(a,b) =>
-tipos[b].minutos -
-tipos[a].minutos
-);
-
-
 nomes.forEach(
 tipo => {
 
 const percentual =
 total > 0
-?
-(
+? (
 tipos[tipo].minutos /
 total
-)
-*
-100
-:
-0;
+) * 100
+: 0;
 
 
 div.innerHTML += `
 
-<div style="
+<div
+style="
 margin:10px 0;
 background:#3a3c3f;
 padding:13px;
@@ -3217,16 +3077,18 @@ border-radius:6px;
 ">
 
 <strong>
+
 ${esc(tipo)}
+
 </strong>
 
-<span style="
+<span
+style="
 float:right;
 color:#ff9800;
 ">
 
-${tipos[tipo].os}
-OS -
+${tipos[tipo].os} OS -
 
 ${formatarTempo(
 tipos[tipo].minutos
@@ -3245,34 +3107,24 @@ tipos[tipo].minutos
 }
 
 
-/* =====================================================
-   GRÁFICOS
-===================================================== */
-
 function criarGraficoBarras(
-containerId,
-dados,
-formatador
+id,
+itens,
+formatarValor
 ){
 
-const container =
-document.getElementById(
-containerId
-);
+const div =
+document.getElementById(id);
 
-container.innerHTML = "";
+if(!div)
+return;
 
+div.innerHTML = "";
 
-if(!dados.length){
+if(!itens.length){
 
-container.innerHTML =
-`
-<div class="grafico-vazio">
-
-Nenhum serviço no período.
-
-</div>
-`;
+div.innerHTML =
+'<div class="grafico-vazio">Nenhum dado no período.</div>';
 
 return;
 
@@ -3281,77 +3133,92 @@ return;
 
 const maior =
 Math.max(
-...dados.map(
-d => d.valor
+...itens.map(
+i =>
+Number(i.valor) || 0
 ),
 1
 );
 
 
-dados.forEach(
-d => {
+itens.forEach(
+item => {
 
 const percentual =
+Math.max(
+0,
+Math.min(
+100,
 (
-d.valor /
+(Number(item.valor) || 0) /
 maior
+) * 100
 )
-*
-100;
+);
 
 
-container.innerHTML += `
+const linha =
+document.createElement(
+"div"
+);
 
-<div class="barra-item">
+linha.className =
+"barra-item";
 
-<div class="barra-topo">
 
-<span>
-${esc(d.nome)}
-</span>
+linha.innerHTML = `
 
-<strong>
-${formatador(d.valor)}
-</strong>
+<div
+class="barra-label"
+title="${esc(item.nome)}">
+
+${esc(item.nome)}
 
 </div>
 
-<div class="barra-fundo">
+
+<div
+class="barra-fundo">
 
 <div
 class="barra-preenchimento"
 style="
-width:${percentual.toFixed(1)}%;
+width:${percentual.toFixed(1)}%
 ">
 
 </div>
 
 </div>
 
+
+<div
+class="barra-valor">
+
+${formatarValor(
+item.valor
+)}
+
 </div>
 
 `;
+
+
+div.appendChild(
+linha
+);
 
 });
 
 }
 
 
-/* =====================================================
-   MONTAR GRÁFICOS
-===================================================== */
-
 function montarGraficos(
 dados,
 tecnicos
 ){
 
-/* PRODUTIVIDADE */
-
-const dadosTecnicos =
-Object.keys(
-tecnicos
-)
+const produtividade =
+Object.keys(tecnicos)
 .map(
 nome => {
 
@@ -3359,165 +3226,140 @@ const t =
 tecnicos[nome];
 
 const disponivel =
+t.disponivel ??
 (
-t.jornada || 480
-)
-*
-t.dias.size;
+(t.jornada || 480) *
+(t.dias
+? t.dias.size
+: 0)
+);
 
-const produtividade =
+
+const valor =
 disponivel > 0
-?
-(
+? (
 t.minutos /
 disponivel
-)
-*
-100
-:
-0;
+) * 100
+: 0;
+
 
 return {
-
-nome:nome,
-
-valor:produtividade
-
+nome,
+valor
 };
 
-}
-)
+})
 .sort(
 (a,b) =>
-b.valor -
-a.valor
+b.valor - a.valor
 );
 
 
 criarGraficoBarras(
-"graficoTecnicos",
-dadosTecnicos,
+"graficoProdutividade",
+produtividade,
 valor =>
-valor.toFixed(1) + "%"
+`${Number(valor).toFixed(1)}%`
 );
 
 
-/* HORAS POR SETOR */
+const setores = {};
 
-const setoresGrafico = {};
 
 dados.forEach(
 r => {
 
 const nome =
 r.setores
-?
-r.setores.nome
-:
-"Não identificado";
+? r.setores.nome
+: "Não identificado";
 
 
-if(!setoresGrafico[nome])
-setoresGrafico[nome] = 0;
-
-
-setoresGrafico[nome] +=
+setores[nome] =
+(
+setores[nome] || 0
+) +
+(
 Number(
 r.minutos_trabalhados
-)
-|| 0;
+) || 0
+);
 
 });
-
-
-const dadosSetores =
-Object.keys(
-setoresGrafico
-)
-.map(
-nome => ({
-
-nome:nome,
-
-valor:
-setoresGrafico[nome]
-
-})
-)
-.sort(
-(a,b) =>
-b.valor -
-a.valor
-);
 
 
 criarGraficoBarras(
 "graficoSetores",
-dadosSetores,
-valor =>
-formatarTempo(valor)
-);
 
-
-/* TIPOS */
-
-const tiposGrafico = {};
-
-dados.forEach(
-r => {
-
-const tipo =
-r.tipo ||
-"Não informado";
-
-
-if(!tiposGrafico[tipo])
-tiposGrafico[tipo] = 0;
-
-
-tiposGrafico[tipo] +=
-Number(
-r.minutos_trabalhados
-)
-|| 0;
-
-});
-
-
-const dadosTipos =
-Object.keys(
-tiposGrafico
-)
+Object.keys(setores)
 .map(
 nome => ({
-
-nome:nome,
-
-valor:
-tiposGrafico[nome]
-
+nome,
+valor:setores[nome]
 })
 )
 .sort(
 (a,b) =>
-b.valor -
-a.valor
+b.valor - a.valor
+),
+
+valor =>
+formatarTempo(
+Number(valor)
+)
+
 );
+
+
+const tipos = {};
+
+
+dados.forEach(
+r => {
+
+const nome =
+r.tipo ||
+"Não informado";
+
+
+tipos[nome] =
+(
+tipos[nome] || 0
+) +
+(
+Number(
+r.minutos_trabalhados
+) || 0
+);
+
+});
 
 
 criarGraficoBarras(
 "graficoTipos",
-dadosTipos,
+
+Object.keys(tipos)
+.map(
+nome => ({
+nome,
+valor:tipos[nome]
+})
+)
+.sort(
+(a,b) =>
+b.valor - a.valor
+),
+
 valor =>
-formatarTempo(valor)
+formatarTempo(
+Number(valor)
+)
+
 );
 
 }
 
-
-/* =====================================================
-   CARREGAR TUDO
-===================================================== */
 
 async function carregarTudo(){
 
@@ -3529,14 +3371,45 @@ await carregarSetores();
 
 await mostrarLancamentos();
 
-await atualizarDashboard();
+
+/*
+Use o mês do lançamento mais recente
+ao abrir a página.
+
+Isso evita que os indicadores
+apareçam zerados quando os
+lançamentos existentes são de
+um mês anterior ao mês atual.
+
+O filtro continua permitindo
+trocar para qualquer outro mês.
+*/
+
+if(
+registros.length &&
+registros[0].data
+){
+
+const mesUltimoLancamento =
+String(
+registros[0].data
+)
+.slice(0,7);
+
+document
+.getElementById(
+"mesFiltro"
+)
+.value =
+mesUltimoLancamento;
 
 }
 
 
-/* =====================================================
-   PRÓXIMO MÊS
-===================================================== */
+await atualizarDashboard();
+
+}
+
 
 function proximoMes(
 mes
@@ -3557,7 +3430,6 @@ partes[1]
 
 numero++;
 
-
 if(numero > 12){
 
 numero = 1;
@@ -3566,21 +3438,132 @@ ano++;
 
 }
 
-
 return (
 ano +
 "-" +
-String(numero)
-.padStart(2,"0") +
+String(
+numero
+)
+.padStart(
+2,
+"0"
+) +
 "-01"
 );
 
 }
 
 
-/* =====================================================
-   SEGURANÇA DE TEXTO
-===================================================== */
+function converterHora(
+hora
+){
+
+const p =
+hora.split(":");
+
+return (
+Number(p[0]) * 60 +
+Number(p[1])
+);
+
+}
+
+
+function formatarTempo(
+minutos
+){
+
+minutos =
+Math.round(
+minutos || 0
+);
+
+const horas =
+Math.floor(
+minutos / 60
+);
+
+const mins =
+minutos % 60;
+
+if(horas === 0)
+return `${mins} min`;
+
+if(mins === 0)
+return `${horas} h`;
+
+return `${horas} h ${mins} min`;
+
+}
+
+
+function minutosParaJornada(
+minutos
+){
+
+minutos =
+Number(
+minutos
+) || 0;
+
+const horas =
+Math.floor(
+minutos / 60
+);
+
+const mins =
+minutos % 60;
+
+return (
+String(horas)
+.padStart(2,"0") +
+":" +
+String(mins)
+.padStart(2,"0")
+);
+
+}
+
+
+function jornadaParaMinutos(
+jornada
+){
+
+if(!jornada)
+return 0;
+
+const p =
+jornada.split(":");
+
+return (
+Number(p[0]) * 60 +
+Number(p[1])
+);
+
+}
+
+
+function formatarData(
+data
+){
+
+if(!data)
+return "";
+
+const p =
+String(data)
+.split("-");
+
+return (
+p[2] +
+"/" +
+p[1] +
+"/" +
+p[0]
+);
+
+}
+
 
 function esc(
 valor
@@ -3618,48 +3601,85 @@ valor ?? ""
 }
 
 
-/* =====================================================
-   DATA INICIAL
-===================================================== */
+function mostrarTela(
+tela
+){
 
-document.addEventListener(
-"DOMContentLoaded",
-() => {
-
-const hoje =
-new Date();
-
-const ano =
-hoje.getFullYear();
-
-const mes =
-String(
-hoje.getMonth() + 1
+document
+.querySelectorAll(
+".tela"
 )
-.padStart(2,"0");
+.forEach(
+el =>
+el.classList.remove(
+"ativa"
+)
+);
 
 
 document
 .getElementById(
-"mesFiltro"
+tela
 )
-.value =
-`${ano}-${mes}`;
+.classList.add(
+"ativa"
+);
 
 
 document
-.getElementById(
-"data"
+.querySelectorAll(
+"nav button"
 )
-.value =
-`${ano}-${mes}-${String(
-hoje.getDate()
-).padStart(2,"0")}`;
+.forEach(
+btn =>
+btn.classList.remove(
+"ativo"
+)
+);
+
+
+if(tela === "lancamento"){
+
+document
+.getElementById(
+"menuLancamento"
+)
+.classList.add(
+"ativo"
+);
+
+}
+
+if(tela === "indicadores"){
+
+document
+.getElementById(
+"menuIndicadores"
+)
+.classList.add(
+"ativo"
+);
+
+atualizarDashboard();
+
+}
+
+if(tela === "cadastros"){
+
+document
+.getElementById(
+"menuCadastros"
+)
+.classList.add(
+"ativo"
+);
+
+}
+
+}
 
 
 carregarTudo();
-
-});
 
 </script>
 
