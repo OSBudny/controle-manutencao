@@ -478,6 +478,32 @@ tr:hover{
  font-weight:bold
 }
 
+
+.linha-lubrificacao{
+ display:grid;
+ grid-template-columns:repeat(3,1fr) auto;
+ gap:14px;
+ align-items:end;
+ margin-bottom:20px
+}
+.status-lubrificacao{
+ display:inline-block;
+ padding:6px 10px;
+ border-radius:5px;
+ font-weight:bold;
+ font-size:12px
+}
+.status-pendente{background:#5b4300;color:#ffd166}
+.status-realizada{background:#164d32;color:#7dffb2}
+.status-atrasada{background:#5b1f1f;color:#ff9b91}
+
+.linha-hora-extra{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr 1.4fr auto;gap:14px;align-items:end;margin-bottom:20px}
+.linha-hora-extra .campo-descricao{grid-column:1 / -2}
+.linha-hora-extra textarea{width:100%;min-height:78px;resize:vertical;background:var(--campo);color:#fff;border:1px solid var(--borda);padding:11px;border-radius:6px;outline:0;font-family:Arial,sans-serif}
+.linha-hora-extra textarea:focus{border-color:var(--laranja)}
+.subtitulo-horas{margin:24px 0 12px;font-size:16px;color:#fff}.resumo-horas-extra{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 20px}.resumo-horas-extra .resumo-item{background:#222426;border:1px solid var(--borda);border-radius:8px;padding:14px}.resumo-horas-extra .resumo-item span{display:block;font-size:12px;color:var(--cinza);margin-bottom:5px}.resumo-horas-extra .resumo-item strong{font-size:22px}.resumo-horas-extra .resumo-total strong{color:var(--laranja)}.resumo-horas-extra .resumo-descontado strong{color:var(--vermelho)}.resumo-horas-extra .resumo-liquido strong{color:var(--verde)}
+.linha-horas-descontar{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr 2fr auto;gap:14px;align-items:end;margin-bottom:20px}.linha-horas-descontar textarea{width:100%;min-height:52px;resize:vertical;background:var(--campo);color:#fff;border:1px solid var(--borda);padding:11px;border-radius:6px;outline:0;font-family:Arial,sans-serif}.linha-horas-descontar textarea:focus{border-color:var(--laranja)}
+
 @media(max-width:850px){
  .formulario{
   grid-template-columns:repeat(2,1fr)
@@ -490,6 +516,15 @@ tr:hover{
  .linha-cadastro{
   grid-template-columns:1fr 1fr
  }
+
+ .linha-lubrificacao{
+  grid-template-columns:1fr 1fr
+ }
+ .linha-hora-extra{grid-template-columns:1fr 1fr}
+ .linha-hora-extra .campo-descricao{grid-column:1 / -1}
+ .linha-horas-descontar{grid-template-columns:1fr 1fr}
+ .linha-horas-descontar textarea{grid-column:1 / -1}
+ .resumo-horas-extra{grid-template-columns:1fr}
 
  .modal-conteudo{
   max-height:92vh;
@@ -572,7 +607,9 @@ tr:hover{
  }
 
  .linha-cadastro,
- .linha-setor{
+ .linha-setor,
+ .linha-lubrificacao,
+ .linha-hora-extra{
   grid-template-columns:1fr
  }
 
@@ -703,6 +740,22 @@ Sair
  onclick="mostrarTela('indicadores')">
 
 📊 Indicadores
+
+</button>
+
+<button
+ id="menuLubrificacao"
+ onclick="mostrarTela('lubrificacao')">
+
+🛢️ Lubrificação
+
+</button>
+
+<button
+ id="menuHoraExtra"
+ onclick="mostrarTela('horaextra')">
+
+⏱️ Hora extra
 
 </button>
 
@@ -952,6 +1005,72 @@ Limpar
 </section>
 
 
+<!-- ================= LUBRIFICAÇÃO ================= -->
+
+<section id="lubrificacao" class="tela">
+
+<div class="card" id="formCadastroLubrificacao">
+
+<h2>🛢️ Lubrificação preventiva</h2>
+
+<div class="linha-lubrificacao">
+
+<div class="campo">
+<label>Data</label>
+<input type="date" id="dataLubrificacao">
+</div>
+
+<div class="campo">
+<label>Funcionário</label>
+<select id="funcionarioLubrificacao">
+<option value="">Selecione o funcionário</option>
+</select>
+</div>
+
+<div class="campo">
+<label>Setor</label>
+<select id="setorLubrificacao">
+<option value="">Selecione o setor</option>
+</select>
+</div>
+
+<button class="botao" onclick="programarLubrificacao()">🟠 PROGRAMAR</button>
+
+</div>
+
+<div id="mensagemLubrificacao" class="mensagem"></div>
+
+</div>
+
+<div class="card">
+
+<h2>Controle mensal</h2>
+
+<div class="campo" style="max-width:220px;margin-bottom:20px">
+<label>Mês</label>
+<input type="month" id="mesLubrificacao" onchange="carregarLubrificacoes()">
+</div>
+
+<div class="tabela">
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Funcionário</th>
+<th>Setor</th>
+<th>Situação</th>
+<th>Ação</th>
+</tr>
+</thead>
+<tbody id="tabelaLubrificacoes"></tbody>
+</table>
+</div>
+
+</div>
+
+</section>
+
+
 <!-- ================= INDICADORES ================= -->
 
 <section
@@ -1143,6 +1262,51 @@ Tipos de manutenção
 
 </section>
 
+
+<!-- ================= HORA EXTRA ================= -->
+
+<section id="horaextra" class="tela">
+
+<div class="card" id="formCadastroHoraExtra">
+<h2>⏱️ Controle de hora extra</h2>
+<div class="linha-hora-extra">
+<div class="campo"><label>Data</label><input type="date" id="dataHoraExtra"></div>
+<div class="campo"><label>Hora inicial</label><input type="time" id="horaInicialExtra"></div>
+<div class="campo"><label>Hora final</label><input type="time" id="horaFinalExtra"></div>
+<div class="campo"><label>Funcionário</label><select id="funcionarioHoraExtra"><option value="">Selecione o funcionário</option></select></div>
+<div class="campo"><label>Tipo de manutenção</label><select id="tipoHoraExtra"><option>Preventiva</option><option>Corretiva</option><option>Melhoria</option><option>Inspeção</option><option>Instalação</option><option>Desenvolvimento</option><option>Outro</option></select></div>
+<div class="campo campo-descricao"><label>O que foi feito</label><textarea id="descricaoHoraExtra" maxlength="500" placeholder="Descreva brevemente o serviço realizado..."></textarea></div>
+<button class="botao pequeno" onclick="registrarHoraExtra()">+ Registrar hora extra</button>
+</div>
+<div id="mensagemHoraExtra" class="mensagem"></div>
+</div>
+
+<div class="card" id="formCadastroHoraDescontar">
+<h2>➖ Horas a descontar</h2>
+<div class="linha-horas-descontar">
+<div class="campo"><label>Data</label><input type="date" id="dataHoraDescontar"></div>
+<div class="campo"><label>Hora da saída</label><input type="time" id="horaDescontar"></div>
+<div class="campo"><label>Tempo a descontar</label><input type="time" id="tempoDescontar" step="60"></div>
+<div class="campo"><label>Funcionário</label><select id="funcionarioHoraDescontar"><option value="">Selecione o funcionário</option></select></div>
+<div class="campo campo-descricao"><label>Motivo</label><textarea id="motivoHoraDescontar" maxlength="500" placeholder="Ex.: saída antes do horário, consulta, liberação..."></textarea></div>
+<button class="botao pequeno" onclick="registrarHoraDescontar()">+ Registrar desconto</button>
+</div>
+<div id="mensagemHoraDescontar" class="mensagem"></div>
+</div>
+
+<div class="card">
+<h2>Controle mensal</h2>
+<div class="campo" style="max-width:220px;margin-bottom:20px"><label>Mês</label><input type="month" id="mesHoraExtra" onchange="carregarHorasExtras()"></div>
+<div id="resumoHoraExtra" class="resumo-horas-extra">Carregando...</div>
+
+<h3 class="subtitulo-horas">Horas extras registradas</h3>
+<div class="tabela"><table><thead><tr><th>Data</th><th>Funcionário</th><th>Início</th><th>Fim</th><th>Tempo</th><th>Tipo</th><th>O que foi feito</th><th>Ação</th></tr></thead><tbody id="tabelaHorasExtras"></tbody></table></div>
+
+<h3 class="subtitulo-horas">Horas descontadas</h3>
+<div class="tabela"><table><thead><tr><th>Data</th><th>Saída</th><th>Funcionário</th><th>Tempo descontado</th><th>Motivo</th><th>Ação</th></tr></thead><tbody id="tabelaHorasDescontar"></tbody></table></div>
+</div>
+
+</section>
 
 <!-- ================= CADASTROS ================= -->
 
@@ -1743,6 +1907,26 @@ async function carregarPerfil(){
    MOSTRAR SISTEMA
 ===================================================== */
 
+function ehAdministradorKelvin(){
+ return !!(
+  perfil &&
+  perfil.nivel === "admin" &&
+  sessao &&
+  sessao.user &&
+  String(sessao.user.email || "").toLowerCase() === "kelvin.batista@budny.com.br"
+ );
+}
+
+function configurarAcessosPreventivaHoras(){
+ const podeEditar = ehAdministradorKelvin();
+ const formLub = document.getElementById("formCadastroLubrificacao");
+ const formExtra = document.getElementById("formCadastroHoraExtra");
+ const formDesc = document.getElementById("formCadastroHoraDescontar");
+ if(formLub) formLub.style.display = podeEditar ? "block" : "none";
+ if(formExtra) formExtra.style.display = podeEditar ? "block" : "none";
+ if(formDesc) formDesc.style.display = podeEditar ? "block" : "none";
+}
+
 function mostrarAplicacao(){
 
  document
@@ -1751,7 +1935,6 @@ function mostrarAplicacao(){
   )
   .style.display =
    "none";
-
 
  document
   .getElementById(
@@ -1805,6 +1988,17 @@ function mostrarAplicacao(){
    "operador"
     ? "none"
     : "block";
+
+ document
+  .getElementById(
+   "menuLubrificacao"
+  )
+  .style.display =
+   "block";
+
+ document.getElementById("menuHoraExtra").style.display = "block";
+
+ configurarAcessosPreventivaHoras();
 
 
  document
@@ -2104,6 +2298,29 @@ function mostrarTela(tela){
    );
 
  }
+
+ if(
+  tela ===
+  "lubrificacao"
+ ){
+
+  document
+   .getElementById(
+    "menuLubrificacao"
+   )
+   .classList.add(
+    "ativo"
+   );
+
+  carregarLubrificacoes();
+
+ }
+
+ if(tela === "horaextra"){
+  document.getElementById("menuHoraExtra").classList.add("ativo");
+  carregarHorasExtras();
+ }
+
 
 }
 
@@ -3767,6 +3984,500 @@ async function excluirSetor(
 
 
 /* =====================================================
+   LUBRIFICAÇÃO PREVENTIVA
+===================================================== */
+
+function preencherSelectLubrificacao(){
+
+ const funcionarioSelect =
+  document.getElementById(
+   "funcionarioLubrificacao"
+  );
+
+ const setorSelect =
+  document.getElementById(
+   "setorLubrificacao"
+  );
+
+ if(!funcionarioSelect || !setorSelect)
+  return;
+
+ funcionarioSelect.innerHTML =
+  '<option value="">Selecione o funcionário</option>';
+
+ funcionarios.forEach(
+  f => {
+
+   funcionarioSelect.innerHTML +=
+    `<option value="${esc(f.id)}">${esc(f.nome)}</option>`;
+
+  }
+ );
+
+ setorSelect.innerHTML =
+  '<option value="">Selecione o setor</option>';
+
+ setores.forEach(
+  s => {
+
+   setorSelect.innerHTML +=
+    `<option value="${esc(s.id)}">${esc(s.nome)}</option>`;
+
+  }
+ );
+
+}
+
+
+async function programarLubrificacao(){
+
+ if(!ehAdministradorKelvin()){
+  alert("Somente o administrador Kelvin pode cadastrar ou alterar lubrificações.");
+  return;
+ }
+
+ const data =
+  document
+   .getElementById(
+    "dataLubrificacao"
+   )
+   .value;
+
+ const funcionarioId =
+  document
+   .getElementById(
+    "funcionarioLubrificacao"
+   )
+   .value;
+
+ const setorId =
+  document
+   .getElementById(
+    "setorLubrificacao"
+   )
+   .value;
+
+ const mensagem =
+  document
+   .getElementById(
+    "mensagemLubrificacao"
+   );
+
+ mensagem.textContent = "";
+
+ if(!data || !funcionarioId || !setorId){
+
+  alert(
+   "Preencha Data, Funcionário e Setor."
+  );
+
+  return;
+
+ }
+
+ try{
+
+  const existente =
+   await supabaseRequest(
+    `lubrificacoes?select=id&data=eq.${data}&funcionario_id=eq.${funcionarioId}&setor_id=eq.${setorId}&limit=1`
+   );
+
+  if(existente.length){
+
+   alert(
+    "Já existe uma lubrificação programada para este funcionário, setor e data."
+   );
+
+   return;
+
+  }
+
+  await supabaseRequest(
+   "lubrificacoes",
+   {
+    method:"POST",
+    body:{
+     data:data,
+     funcionario_id:Number(funcionarioId),
+     setor_id:Number(setorId),
+     status:"pendente"
+    },
+    prefer:"return=minimal"
+   }
+  );
+
+  mensagem.textContent =
+   "✓ Lubrificação programada com sucesso.";
+
+  mensagem.style.color =
+   "var(--verde)";
+
+  document
+   .getElementById(
+    "mesLubrificacao"
+   )
+   .value =
+   data.slice(
+    0,
+    7
+   );
+
+  await carregarLubrificacoes();
+
+ }catch(erro){
+
+  console.error(
+   "Erro ao programar lubrificação:",
+   erro
+  );
+
+  mensagem.textContent =
+   "✗ Erro: " +
+   erro.message;
+
+  mensagem.style.color =
+   "var(--vermelho)";
+
+ }
+
+}
+
+
+async function carregarLubrificacoes(){
+
+ const tabela =
+  document.getElementById(
+   "tabelaLubrificacoes"
+  );
+
+ if(!tabela)
+  return;
+
+ const mes =
+  document.getElementById(
+   "mesLubrificacao"
+  ).value;
+
+ if(!mes)
+  return;
+
+ tabela.innerHTML =
+  '<tr><td colspan="5" class="lista-vazia">Carregando...</td></tr>';
+
+ try{
+
+  const dados =
+   await supabaseRequest(
+    `lubrificacoes?select=*,funcionarios(nome),setores(nome)&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.asc,id.asc`
+   );
+
+  tabela.innerHTML = "";
+
+  if(!dados.length){
+
+   tabela.innerHTML =
+    '<tr><td colspan="5" class="lista-vazia">Nenhuma lubrificação programada neste mês.</td></tr>';
+
+   return;
+
+  }
+
+  const hoje =
+   new Date()
+    .toISOString()
+    .slice(
+     0,
+     10
+    );
+
+  dados.forEach(
+   r => {
+
+    const funcionario =
+     r.funcionarios &&
+     typeof r.funcionarios === "object" &&
+     !Array.isArray(r.funcionarios)
+      ? r.funcionarios
+      : null;
+
+    const setor =
+     r.setores &&
+     typeof r.setores === "object" &&
+     !Array.isArray(r.setores)
+      ? r.setores
+      : null;
+
+    let situacao = "Pendente";
+    let classe = "status-pendente";
+
+    if(r.status === "realizada"){
+
+     situacao = "Realizada";
+     classe = "status-realizada";
+
+    }else if(
+     String(r.data).slice(0,10) <
+     hoje
+    ){
+
+     situacao = "Atrasada";
+     classe = "status-atrasada";
+
+    }
+
+    const tr =
+     document.createElement(
+      "tr"
+     );
+
+    const acao =
+     r.status === "realizada"
+      ? '<span class="verde">✓ Concluída</span>'
+      : ehAdministradorKelvin()
+       ? `
+        <button
+         class="botao pequeno"
+         onclick="marcarLubrificacaoRealizada(${Number(r.id)})">
+         ✓ Marcar como realizada
+        </button>
+       `
+       : '<span>—</span>';
+
+    tr.innerHTML =
+     `
+      <td>${formatarData(r.data)}</td>
+      <td>${esc(funcionario && funcionario.nome ? funcionario.nome : "Não identificado")}</td>
+      <td>${esc(setor && setor.nome ? setor.nome : "Não identificado")}</td>
+      <td><span class="status-lubrificacao ${classe}">${situacao}</span></td>
+      <td>${acao}</td>
+     `;
+
+    tabela.appendChild(
+     tr
+    );
+
+   }
+  );
+
+ }catch(erro){
+
+  console.error(
+   "Erro ao carregar lubrificações:",
+   erro
+  );
+
+  tabela.innerHTML =
+   `<tr><td colspan="5" class="lista-vazia">Não foi possível carregar as lubrificações.<br>${esc(erro.message)}</td></tr>`;
+
+ }
+
+}
+
+
+async function marcarLubrificacaoRealizada(id){
+
+ if(!ehAdministradorKelvin()){
+  alert("Somente o administrador Kelvin pode cadastrar ou alterar lubrificações.");
+  return;
+ }
+
+ if(
+  !confirm(
+   "Marcar esta lubrificação como realizada?"
+  )
+ )
+  return;
+
+ try{
+
+  await supabaseRequest(
+   `lubrificacoes?id=eq.${id}`,
+   {
+    method:"PATCH",
+    body:{
+     status:"realizada",
+     realizada_em:new Date().toISOString()
+    },
+    prefer:"return=minimal"
+   }
+  );
+
+  await carregarLubrificacoes();
+
+  if(
+   document
+    .getElementById(
+     "indicadores"
+    )
+    .classList.contains(
+     "ativa"
+    )
+  ){
+
+   await atualizarDashboard();
+
+  }
+
+ }catch(erro){
+
+  console.error(
+   "Erro ao concluir lubrificação:",
+   erro
+  );
+
+  alert(
+   "Erro ao marcar como realizada:\n" +
+   erro.message
+  );
+
+ }
+
+}
+
+
+/* =====================================================
+   CONTROLE DE HORA EXTRA
+===================================================== */
+
+function preencherSelectHoraExtra(){
+ const select=document.getElementById("funcionarioHoraExtra");
+ if(select){
+  select.innerHTML='<option value="">Selecione o funcionário</option>';
+  funcionarios.forEach(f=>{select.innerHTML+=`<option value="${esc(f.id)}">${esc(f.nome)}</option>`;});
+ }
+ const selectDesconto=document.getElementById("funcionarioHoraDescontar");
+ if(selectDesconto){
+  selectDesconto.innerHTML='<option value="">Selecione o funcionário</option>';
+  funcionarios.forEach(f=>{selectDesconto.innerHTML+=`<option value="${esc(f.id)}">${esc(f.nome)}</option>`;});
+ }
+}
+
+async function registrarHoraExtra(){
+ if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode registrar horas extras.");return;}
+ const data=document.getElementById("dataHoraExtra").value;
+ const inicio=document.getElementById("horaInicialExtra").value;
+ const fim=document.getElementById("horaFinalExtra").value;
+ const funcionarioId=document.getElementById("funcionarioHoraExtra").value;
+ const tipo=document.getElementById("tipoHoraExtra").value;
+ const descricao=document.getElementById("descricaoHoraExtra").value.trim();
+ const mensagem=document.getElementById("mensagemHoraExtra");
+ mensagem.textContent="";
+ if(!data||!inicio||!fim||!funcionarioId||!tipo){mensagem.textContent="Preencha data, horários, funcionário e tipo de manutenção.";mensagem.style.color="var(--vermelho)";return;}
+ const minutosInicio=converterHora(inicio), minutosFim=converterHora(fim);
+ if(minutosFim<=minutosInicio){mensagem.textContent="A hora final deve ser maior que a hora inicial.";mensagem.style.color="var(--vermelho)";return;}
+ try{
+  await supabaseRequest("horas_extras",{method:"POST",body:{data:data,hora_inicial:inicio,hora_final:fim,funcionario_id:Number(funcionarioId),tipo:tipo,descricao:descricao||null,minutos_total:minutosFim-minutosInicio},prefer:"return=minimal"});
+  mensagem.textContent="✓ Hora extra registrada com sucesso.";mensagem.style.color="var(--verde)";
+  document.getElementById("mesHoraExtra").value=data.slice(0,7);
+  document.getElementById("horaInicialExtra").value="";document.getElementById("horaFinalExtra").value="";document.getElementById("descricaoHoraExtra").value="";
+  await carregarHorasExtras();
+ }catch(erro){console.error(erro);mensagem.textContent="✗ Erro ao registrar hora extra: "+erro.message;mensagem.style.color="var(--vermelho)";}
+}
+
+async function carregarHorasExtras(){
+ const tabelaExtras=document.getElementById("tabelaHorasExtras");
+ const tabelaDescontos=document.getElementById("tabelaHorasDescontar");
+ const resumo=document.getElementById("resumoHoraExtra");
+ const mesEl=document.getElementById("mesHoraExtra");
+ if(!tabelaExtras||!tabelaDescontos||!resumo||!mesEl||!mesEl.value)return;
+ tabelaExtras.innerHTML='<tr><td colspan="8" class="lista-vazia">Carregando...</td></tr>';
+ tabelaDescontos.innerHTML='<tr><td colspan="6" class="lista-vazia">Carregando...</td></tr>';
+ try{
+  const inicioMes=mesEl.value+'-01';
+  const fimMes=proximoMes(mesEl.value);
+  const dados=await supabaseRequest(`horas_extras?select=*,funcionarios(nome)&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora_inicial.asc,id.asc`);
+  const descontos=await supabaseRequest(`horas_descontar?select=*,funcionarios(nome)&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora.asc,id.asc`);
+  let totalMinutos=0;
+  dados.forEach(r=>totalMinutos+=Number(r.minutos_total)||0);
+  let totalDescontado=0;
+  descontos.forEach(r=>totalDescontado+=Number(r.minutos_total)||0);
+  const totalLiquido=Math.max(0,totalMinutos-totalDescontado);
+  resumo.className="resumo-horas-extra";
+  resumo.innerHTML=`<div class="resumo-item resumo-total"><span>Total de hora extra</span><strong>${formatarTempo(totalMinutos)}</strong></div><div class="resumo-item resumo-descontado"><span>Total descontado</span><strong>${formatarTempo(totalDescontado)}</strong></div><div class="resumo-item resumo-liquido"><span>Hora extra líquida</span><strong>${formatarTempo(totalLiquido)}</strong></div>`;
+
+  if(!dados.length){
+   tabelaExtras.innerHTML='<tr><td colspan="8" class="lista-vazia">Nenhuma hora extra registrada neste mês.</td></tr>';
+  }else{
+   tabelaExtras.innerHTML="";
+   dados.forEach(r=>{
+    const tr=document.createElement("tr");
+    const funcionario=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
+    const acao=ehAdministradorKelvin()?`<button class="botao vermelho pequeno" onclick="excluirHoraExtra(${Number(r.id)})">X</button>`:"—";
+    tr.innerHTML=`<td>${esc(formatarData(r.data))}</td><td>${esc(funcionario)}</td><td>${esc(String(r.hora_inicial||"").slice(0,5))}</td><td>${esc(String(r.hora_final||"").slice(0,5))}</td><td><strong>${formatarTempo(r.minutos_total)}</strong></td><td>${esc(r.tipo||"—")}</td><td>${esc(r.descricao||"—")}</td><td>${acao}</td>`;
+    tabelaExtras.appendChild(tr);
+   });
+  }
+
+  if(!descontos.length){
+   tabelaDescontos.innerHTML='<tr><td colspan="6" class="lista-vazia">Nenhum desconto registrado neste mês.</td></tr>';
+  }else{
+   tabelaDescontos.innerHTML="";
+   descontos.forEach(r=>{
+    const tr=document.createElement("tr");
+    const funcionario=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
+    const acao=ehAdministradorKelvin()?`<button class="botao vermelho pequeno" onclick="excluirHoraDescontar(${Number(r.id)})">X</button>`:"—";
+    tr.innerHTML=`<td>${esc(formatarData(r.data))}</td><td>${esc(String(r.hora||"").slice(0,5))}</td><td>${esc(funcionario)}</td><td><strong>${formatarTempo(r.minutos_total)}</strong></td><td>${esc(r.motivo||"—")}</td><td>${acao}</td>`;
+    tabelaDescontos.appendChild(tr);
+   });
+  }
+ }catch(erro){
+  console.error(erro);
+  resumo.className="status erro";
+  resumo.innerText="Não foi possível carregar o controle de horas.";
+  tabelaExtras.innerHTML='<tr><td colspan="8" class="lista-vazia">Erro ao carregar as horas extras.</td></tr>';
+  tabelaDescontos.innerHTML='<tr><td colspan="6" class="lista-vazia">Erro ao carregar os descontos.</td></tr>';
+ }
+}
+
+
+async function excluirHoraExtra(id){
+ if(!perfil||perfil.nivel!=="admin"){alert("Somente o administrador pode excluir horas extras.");return;}
+ if(!confirm("Excluir este registro de hora extra?"))return;
+ try{await supabaseRequest(`horas_extras?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});await carregarHorasExtras();}catch(erro){console.error(erro);alert("Erro ao excluir hora extra:\n"+erro.message);}
+}
+
+
+/* =====================================================
+   HORAS A DESCONTAR
+===================================================== */
+
+function preencherSelectHoraDescontar(){
+ const select=document.getElementById("funcionarioHoraDescontar");
+ if(!select)return;
+ select.innerHTML='<option value="">Selecione o funcionário</option>';
+ funcionarios.forEach(f=>{select.innerHTML+=`<option value="${esc(f.id)}">${esc(f.nome)}</option>`;});
+}
+
+async function registrarHoraDescontar(){
+ if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode registrar horas a descontar.");return;}
+ const data=document.getElementById("dataHoraDescontar").value;
+ const hora=document.getElementById("horaDescontar").value;
+ const tempo=document.getElementById("tempoDescontar").value;
+ const funcionarioId=document.getElementById("funcionarioHoraDescontar").value;
+ const motivo=document.getElementById("motivoHoraDescontar").value.trim();
+ const mensagem=document.getElementById("mensagemHoraDescontar");
+ mensagem.textContent="";
+ if(!data||!hora||!tempo||!funcionarioId||!motivo){mensagem.textContent="Preencha data, hora da saída, tempo a descontar, funcionário e motivo.";mensagem.style.color="var(--vermelho)";return;}
+ const minutosTempo=converterHora(tempo);
+ if(minutosTempo<=0){mensagem.textContent="Informe um tempo a descontar válido.";mensagem.style.color="var(--vermelho)";return;}
+ try{
+  await supabaseRequest("horas_descontar",{method:"POST",body:{data:data,hora:hora,funcionario_id:Number(funcionarioId),motivo:motivo,minutos_total:minutosTempo},prefer:"return=minimal"});
+  mensagem.textContent="✓ Desconto registrado com sucesso.";mensagem.style.color="var(--verde)";
+  document.getElementById("horaDescontar").value="";document.getElementById("tempoDescontar").value="";document.getElementById("motivoHoraDescontar").value="";
+  await carregarHorasExtras();
+ }catch(erro){console.error(erro);mensagem.textContent="✗ Erro ao registrar desconto: "+erro.message;mensagem.style.color="var(--vermelho)";}
+}
+
+
+
+async function excluirHoraDescontar(id){
+ if(!perfil||perfil.nivel!=="admin"){alert("Somente o administrador pode excluir descontos.");return;}
+ if(!confirm("Excluir este desconto?"))return;
+ try{await supabaseRequest(`horas_descontar?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});await carregarHorasExtras();}catch(erro){console.error(erro);alert("Erro ao excluir desconto:\n"+erro.message);}
+}
+
+
+/* =====================================================
    INDICADORES
 ===================================================== */
 
@@ -3789,6 +4500,11 @@ async function atualizarDashboard(){
   const dados =
    await supabaseRequest(
     `registros?select=*,funcionarios(id,nome,jornada_minutos),setores(id,nome)&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.desc`
+   );
+
+  const lubrificacoesRealizadas =
+   await supabaseRequest(
+    `lubrificacoes?select=id,data,funcionario_id,setor_id,status&status=eq.realizada&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.asc`
    );
 
 
@@ -3983,7 +4699,8 @@ async function atualizarDashboard(){
 
 
   montarTabelaTipos(
-   dados
+   dados,
+   lubrificacoesRealizadas
   );
 
 
@@ -4889,7 +5606,8 @@ document.addEventListener(
 ===================================================== */
 
 function montarTabelaTipos(
- dados
+ dados,
+ lubrificacoesRealizadas = []
 ){
 
  const tabela =
@@ -4924,8 +5642,29 @@ function montarTabelaTipos(
  );
 
 
+ const quantidadeLubrificacoes =
+  Array.isArray(
+   lubrificacoesRealizadas
+  )
+   ? lubrificacoesRealizadas.length
+   : 0;
+
+
+ if(quantidadeLubrificacoes > 0){
+
+  tipos["Preventiva"] =
+   (
+    tipos["Preventiva"] ||
+    0
+   ) +
+   quantidadeLubrificacoes;
+
+ }
+
+
  const total =
-  dados.length;
+  dados.length +
+  quantidadeLubrificacoes;
 
 
  const nomes =
@@ -5029,6 +5768,39 @@ async function carregarTudo(){
  await carregarFuncionarios();
 
  await carregarSetores();
+
+ preencherSelectLubrificacao();
+  preencherSelectHoraExtra();
+
+ const hojeLub =
+  new Date()
+   .toISOString()
+   .slice(0,10);
+
+ document
+  .getElementById(
+   "dataLubrificacao"
+  )
+  .value =
+  hojeLub;
+
+ document
+  .getElementById(
+   "mesLubrificacao"
+  )
+  .value =
+  hojeLub.slice(
+   0,
+   7
+  );
+
+ await carregarLubrificacoes();
+
+ const hojeHoraExtra=obterDataLocalISO();
+ document.getElementById("dataHoraExtra").value=hojeHoraExtra;
+ document.getElementById("dataHoraDescontar").value=hojeHoraExtra;
+ document.getElementById("mesHoraExtra").value=hojeHoraExtra.slice(0,7);
+ await carregarHorasExtras();
 
  await mostrarLancamentos();
 
