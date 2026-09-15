@@ -501,7 +501,7 @@ tr:hover{
 .linha-hora-extra .campo-descricao{grid-column:1 / -2}
 .linha-hora-extra textarea{width:100%;min-height:78px;resize:vertical;background:var(--campo);color:#fff;border:1px solid var(--borda);padding:11px;border-radius:6px;outline:0;font-family:Arial,sans-serif}
 .linha-hora-extra textarea:focus{border-color:var(--laranja)}
-.subtitulo-horas{margin:24px 0 12px;font-size:16px;color:#fff}.resumo-horas-extra{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 20px}.resumo-horas-extra .resumo-item{background:#222426;border:1px solid var(--borda);border-radius:8px;padding:14px}.resumo-horas-extra .resumo-item span{display:block;font-size:12px;color:var(--cinza);margin-bottom:5px}.resumo-horas-extra .resumo-item strong{font-size:22px}.resumo-horas-extra .resumo-total strong{color:var(--laranja)}.resumo-horas-extra .resumo-descontado strong{color:var(--vermelho)}.resumo-horas-extra .resumo-liquido strong{color:var(--verde)}
+.subtitulo-horas{margin:24px 0 12px;font-size:16px;color:#fff}.resumo-horas-extra{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 20px}.resumo-horas-extra .resumo-item{background:#222426;border:1px solid var(--borda);border-radius:8px;padding:14px}.resumo-horas-extra .resumo-item span{display:block;font-size:12px;color:var(--cinza);margin-bottom:5px}.resumo-horas-extra .resumo-item strong{font-size:22px}.resumo-horas-extra .resumo-total strong{color:var(--laranja)}.resumo-horas-extra .resumo-descontado strong{color:var(--vermelho)}.resumo-horas-extra .resumo-liquido strong{color:var(--verde)}.resumo-funcionarios{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0 20px}.resumo-funcionario{background:#222426;border:1px solid var(--borda);border-radius:8px;padding:14px}.resumo-funcionario h4{margin:0 0 12px;color:#fff;font-size:16px}.resumo-funcionario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.resumo-funcionario-item{background:#1b1d1f;border-radius:7px;padding:10px}.resumo-funcionario-item span{display:block;font-size:11px;color:var(--cinza);margin-bottom:4px}.resumo-funcionario-item strong{font-size:18px}.resumo-funcionario-item.extra strong{color:var(--laranja)}.resumo-funcionario-item.desconto strong{color:var(--vermelho)}.resumo-funcionario-item.liquido strong{color:var(--verde)}
 .linha-horas-descontar{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr 2fr auto;gap:14px;align-items:end;margin-bottom:20px}.linha-horas-descontar textarea{width:100%;min-height:52px;resize:vertical;background:var(--campo);color:#fff;border:1px solid var(--borda);padding:11px;border-radius:6px;outline:0;font-family:Arial,sans-serif}.linha-horas-descontar textarea:focus{border-color:var(--laranja)}
 
 @media(max-width:850px){
@@ -524,7 +524,7 @@ tr:hover{
  .linha-hora-extra .campo-descricao{grid-column:1 / -1}
  .linha-horas-descontar{grid-template-columns:1fr 1fr}
  .linha-horas-descontar textarea{grid-column:1 / -1}
- .resumo-horas-extra{grid-template-columns:1fr}
+ .resumo-horas-extra{grid-template-columns:1fr}.resumo-funcionarios{grid-template-columns:1fr}.resumo-funcionario-grid{grid-template-columns:repeat(3,1fr)}
 
  .modal-conteudo{
   max-height:92vh;
@@ -4392,8 +4392,39 @@ async function carregarHorasExtras(){
   let totalDescontado=0;
   descontos.forEach(r=>totalDescontado+=Number(r.minutos_total)||0);
   const totalLiquido=Math.max(0,totalMinutos-totalDescontado);
+
+  const porFuncionario={};
+  funcionarios.forEach(f=>{porFuncionario[String(f.id)]={nome:f.nome,extra:0,desconto:0};});
+  dados.forEach(r=>{
+   const id=String(r.funcionario_id||"");
+   if(!porFuncionario[id]){
+    const nome=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
+    porFuncionario[id]={nome:nome,extra:0,desconto:0};
+   }
+   porFuncionario[id].extra+=(Number(r.minutos_total)||0);
+  });
+  descontos.forEach(r=>{
+   const id=String(r.funcionario_id||"");
+   if(!porFuncionario[id]){
+    const nome=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
+    porFuncionario[id]={nome:nome,extra:0,desconto:0};
+   }
+   porFuncionario[id].desconto+=(Number(r.minutos_total)||0);
+  });
+
+  const funcionariosComMovimento=Object.values(porFuncionario)
+   .filter(f=>f.extra>0||f.desconto>0)
+   .sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
+
   resumo.className="resumo-horas-extra";
-  resumo.innerHTML=`<div class="resumo-item resumo-total"><span>Total de hora extra</span><strong>${formatarTempo(totalMinutos)}</strong></div><div class="resumo-item resumo-descontado"><span>Total descontado</span><strong>${formatarTempo(totalDescontado)}</strong></div><div class="resumo-item resumo-liquido"><span>Hora extra líquida</span><strong>${formatarTempo(totalLiquido)}</strong></div>`;
+  resumo.innerHTML=`<div class="resumo-item resumo-total"><span>Total geral de horas extras</span><strong>${formatarTempo(totalMinutos)}</strong></div><div class="resumo-item resumo-descontado"><span>Total geral descontado</span><strong>${formatarTempo(totalDescontado)}</strong></div><div class="resumo-item resumo-liquido"><span>Total geral líquido</span><strong>${formatarTempo(totalLiquido)}</strong></div>`;
+
+  if(funcionariosComMovimento.length){
+   resumo.innerHTML+=`<div class="resumo-funcionarios" style="grid-column:1/-1"><div class="resumo-funcionario-container" style="grid-column:1/-1"><h3 class="subtitulo-horas" style="margin-top:0">Horas por funcionário</h3><div class="resumo-funcionarios">${funcionariosComMovimento.map(f=>{
+    const liquido=Math.max(0,f.extra-f.desconto);
+    return `<div class="resumo-funcionario"><h4>${esc(f.nome)}</h4><div class="resumo-funcionario-grid"><div class="resumo-funcionario-item extra"><span>Hora extra</span><strong>${formatarTempo(f.extra)}</strong></div><div class="resumo-funcionario-item desconto"><span>Descontado</span><strong>${formatarTempo(f.desconto)}</strong></div><div class="resumo-funcionario-item liquido"><span>Líquido</span><strong>${formatarTempo(liquido)}</strong></div></div></div>`;
+   }).join("")}</div></div></div>`;
+  }
 
   if(!dados.length){
    tabelaExtras.innerHTML='<tr><td colspan="8" class="lista-vazia">Nenhuma hora extra registrada neste mês.</td></tr>';
@@ -4431,7 +4462,7 @@ async function carregarHorasExtras(){
 
 
 async function excluirHoraExtra(id){
- if(!perfil||perfil.nivel!=="admin"){alert("Somente o administrador pode excluir horas extras.");return;}
+ if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode excluir horas extras.");return;}
  if(!confirm("Excluir este registro de hora extra?"))return;
  try{await supabaseRequest(`horas_extras?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});await carregarHorasExtras();}catch(erro){console.error(erro);alert("Erro ao excluir hora extra:\n"+erro.message);}
 }
@@ -4471,7 +4502,7 @@ async function registrarHoraDescontar(){
 
 
 async function excluirHoraDescontar(id){
- if(!perfil||perfil.nivel!=="admin"){alert("Somente o administrador pode excluir descontos.");return;}
+ if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode excluir descontos.");return;}
  if(!confirm("Excluir este desconto?"))return;
  try{await supabaseRequest(`horas_descontar?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});await carregarHorasExtras();}catch(erro){console.error(erro);alert("Erro ao excluir desconto:\n"+erro.message);}
 }
