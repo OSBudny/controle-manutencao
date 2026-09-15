@@ -1607,6 +1607,157 @@ function recuperarSessao(){
 
 
 /* =====================================================
+   RENOVAÇÃO AUTOMÁTICA DA SESSÃO
+===================================================== */
+
+let renovandoSessao = null;
+
+function decodificarPayloadJWT(token){
+
+ try{
+
+  const partes =
+   String(token || "").split(".");
+
+  if(partes.length !== 3)
+   return null;
+
+  let base64 =
+   partes[1]
+    .replace(/-/g,"+")
+    .replace(/_/g,"/");
+
+  while(base64.length % 4)
+   base64 += "=";
+
+  return JSON.parse(
+   decodeURIComponent(
+    atob(base64)
+     .split("")
+     .map(
+      c =>
+       "%" +
+       ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+     )
+     .join("")
+   )
+  );
+
+ }catch(e){
+
+  return null;
+
+ }
+
+}
+
+function tokenEstaExpiradoOuPertoDeExpirar(token){
+
+ const payload =
+  decodificarPayloadJWT(token);
+
+ if(!payload || !payload.exp)
+  return true;
+
+ /*
+  Renova 60 segundos antes do vencimento.
+  Isso evita que uma operação seja enviada
+  com o JWT já vencido.
+ */
+ return (
+  Number(payload.exp) * 1000
+  <=
+  Date.now() + 60000
+ );
+
+}
+
+async function renovarSessao(){
+
+ if(
+  !sessao ||
+  !sessao.refresh_token
+ ){
+
+  throw new Error(
+   "Sua sessão expirou. Faça login novamente."
+  );
+
+ }
+
+ if(renovandoSessao)
+  return renovandoSessao;
+
+ renovandoSessao =
+  (async()=>{
+
+   const resposta =
+    await fetch(
+     `${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,
+     {
+      method:"POST",
+
+      headers:{
+       apikey:SUPABASE_KEY,
+       "Content-Type":
+        "application/json"
+      },
+
+      body:JSON.stringify({
+       refresh_token:
+        sessao.refresh_token
+      })
+     }
+    );
+
+   const texto =
+    await resposta.text();
+
+   if(!resposta.ok){
+
+    throw new Error(
+     `Não foi possível renovar a sessão: ${texto}`
+    );
+
+   }
+
+   const novaSessao =
+    JSON.parse(texto);
+
+   /*
+    O Supabase pode rotacionar o refresh token.
+    Por isso substituímos a sessão inteira e
+    salvamos novamente no navegador.
+   */
+   sessao =
+    {
+     ...sessao,
+     ...novaSessao,
+     user:
+      novaSessao.user ||
+      sessao.user
+    };
+
+   salvarSessao();
+
+   return sessao;
+
+  })();
+
+ try{
+
+  return await renovandoSessao;
+
+ }finally{
+
+  renovandoSessao = null;
+
+ }
+
+}
+
+
+/* =====================================================
    CABEÇALHO AUTENTICADO
 ===================================================== */
 
@@ -1655,7 +1806,22 @@ async function supabaseRequest(
 
  }
 
- const resposta =
+ /*
+  Renova automaticamente antes da chamada
+  quando o JWT estiver expirado ou próximo
+  do vencimento.
+ */
+ if(
+  tokenEstaExpiradoOuPertoDeExpirar(
+   sessao.access_token
+  )
+ ){
+
+  await renovarSessao();
+
+ }
+
+ let resposta =
   await fetch(
    `${SUPABASE_URL}/rest/v1/${tabela}`,
    {
@@ -1679,6 +1845,39 @@ async function supabaseRequest(
    }
   );
 
+ /*
+  Se mesmo assim o servidor devolver 401,
+  renova uma vez e repete a mesma operação.
+ */
+ if(resposta.status === 401){
+
+  await renovarSessao();
+
+  resposta =
+   await fetch(
+    `${SUPABASE_URL}/rest/v1/${tabela}`,
+    {
+     method:
+      opcoes.method ||
+      "GET",
+
+     cache:"no-store",
+
+     headers:
+      authHeaders(
+       opcoes.prefer
+      ),
+
+     body:
+      opcoes.body
+       ? JSON.stringify(
+          opcoes.body
+         )
+       : undefined
+    }
+   );
+
+ }
 
  const texto =
   await resposta.text();
@@ -2062,6 +2261,16 @@ async function restaurarSessao(){
 
 
  try{
+
+  if(
+   tokenEstaExpiradoOuPertoDeExpirar(
+    sessao.access_token
+   )
+  ){
+
+   await renovarSessao();
+
+  }
 
   await carregarPerfil();
 
