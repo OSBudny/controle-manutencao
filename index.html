@@ -502,7 +502,7 @@ tr:hover{
 .linha-hora-extra textarea{width:100%;min-height:78px;resize:vertical;background:var(--campo);color:#fff;border:1px solid var(--borda);padding:11px;border-radius:6px;outline:0;font-family:Arial,sans-serif}
 .linha-hora-extra textarea:focus{border-color:var(--laranja)}
 .subtitulo-horas{margin:24px 0 12px;font-size:16px;color:#fff}.resumo-horas-extra{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 20px}.resumo-horas-extra .resumo-item{background:#222426;border:1px solid var(--borda);border-radius:8px;padding:14px}.resumo-horas-extra .resumo-item span{display:block;font-size:12px;color:var(--cinza);margin-bottom:5px}.resumo-horas-extra .resumo-item strong{font-size:22px}.resumo-horas-extra .resumo-total strong{color:var(--laranja)}.resumo-horas-extra .resumo-descontado strong{color:var(--vermelho)}.resumo-horas-extra .resumo-liquido strong{color:var(--verde)}.resumo-funcionarios{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0 20px}.resumo-funcionario{background:#222426;border:1px solid var(--borda);border-radius:8px;padding:14px}.resumo-funcionario h4{margin:0 0 12px;color:#fff;font-size:16px}.resumo-funcionario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.resumo-funcionario-item{background:#1b1d1f;border-radius:7px;padding:10px}.resumo-funcionario-item span{display:block;font-size:11px;color:var(--cinza);margin-bottom:4px}.resumo-funcionario-item strong{font-size:18px}.resumo-funcionario-item.extra strong{color:var(--laranja)}.resumo-funcionario-item.desconto strong{color:var(--vermelho)}.resumo-funcionario-item.liquido strong{color:var(--verde)}
-.linha-horas-descontar{display:grid;grid-template-columns:1fr 1fr 1fr 1.4fr 2fr auto;gap:14px;align-items:end;margin-bottom:20px}.linha-horas-descontar textarea{width:100%;min-height:52px;resize:vertical;background:var(--campo);color:#fff;border:1px solid var(--borda);padding:11px;border-radius:6px;outline:0;font-family:Arial,sans-serif}.linha-horas-descontar textarea:focus{border-color:var(--laranja)}
+.linha-horas-descontar{display:grid;grid-template-columns:1fr 1fr 1.4fr 2fr auto;gap:14px;align-items:end;margin-bottom:20px}.linha-horas-descontar textarea{width:100%;min-height:52px;resize:vertical;background:var(--campo);color:#fff;border:1px solid var(--borda);padding:11px;border-radius:6px;outline:0;font-family:Arial,sans-serif}.linha-horas-descontar textarea:focus{border-color:var(--laranja)}
 
 @media(max-width:850px){
  .formulario{
@@ -1285,8 +1285,7 @@ Tipos de manutenção
 <h2>➖ Horas a descontar</h2>
 <div class="linha-horas-descontar">
 <div class="campo"><label>Data</label><input type="date" id="dataHoraDescontar"></div>
-<div class="campo"><label>Hora da saída</label><input type="time" id="horaDescontar"></div>
-<div class="campo"><label>Tempo a descontar</label><input type="time" id="tempoDescontar" step="60"></div>
+<div class="campo"><label>Quantidade a descontar</label><input type="time" id="tempoDescontar" step="60"></div>
 <div class="campo"><label>Funcionário</label><select id="funcionarioHoraDescontar"><option value="">Selecione o funcionário</option></select></div>
 <div class="campo campo-descricao"><label>Motivo</label><textarea id="motivoHoraDescontar" maxlength="500" placeholder="Ex.: saída antes do horário, consulta, liberação..."></textarea></div>
 <button class="botao pequeno" onclick="registrarHoraDescontar()">+ Registrar desconto</button>
@@ -1303,7 +1302,7 @@ Tipos de manutenção
 <div class="tabela"><table><thead><tr><th>Data</th><th>Funcionário</th><th>Início</th><th>Fim</th><th>Tempo</th><th>Tipo</th><th>O que foi feito</th><th>Ação</th></tr></thead><tbody id="tabelaHorasExtras"></tbody></table></div>
 
 <h3 class="subtitulo-horas">Horas descontadas</h3>
-<div class="tabela"><table><thead><tr><th>Data</th><th>Saída</th><th>Funcionário</th><th>Tempo descontado</th><th>Motivo</th><th>Ação</th></tr></thead><tbody id="tabelaHorasDescontar"></tbody></table></div>
+<div class="tabela"><table><thead><tr><th>Data</th><th>Funcionário</th><th>Tempo descontado</th><th>Motivo</th><th>Ação</th></tr></thead><tbody id="tabelaHorasDescontar"></tbody></table></div>
 </div>
 
 </section>
@@ -4440,14 +4439,14 @@ async function carregarHorasExtras(){
   }
 
   if(!descontos.length){
-   tabelaDescontos.innerHTML='<tr><td colspan="6" class="lista-vazia">Nenhum desconto registrado neste mês.</td></tr>';
+   tabelaDescontos.innerHTML='<tr><td colspan="5" class="lista-vazia">Nenhum desconto registrado neste mês.</td></tr>';
   }else{
    tabelaDescontos.innerHTML="";
    descontos.forEach(r=>{
     const tr=document.createElement("tr");
     const funcionario=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
     const acao=ehAdministradorKelvin()?`<button class="botao vermelho pequeno" onclick="excluirHoraDescontar(${Number(r.id)})">X</button>`:"—";
-    tr.innerHTML=`<td>${esc(formatarData(r.data))}</td><td>${esc(String(r.hora||"").slice(0,5))}</td><td>${esc(funcionario)}</td><td><strong>${formatarTempo(r.minutos_total)}</strong></td><td>${esc(r.motivo||"—")}</td><td>${acao}</td>`;
+    tr.innerHTML=`<td>${esc(formatarData(r.data))}</td><td>${esc(funcionario)}</td><td><strong>${formatarTempo(r.minutos_total)}</strong></td><td>${esc(r.motivo||"—")}</td><td>${acao}</td>`;
     tabelaDescontos.appendChild(tr);
    });
   }
@@ -4456,7 +4455,7 @@ async function carregarHorasExtras(){
   resumo.className="status erro";
   resumo.innerText="Não foi possível carregar o controle de horas.";
   tabelaExtras.innerHTML='<tr><td colspan="8" class="lista-vazia">Erro ao carregar as horas extras.</td></tr>';
-  tabelaDescontos.innerHTML='<tr><td colspan="6" class="lista-vazia">Erro ao carregar os descontos.</td></tr>';
+  tabelaDescontos.innerHTML='<tr><td colspan="5" class="lista-vazia">Erro ao carregar os descontos.</td></tr>';
  }
 }
 
@@ -4482,19 +4481,19 @@ function preencherSelectHoraDescontar(){
 async function registrarHoraDescontar(){
  if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode registrar horas a descontar.");return;}
  const data=document.getElementById("dataHoraDescontar").value;
- const hora=document.getElementById("horaDescontar").value;
  const tempo=document.getElementById("tempoDescontar").value;
  const funcionarioId=document.getElementById("funcionarioHoraDescontar").value;
  const motivo=document.getElementById("motivoHoraDescontar").value.trim();
  const mensagem=document.getElementById("mensagemHoraDescontar");
  mensagem.textContent="";
- if(!data||!hora||!tempo||!funcionarioId||!motivo){mensagem.textContent="Preencha data, hora da saída, tempo a descontar, funcionário e motivo.";mensagem.style.color="var(--vermelho)";return;}
+ if(!data||!tempo||!funcionarioId||!motivo){mensagem.textContent="Preencha data, quantidade a descontar, funcionário e motivo.";mensagem.style.color="var(--vermelho)";return;}
  const minutosTempo=converterHora(tempo);
- if(minutosTempo<=0){mensagem.textContent="Informe um tempo a descontar válido.";mensagem.style.color="var(--vermelho)";return;}
+ if(minutosTempo<=0){mensagem.textContent="Informe uma quantidade de tempo válida para descontar.";mensagem.style.color="var(--vermelho)";return;}
  try{
-  await supabaseRequest("horas_descontar",{method:"POST",body:{data:data,hora:hora,funcionario_id:Number(funcionarioId),motivo:motivo,minutos_total:minutosTempo},prefer:"return=minimal"});
+  /* A coluna hora ainda existe no banco por compatibilidade, mas não é mais usada na tela. */
+  await supabaseRequest("horas_descontar",{method:"POST",body:{data:data,hora:"00:00",funcionario_id:Number(funcionarioId),motivo:motivo,minutos_total:minutosTempo},prefer:"return=minimal"});
   mensagem.textContent="✓ Desconto registrado com sucesso.";mensagem.style.color="var(--verde)";
-  document.getElementById("horaDescontar").value="";document.getElementById("tempoDescontar").value="";document.getElementById("motivoHoraDescontar").value="";
+  document.getElementById("tempoDescontar").value="";document.getElementById("motivoHoraDescontar").value="";
   await carregarHorasExtras();
  }catch(erro){console.error(erro);mensagem.textContent="✗ Erro ao registrar desconto: "+erro.message;mensagem.style.color="var(--vermelho)";}
 }
