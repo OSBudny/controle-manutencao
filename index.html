@@ -501,7 +501,10 @@ tr:hover{
 .linha-hora-extra .campo-descricao{grid-column:1 / -2}
 .linha-hora-extra textarea{width:100%;min-height:78px;resize:vertical;background:var(--campo);color:#fff;border:1px solid var(--borda);padding:11px;border-radius:6px;outline:0;font-family:Arial,sans-serif}
 .linha-hora-extra textarea:focus{border-color:var(--laranja)}
-.subtitulo-horas{margin:24px 0 12px;font-size:16px;color:#fff}.resumo-horas-extra{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 20px}.resumo-horas-extra .resumo-item{background:#222426;border:1px solid var(--borda);border-radius:8px;padding:14px}.resumo-horas-extra .resumo-item span{display:block;font-size:12px;color:var(--cinza);margin-bottom:5px}.resumo-horas-extra .resumo-item strong{font-size:22px}.resumo-horas-extra .resumo-total strong{color:var(--laranja)}.resumo-horas-extra .resumo-descontado strong{color:var(--vermelho)}.resumo-horas-extra .resumo-liquido strong{color:var(--verde)}.resumo-funcionarios{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0 20px}.resumo-funcionario{background:#222426;border:1px solid var(--borda);border-radius:8px;padding:14px}.resumo-funcionario h4{margin:0 0 12px;color:#fff;font-size:16px}.resumo-funcionario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.resumo-funcionario-item{background:#1b1d1f;border-radius:7px;padding:10px}.resumo-funcionario-item span{display:block;font-size:11px;color:var(--cinza);margin-bottom:4px}.resumo-funcionario-item strong{font-size:18px}.resumo-funcionario-item.extra strong{color:var(--laranja)}.resumo-funcionario-item.desconto strong{color:var(--vermelho)}.resumo-funcionario-item.liquido strong{color:var(--verde)}
+.subtitulo-horas{margin:24px 0 12px;font-size:16px;color:#fff}.resumo-horas-extra{display:block;margin:16px 0 20px}.resumo-funcionarios{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0 20px}.resumo-funcionario{background:#222426;border:1px solid var(--borda);border-radius:8px;padding:14px}.resumo-funcionario h4{margin:0 0 12px;color:#fff;font-size:16px}.resumo-funcionario-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.resumo-funcionario-item{background:#1b1d1f;border-radius:7px;padding:10px}.resumo-funcionario-item span{display:block;font-size:11px;color:var(--cinza);margin-bottom:4px}.resumo-funcionario-item strong{font-size:18px}.resumo-funcionario-item.extra strong{color:var(--laranja)}.resumo-funcionario-item.desconto strong{color:var(--vermelho)}.resumo-funcionario-item.liquido strong{color:var(--verde)}.resumo-funcionario-item.devedor strong{color:var(--vermelho)}
+.resumo-funcionario h4.nome-funcionario-clicavel{cursor:pointer;color:#fff;text-decoration:none;display:inline-block;transition:color .15s ease}.resumo-funcionario h4.nome-funcionario-clicavel:hover{color:var(--laranja)}
+.janela-flutuante-funcionario{position:fixed;z-index:99999;width:min(620px,calc(100vw - 30px));max-height:min(78vh,720px);overflow:auto;background:#222426;border:1px solid var(--laranja);border-radius:10px;box-shadow:0 18px 55px rgba(0,0,0,.65);padding:18px;display:none;color:#fff}.janela-flutuante-funcionario.aberta{display:block}.janela-flutuante-cabecalho{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.janela-flutuante-cabecalho h3{margin:0;color:#fff;font-size:18px}.janela-flutuante-fechar{border:0;background:#3a3c3f;color:#fff;border-radius:6px;width:32px;height:32px;font-size:20px;cursor:pointer}.janela-flutuante-fechar:hover{background:var(--vermelho)}.janela-flutuante-subtitulo{margin:12px 0 7px;color:var(--laranja);font-size:14px}.janela-flutuante-resumo{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.janela-flutuante-resumo .item{background:#1b1d1f;border:1px solid var(--borda);border-radius:7px;padding:9px}.janela-flutuante-resumo .item span{display:block;font-size:10px;color:var(--cinza);margin-bottom:3px}.janela-flutuante-resumo .item strong{font-size:16px}.janela-flutuante-resumo .extra strong{color:var(--laranja)}.janela-flutuante-resumo .desconto strong{color:var(--vermelho)}.janela-flutuante-resumo .liquido strong{color:var(--verde)}.janela-flutuante-resumo .devedor strong{color:var(--vermelho)}.janela-flutuante-tabela{width:100%;border-collapse:collapse;font-size:12px}.janela-flutuante-tabela th{background:#181a1c;color:var(--laranja);text-align:left;padding:7px;border-bottom:1px solid var(--borda)}.janela-flutuante-tabela td{padding:7px;border-bottom:1px solid var(--borda);vertical-align:top}.janela-flutuante-vazia{color:var(--cinza);padding:9px 0}.janela-flutuante-rodape{margin-top:12px;color:var(--cinza);font-size:11px}@media(max-width:700px){.janela-flutuante-resumo{grid-template-columns:1fr}.resumo-funcionarios{grid-template-columns:1fr}}
+
 .linha-horas-descontar{display:grid;grid-template-columns:1fr 1fr 1.4fr 2fr auto;gap:14px;align-items:end;margin-bottom:20px}.linha-horas-descontar textarea{width:100%;min-height:52px;resize:vertical;background:var(--campo);color:#fff;border:1px solid var(--borda);padding:11px;border-radius:6px;outline:0;font-family:Arial,sans-serif}.linha-horas-descontar textarea:focus{border-color:var(--laranja)}
 
 @media(max-width:850px){
@@ -621,56 +624,6 @@ tr:hover{
   justify-content:center
  }
 }
-
-/* =====================================================
-   JANELA FLUTUANTE DE HORAS POR FUNCIONÁRIO
-   (ACRÉSCIMO — não altera os controles existentes)
-===================================================== */
-.janela-horas-funcionario{
- position:fixed;
- z-index:99999;
- width:min(420px,calc(100vw - 30px));
- max-height:min(560px,calc(100vh - 30px));
- overflow:auto;
- background:#202224;
- border:1px solid #555;
- border-top:3px solid var(--laranja);
- border-radius:10px;
- box-shadow:0 18px 45px rgba(0,0,0,.55);
- padding:16px;
- color:#fff;
- display:none;
-}
-.janela-horas-funcionario.aberta{display:block}
-.janela-horas-funcionario .fechar-janela-horas{
- float:right;
- border:0;
- background:transparent;
- color:#aaa;
- font-size:22px;
- cursor:pointer;
- line-height:1;
-}
-.janela-horas-funcionario h3{margin:0 28px 4px 0;font-size:18px;color:#fff}
-.janela-horas-funcionario .mes-janela{font-size:12px;color:var(--cinza);margin-bottom:12px}
-.janela-horas-resumo{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px}
-.janela-horas-resumo .item{background:#181a1c;border-radius:7px;padding:9px}
-.janela-horas-resumo .item span{display:block;font-size:10px;color:var(--cinza);margin-bottom:3px}
-.janela-horas-resumo .item strong{font-size:15px}
-.janela-horas-resumo .extra strong{color:var(--laranja)}
-.janela-horas-resumo .desconto strong{color:var(--vermelho)}
-.janela-horas-resumo .liquido strong{color:var(--verde)}
-.janela-horas-funcionario .bloco-janela{margin-top:12px}
-.janela-horas-funcionario .bloco-janela h4{margin:0 0 7px;color:#fff;font-size:13px}
-.janela-horas-funcionario .linha-janela{display:grid;grid-template-columns:62px 1fr auto;gap:7px;padding:7px 0;border-bottom:1px solid #333;font-size:12px}
-.janela-horas-funcionario .linha-janela:last-child{border-bottom:0}
-.janela-horas-funcionario .linha-janela .data{color:#ddd}
-.janela-horas-funcionario .linha-janela .detalhe{color:#fff}
-.janela-horas-funcionario .linha-janela .tempo{font-weight:700;color:var(--laranja);white-space:nowrap}
-.janela-horas-funcionario .linha-janela.desconto .tempo{color:var(--vermelho)}
-.nome-funcionario-flutuante{cursor:pointer;text-decoration:underline;text-decoration-color:#666;text-underline-offset:3px}
-@media(max-width:600px){.janela-horas-resumo{grid-template-columns:1fr}.janela-horas-funcionario .linha-janela{grid-template-columns:55px 1fr;}.janela-horas-funcionario .linha-janela .tempo{grid-column:2}}
-
 </style>
 </head>
 
@@ -1657,6 +1610,157 @@ function recuperarSessao(){
 
 
 /* =====================================================
+   RENOVAÇÃO AUTOMÁTICA DA SESSÃO
+===================================================== */
+
+let renovandoSessao = null;
+
+function decodificarPayloadJWT(token){
+
+ try{
+
+  const partes =
+   String(token || "").split(".");
+
+  if(partes.length !== 3)
+   return null;
+
+  let base64 =
+   partes[1]
+    .replace(/-/g,"+")
+    .replace(/_/g,"/");
+
+  while(base64.length % 4)
+   base64 += "=";
+
+  return JSON.parse(
+   decodeURIComponent(
+    atob(base64)
+     .split("")
+     .map(
+      c =>
+       "%" +
+       ("00" + c.charCodeAt(0).toString(16)).slice(-2)
+     )
+     .join("")
+   )
+  );
+
+ }catch(e){
+
+  return null;
+
+ }
+
+}
+
+function tokenEstaExpiradoOuPertoDeExpirar(token){
+
+ const payload =
+  decodificarPayloadJWT(token);
+
+ if(!payload || !payload.exp)
+  return true;
+
+ /*
+  Renova 60 segundos antes do vencimento.
+  Isso evita que uma operação seja enviada
+  com o JWT já vencido.
+ */
+ return (
+  Number(payload.exp) * 1000
+  <=
+  Date.now() + 60000
+ );
+
+}
+
+async function renovarSessao(){
+
+ if(
+  !sessao ||
+  !sessao.refresh_token
+ ){
+
+  throw new Error(
+   "Sua sessão expirou. Faça login novamente."
+  );
+
+ }
+
+ if(renovandoSessao)
+  return renovandoSessao;
+
+ renovandoSessao =
+  (async()=>{
+
+   const resposta =
+    await fetch(
+     `${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`,
+     {
+      method:"POST",
+
+      headers:{
+       apikey:SUPABASE_KEY,
+       "Content-Type":
+        "application/json"
+      },
+
+      body:JSON.stringify({
+       refresh_token:
+        sessao.refresh_token
+      })
+     }
+    );
+
+   const texto =
+    await resposta.text();
+
+   if(!resposta.ok){
+
+    throw new Error(
+     `Não foi possível renovar a sessão: ${texto}`
+    );
+
+   }
+
+   const novaSessao =
+    JSON.parse(texto);
+
+   /*
+    O Supabase pode rotacionar o refresh token.
+    Por isso substituímos a sessão inteira e
+    salvamos novamente no navegador.
+   */
+   sessao =
+    {
+     ...sessao,
+     ...novaSessao,
+     user:
+      novaSessao.user ||
+      sessao.user
+    };
+
+   salvarSessao();
+
+   return sessao;
+
+  })();
+
+ try{
+
+  return await renovandoSessao;
+
+ }finally{
+
+  renovandoSessao = null;
+
+ }
+
+}
+
+
+/* =====================================================
    CABEÇALHO AUTENTICADO
 ===================================================== */
 
@@ -1705,7 +1809,22 @@ async function supabaseRequest(
 
  }
 
- const resposta =
+ /*
+  Renova automaticamente antes da chamada
+  quando o JWT estiver expirado ou próximo
+  do vencimento.
+ */
+ if(
+  tokenEstaExpiradoOuPertoDeExpirar(
+   sessao.access_token
+  )
+ ){
+
+  await renovarSessao();
+
+ }
+
+ let resposta =
   await fetch(
    `${SUPABASE_URL}/rest/v1/${tabela}`,
    {
@@ -1729,6 +1848,39 @@ async function supabaseRequest(
    }
   );
 
+ /*
+  Se mesmo assim o servidor devolver 401,
+  renova uma vez e repete a mesma operação.
+ */
+ if(resposta.status === 401){
+
+  await renovarSessao();
+
+  resposta =
+   await fetch(
+    `${SUPABASE_URL}/rest/v1/${tabela}`,
+    {
+     method:
+      opcoes.method ||
+      "GET",
+
+     cache:"no-store",
+
+     headers:
+      authHeaders(
+       opcoes.prefer
+      ),
+
+     body:
+      opcoes.body
+       ? JSON.stringify(
+          opcoes.body
+         )
+       : undefined
+    }
+   );
+
+ }
 
  const texto =
   await resposta.text();
@@ -2112,6 +2264,16 @@ async function restaurarSessao(){
 
 
  try{
+
+  if(
+   tokenEstaExpiradoOuPertoDeExpirar(
+    sessao.access_token
+   )
+  ){
+
+   await renovarSessao();
+
+  }
 
   await carregarPerfil();
 
@@ -4423,80 +4585,73 @@ async function registrarHoraExtra(){
  }catch(erro){console.error(erro);mensagem.textContent="✗ Erro ao registrar hora extra: "+erro.message;mensagem.style.color="var(--vermelho)";}
 }
 
-let dadosJanelaHorasFuncionario={};
+let horasExtrasMesCache=[];
+let horasDescontosMesCache=[];
+let mesHoraExtraCache="";
 
-function abrirJanelaHorasFuncionario(funcionarioId, elemento){
- const dados=dadosJanelaHorasFuncionario[String(funcionarioId)];
- const janela=document.getElementById("janelaHorasFuncionario");
- if(!dados||!janela)return;
- const titulo=document.getElementById("tituloJanelaHorasFuncionario");
- const mes=document.getElementById("mesJanelaHorasFuncionario");
- const conteudo=document.getElementById("conteudoJanelaHorasFuncionario");
- titulo.textContent=dados.nome;
- mes.textContent=`Movimentação de ${dados.mesLabel}`;
- const saldo=dados.extra-dados.desconto;
+function nomeFuncionarioRegistro(r){
+ const f=r&&r.funcionarios;
+ return f&&typeof f==="object"&&!Array.isArray(f)?String(f.nome||"Não identificado"):"Não identificado";
+}
+
+function abrirJanelaFuncionario(funcionarioId,nome,elemento){
+ const janela=document.getElementById("janelaFlutuanteFuncionario");
+ const conteudo=document.getElementById("conteudoJanelaFuncionario");
+ const titulo=document.getElementById("tituloJanelaFuncionario");
+ if(!janela||!conteudo||!titulo)return;
+ const id=String(funcionarioId);
+ const extras=horasExtrasMesCache.filter(r=>String(r.funcionario_id||"")===id);
+ const descontos=horasDescontosMesCache.filter(r=>String(r.funcionario_id||"")===id);
+ const totalExtra=extras.reduce((s,r)=>s+(Number(r.minutos_total)||0),0);
+ const totalDesconto=descontos.reduce((s,r)=>s+(Number(r.minutos_total)||0),0);
+ const saldo=totalExtra-totalDesconto;
  const saldoTexto=saldo<0?`Deve ${formatarTempo(Math.abs(saldo))}`:formatarTempo(saldo);
- const saldoCor=saldo<0?"var(--vermelho)":"var(--verde)";
- let html=`<div class="janela-horas-resumo">
-  <div class="item extra"><span>Hora extra</span><strong>${formatarTempo(dados.extra)}</strong></div>
-  <div class="item desconto"><span>Descontado</span><strong>${formatarTempo(dados.desconto)}</strong></div>
-  <div class="item liquido"><span>${saldo<0?"Saldo devedor":"Líquido"}</span><strong style="color:${saldoCor}">${saldoTexto}</strong></div>
- </div>`;
- html+=`<div class="bloco-janela"><h4>Horas extras do mês</h4>`;
- if(!dados.extras.length){
-  html+=`<div class="lista-vazia">Nenhuma hora extra registrada.</div>`;
- }else{
-  dados.extras.forEach(r=>{
-   const inicio=String(r.hora_inicial||"").slice(0,5);
-   const fim=String(r.hora_final||"").slice(0,5);
-   html+=`<div class="linha-janela"><span class="data">${esc(formatarData(r.data))}</span><span class="detalhe">${esc(r.tipo||"—")}${r.descricao?` — ${esc(r.descricao)}`:""}</span><span class="tempo">${formatarTempo(r.minutos_total)}<br><small>${esc(inicio)}–${esc(fim)}</small></span></div>`;
-  });
- }
- html+=`</div><div class="bloco-janela"><h4>Horas descontadas no mês</h4>`;
- if(!dados.descontos.length){
-  html+=`<div class="lista-vazia">Nenhum desconto registrado.</div>`;
- }else{
-  dados.descontos.forEach(r=>{
-   html+=`<div class="linha-janela desconto"><span class="data">${esc(formatarData(r.data))}</span><span class="detalhe">${esc(r.motivo||"—")}</span><span class="tempo">${formatarTempo(r.minutos_total)}</span></div>`;
-  });
- }
- html+='</div>';
+ const saldoClasse=saldo<0?"devedor":"liquido";
+ const partesMes=mesHoraExtraCache?mesHoraExtraCache.split("-"):[];
+ const tituloMes=partesMes.length===2?`${partesMes[1]}/${partesMes[0]}`:"mês selecionado";
+ titulo.textContent=`${nome} — ${tituloMes}`;
+ let html=`<div class="janela-flutuante-resumo"><div class="item extra"><span>Hora extra</span><strong>${formatarTempo(totalExtra)}</strong></div><div class="item desconto"><span>Descontado</span><strong>${formatarTempo(totalDesconto)}</strong></div><div class="item ${saldoClasse}"><span>${saldo<0?"Saldo devedor":"Líquido"}</span><strong>${saldoTexto}</strong></div></div>`;
+ html+=`<div class="janela-flutuante-subtitulo">Horas extras do mês</div>`;
+ if(extras.length){
+  html+=`<table class="janela-flutuante-tabela"><thead><tr><th>Data</th><th>Horário</th><th>Tempo</th><th>Tipo</th><th>O que foi feito</th></tr></thead><tbody>`;
+  extras.forEach(r=>{html+=`<tr><td>${esc(formatarData(r.data))}</td><td>${esc(String(r.hora_inicial||"").slice(0,5))} - ${esc(String(r.hora_final||"").slice(0,5))}</td><td><strong>${formatarTempo(r.minutos_total)}</strong></td><td>${esc(r.tipo||"—")}</td><td>${esc(r.descricao||"—")}</td></tr>`});
+  html+=`</tbody></table>`;
+ }else html+=`<div class="janela-flutuante-vazia">Nenhuma hora extra registrada para este funcionário neste mês.</div>`;
+ html+=`<div class="janela-flutuante-subtitulo">Horas descontadas do mês</div>`;
+ if(descontos.length){
+  html+=`<table class="janela-flutuante-tabela"><thead><tr><th>Data</th><th>Quantidade</th><th>Motivo</th></tr></thead><tbody>`;
+  descontos.forEach(r=>{html+=`<tr><td>${esc(formatarData(r.data))}</td><td><strong>${formatarTempo(r.minutos_total)}</strong></td><td>${esc(r.motivo||"—")}</td></tr>`});
+  html+=`</tbody></table>`;
+ }else html+=`<div class="janela-flutuante-vazia">Nenhum desconto registrado para este funcionário neste mês.</div>`;
  conteudo.innerHTML=html;
  janela.classList.add("aberta");
- janela.setAttribute("aria-hidden","false");
+ // Position the floating window above/near the clicked employee name.
  const rect=elemento.getBoundingClientRect();
  const largura=janela.offsetWidth;
  const altura=janela.offsetHeight;
- let left=rect.left+(rect.width/2)-(largura/2);
- left=Math.max(15,Math.min(left,window.innerWidth-largura-15));
+ let left=rect.left;
  let top=rect.top-altura-12;
- if(top<15)top=rect.bottom+12;
- if(top+altura>window.innerHeight-15)top=Math.max(15,window.innerHeight-altura-15);
+ if(left+largura>window.innerWidth-12)left=window.innerWidth-largura-12;
+ if(left<12)left=12;
+ if(top<12)top=rect.bottom+12;
+ if(top+altura>window.innerHeight-12)top=Math.max(12,window.innerHeight-altura-12);
  janela.style.left=`${left}px`;
  janela.style.top=`${top}px`;
 }
 
-
-function abrirJanelaHorasPorNome(nome, elemento){
- const id=Object.keys(dadosJanelaHorasFuncionario).find(k=>dadosJanelaHorasFuncionario[k].nome===nome);
- if(id)abrirJanelaHorasFuncionario(id,elemento);
-}
-
-function fecharJanelaHorasFuncionario(){
- const janela=document.getElementById("janelaHorasFuncionario");
- if(!janela)return;
- janela.classList.remove("aberta");
- janela.setAttribute("aria-hidden","true");
+function fecharJanelaFuncionario(){
+ const janela=document.getElementById("janelaFlutuanteFuncionario");
+ if(janela)janela.classList.remove("aberta");
 }
 
 document.addEventListener("click",function(e){
- const janela=document.getElementById("janelaHorasFuncionario");
+ const janela=document.getElementById("janelaFlutuanteFuncionario");
  if(!janela||!janela.classList.contains("aberta"))return;
- if(!janela.contains(e.target)&&!e.target.closest(".nome-funcionario-flutuante"))fecharJanelaHorasFuncionario();
+ if(!janela.contains(e.target)&&!e.target.closest(".nome-funcionario-clicavel"))fecharJanelaFuncionario();
 });
 
-window.addEventListener("resize",fecharJanelaHorasFuncionario);
-window.addEventListener("scroll",fecharJanelaHorasFuncionario,true);
+window.addEventListener("resize",fecharJanelaFuncionario);
+window.addEventListener("scroll",fecharJanelaFuncionario,true);
 
 async function carregarHorasExtras(){
  const tabelaExtras=document.getElementById("tabelaHorasExtras");
@@ -4511,19 +4666,16 @@ async function carregarHorasExtras(){
   const fimMes=proximoMes(mesEl.value);
   const dados=await supabaseRequest(`horas_extras?select=*,funcionarios(nome)&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora_inicial.asc,id.asc`);
   const descontos=await supabaseRequest(`horas_descontar?select=*,funcionarios(nome)&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora.asc,id.asc`);
-  let totalMinutos=0;
-  dados.forEach(r=>totalMinutos+=Number(r.minutos_total)||0);
-  let totalDescontado=0;
-  descontos.forEach(r=>totalDescontado+=Number(r.minutos_total)||0);
-  const totalLiquido=Math.max(0,totalMinutos-totalDescontado);
-
+  horasExtrasMesCache=dados;
+  horasDescontosMesCache=descontos;
+  mesHoraExtraCache=mesEl.value;
   const porFuncionario={};
-  funcionarios.forEach(f=>{porFuncionario[String(f.id)]={nome:f.nome,extra:0,desconto:0};});
+  funcionarios.forEach(f=>{porFuncionario[String(f.id)]={id:String(f.id),nome:f.nome,extra:0,desconto:0};});
   dados.forEach(r=>{
    const id=String(r.funcionario_id||"");
    if(!porFuncionario[id]){
     const nome=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
-    porFuncionario[id]={nome:nome,extra:0,desconto:0};
+    porFuncionario[id]={id:id,nome:nome,extra:0,desconto:0};
    }
    porFuncionario[id].extra+=(Number(r.minutos_total)||0);
   });
@@ -4531,7 +4683,7 @@ async function carregarHorasExtras(){
    const id=String(r.funcionario_id||"");
    if(!porFuncionario[id]){
     const nome=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
-    porFuncionario[id]={nome:nome,extra:0,desconto:0};
+    porFuncionario[id]={id:id,nome:nome,extra:0,desconto:0};
    }
    porFuncionario[id].desconto+=(Number(r.minutos_total)||0);
   });
@@ -4541,12 +4693,14 @@ async function carregarHorasExtras(){
    .sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
 
   resumo.className="resumo-horas-extra";
-  resumo.innerHTML=`<div class="resumo-item resumo-total"><span>Total geral de horas extras</span><strong>${formatarTempo(totalMinutos)}</strong></div><div class="resumo-item resumo-descontado"><span>Total geral descontado</span><strong>${formatarTempo(totalDescontado)}</strong></div><div class="resumo-item resumo-liquido"><span>Total geral líquido</span><strong>${formatarTempo(totalLiquido)}</strong></div>`;
+  resumo.innerHTML="";
 
   if(funcionariosComMovimento.length){
    resumo.innerHTML+=`<div class="resumo-funcionarios" style="grid-column:1/-1"><div class="resumo-funcionario-container" style="grid-column:1/-1"><h3 class="subtitulo-horas" style="margin-top:0">Horas por funcionário</h3><div class="resumo-funcionarios">${funcionariosComMovimento.map(f=>{
-    const liquido=Math.max(0,f.extra-f.desconto);
-    return `<div class="resumo-funcionario"><h4 class="nome-funcionario-flutuante" onclick="abrirJanelaHorasPorNome(${JSON.stringify(f.nome)},this)">${esc(f.nome)}</h4><div class="resumo-funcionario-grid"><div class="resumo-funcionario-item extra"><span>Hora extra</span><strong>${formatarTempo(f.extra)}</strong></div><div class="resumo-funcionario-item desconto"><span>Descontado</span><strong>${formatarTempo(f.desconto)}</strong></div><div class="resumo-funcionario-item liquido"><span>Líquido</span><strong>${formatarTempo(liquido)}</strong></div></div></div>`;
+    const saldo=f.extra-f.desconto;
+    const saldoTexto=saldo<0?`Deve ${formatarTempo(Math.abs(saldo))}`:formatarTempo(saldo);
+    const saldoClasse=saldo<0?"devedor":"liquido";
+    return `<div class="resumo-funcionario"><h4 class="nome-funcionario-clicavel" title="Clique para ver as horas deste funcionário no mês" onclick="abrirJanelaFuncionario('${esc(f.id)}','${esc(f.nome).replace("'","&#39;")}',this)">${esc(f.nome)}</h4><div class="resumo-funcionario-grid"><div class="resumo-funcionario-item extra"><span>Hora extra</span><strong>${formatarTempo(f.extra)}</strong></div><div class="resumo-funcionario-item desconto"><span>Descontado</span><strong>${formatarTempo(f.desconto)}</strong></div><div class="resumo-funcionario-item ${saldoClasse}"><span>${saldo<0?"Saldo devedor":"Líquido"}</span><strong>${saldoTexto}</strong></div></div></div>`;
    }).join("")}</div></div></div>`;
   }
 
@@ -6092,13 +6246,13 @@ restaurarSessao();
 </script>
 
 
-<!-- JANELA FLUTUANTE — HORAS DO FUNCIONÁRIO -->
-<div id="janelaHorasFuncionario" class="janela-horas-funcionario" role="dialog" aria-hidden="true">
- <button class="fechar-janela-horas" type="button" onclick="fecharJanelaHorasFuncionario()" aria-label="Fechar">×</button>
- <h3 id="tituloJanelaHorasFuncionario">Horas do funcionário</h3>
- <div id="mesJanelaHorasFuncionario" class="mes-janela"></div>
- <div id="conteudoJanelaHorasFuncionario"></div>
+<div id="janelaFlutuanteFuncionario" class="janela-flutuante-funcionario" role="dialog" aria-modal="false">
+  <div class="janela-flutuante-cabecalho">
+    <h3 id="tituloJanelaFuncionario">Resumo do funcionário</h3>
+    <button type="button" class="janela-flutuante-fechar" onclick="fecharJanelaFuncionario()">×</button>
+  </div>
+  <div id="conteudoJanelaFuncionario"></div>
+  <div class="janela-flutuante-rodape">Clique novamente no nome ou no × para fechar.</div>
 </div>
-
 </body>
 </html>
