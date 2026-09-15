@@ -2128,6 +2128,26 @@ function configurarAcessosPreventivaHoras(){
  if(formDesc) formDesc.style.display = podeEditar ? "block" : "none";
 }
 
+function ehRafaelSomenteVisualizacao(){
+ const email = String(sessao && sessao.user && sessao.user.email ? sessao.user.email : "").trim().toLowerCase();
+ return email === "rafael.zaccaron@budny.com.br";
+}
+
+function configurarAcessoRafael(){
+ if(!ehRafaelSomenteVisualizacao()) return;
+ const idsOcultar=["menuLancamento","menuCadastros","menuLubrificacao"];
+ idsOcultar.forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display="none"; });
+ const menuIndicadores=document.getElementById("menuIndicadores");
+ const menuHoraExtra=document.getElementById("menuHoraExtra");
+ if(menuIndicadores) menuIndicadores.style.display="block";
+ if(menuHoraExtra) menuHoraExtra.style.display="block";
+ const formExtra=document.getElementById("formCadastroHoraExtra");
+ const formDesc=document.getElementById("formCadastroHoraDescontar");
+ if(formExtra) formExtra.style.display="none";
+ if(formDesc) formDesc.style.display="none";
+}
+
+
 function mostrarAplicacao(){
 
  document
@@ -2200,6 +2220,7 @@ function mostrarAplicacao(){
  document.getElementById("menuHoraExtra").style.display = "block";
 
  configurarAcessosPreventivaHoras();
+ configurarAcessoRafael();
 
 
  document
@@ -2224,7 +2245,9 @@ function mostrarAplicacao(){
 
 
  const primeira =
-  perfil.nivel ===
+  ehRafaelSomenteVisualizacao()
+   ? "indicadores"
+   : perfil.nivel ===
   "indicadores"
    ? "indicadores"
    : "lancamento";
@@ -2390,6 +2413,14 @@ function mostrarTela(tela){
 
  if(!perfil)
   return;
+
+ if(
+  ehRafaelSomenteVisualizacao() &&
+  !["indicadores","horaextra"].includes(tela)
+ ){
+  alert("Seu acesso permite apenas visualizar Indicadores e Hora extra.");
+  return;
+ }
 
 
  if(
@@ -3246,6 +3277,7 @@ function atualizarSelectSetores(){
 ===================================================== */
 
 async function registrar(){
+ if(ehRafaelSomenteVisualizacao()){alert("Seu acesso é somente para visualização. Você não pode cadastrar OS.");return;}
 
  if(
   !perfil ||
@@ -4564,6 +4596,7 @@ function preencherSelectHoraExtra(){
 }
 
 async function registrarHoraExtra(){
+ if(ehRafaelSomenteVisualizacao()){alert("Seu acesso é somente para visualização. Você não pode registrar horas extras.");return;}
  if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode registrar horas extras.");return;}
  const data=document.getElementById("dataHoraExtra").value;
  const inicio=document.getElementById("horaInicialExtra").value;
@@ -4758,6 +4791,7 @@ function preencherSelectHoraDescontar(){
 }
 
 async function registrarHoraDescontar(){
+ if(ehRafaelSomenteVisualizacao()){alert("Seu acesso é somente para visualização. Você não pode registrar horas a descontar.");return;}
  if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode registrar horas a descontar.");return;}
  const data=document.getElementById("dataHoraDescontar").value;
  const tempo=document.getElementById("tempoDescontar").value;
