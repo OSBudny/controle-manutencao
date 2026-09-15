@@ -4813,8 +4813,13 @@ async function atualizarDashboard(){
 
   const lubrificacoesRealizadas =
    await supabaseRequest(
-    `lubrificacoes?select=id,data,funcionario_id,setor_id,status&status=eq.realizada&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.asc`
+    `lubrificacoes?select=id,data,funcionario_id,setor_id,status&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.asc`
    );
+
+  // Somente lubrificações REALIZADAS entram na categoria PREVENTIVA.
+  const lubrificacoesPreventivas = Array.isArray(lubrificacoesRealizadas)
+   ? lubrificacoesRealizadas.filter(r => String(r.status || '').toLowerCase().trim() === 'realizada')
+   : [];
 
 
   registros =
@@ -5009,7 +5014,7 @@ async function atualizarDashboard(){
 
   montarTabelaTipos(
    dados,
-   lubrificacoesRealizadas
+   lubrificacoesPreventivas
   );
 
 
