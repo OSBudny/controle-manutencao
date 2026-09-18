@@ -624,6 +624,9 @@ tr:hover{
   justify-content:center
  }
 }
+
+/* Usuário Indicadores: mostra apenas os cards superiores. Os detalhes completos continuam na janela do funcionário. */
+#detalhesHorasExtrasIndicadores.ocultar-para-indicadores{display:none !important;}
 </style>
 </head>
 
@@ -1301,11 +1304,13 @@ Tipos de manutenção
 <div class="campo" style="max-width:220px;margin-bottom:20px"><label>Mês</label><input type="month" id="mesHoraExtra" onchange="carregarHorasExtras()"></div>
 <div id="resumoHoraExtra" class="resumo-horas-extra">Carregando...</div>
 
+<div id="detalhesHorasExtrasIndicadores">
 <h3 class="subtitulo-horas">Horas extras registradas</h3>
 <div class="tabela"><table><thead><tr><th>Data</th><th>Funcionário</th><th>Início</th><th>Fim</th><th>Tempo</th><th>Tipo</th><th>O que foi feito</th><th>Ação</th></tr></thead><tbody id="tabelaHorasExtras"></tbody></table></div>
 
 <h3 class="subtitulo-horas">Horas descontadas</h3>
 <div class="tabela"><table><thead><tr><th>Data</th><th>Funcionário</th><th>Tempo descontado</th><th>Motivo</th><th>Ação</th></tr></thead><tbody id="tabelaHorasDescontar"></tbody></table></div>
+</div>
 </div>
 
 </section>
@@ -2133,6 +2138,18 @@ function ehRafaelSomenteVisualizacao(){
  return email === "rafael.zaccaron@budny.com.br";
 }
 
+function configurarVisualizacaoHorasIndicadores(){
+ const detalhes=document.getElementById("detalhesHorasExtrasIndicadores");
+ if(!detalhes)return;
+ const somenteIndicadores=!!(perfil&&perfil.nivel==="indicadores");
+ const somenteRafael=typeof ehRafaelSomenteVisualizacao==="function"&&ehRafaelSomenteVisualizacao();
+ if(somenteIndicadores||somenteRafael){
+  detalhes.classList.add("ocultar-para-indicadores");
+ }else{
+  detalhes.classList.remove("ocultar-para-indicadores");
+ }
+}
+
 function configurarAcessoRafael(){
  if(!ehRafaelSomenteVisualizacao()) return;
  const idsOcultar=["menuLancamento","menuCadastros","menuLubrificacao"];
@@ -2221,6 +2238,7 @@ function mostrarAplicacao(){
 
  configurarAcessosPreventivaHoras();
  configurarAcessoRafael();
+ configurarVisualizacaoHorasIndicadores();
 
 
  document
@@ -2410,6 +2428,7 @@ async function testarConexao(){
 ===================================================== */
 
 function mostrarTela(tela){
+ configurarVisualizacaoHorasIndicadores();
 
  if(!perfil)
   return;
