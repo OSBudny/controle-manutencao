@@ -4732,11 +4732,20 @@ let mesHoraExtraCache="";
 
 function nomeFuncionarioRegistro(r){
  const f=r&&r.funcionarios;
+
+ // Relação muitos-para-um normalmente retorna um objeto.
  if(f&&typeof f==="object"&&!Array.isArray(f)&&f.nome){
   return String(f.nome);
  }
+
+ // Compatibilidade caso a relação venha como array.
+ if(Array.isArray(f)&&f.length&&f[0]&&f[0].nome){
+  return String(f[0].nome);
+ }
+
+ // Fallback para a lista de funcionários já carregada no sistema.
  const id=String(r&&r.funcionario_id!=null?r.funcionario_id:"");
- const local=funcionarios.find(x=>String(x.id)===id);
+ const local=(Array.isArray(funcionarios)?funcionarios:[]).find(x=>String(x.id)===id);
  return local&&local.nome?String(local.nome):"Não identificado";
 }
 
@@ -4810,8 +4819,8 @@ async function carregarHorasExtras(){
  try{
   const inicioMes=mesEl.value+'-01';
   const fimMes=proximoMes(mesEl.value);
-  const dados=await supabaseRequest(`horas_extras?select=*&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora_inicial.asc,id.asc`);
-  const descontos=await supabaseRequest(`horas_descontar?select=*&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora.asc,id.asc`);
+  const dados=await supabaseRequest(`horas_extras?select=*,funcionarios(id,nome)&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora_inicial.asc,id.asc`);
+  const descontos=await supabaseRequest(`horas_descontar?select=*,funcionarios(id,nome)&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora.asc,id.asc`);
   horasExtrasMesCache=dados;
   horasDescontosMesCache=descontos;
   mesHoraExtraCache=mesEl.value;
