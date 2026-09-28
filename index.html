@@ -2091,7 +2091,17 @@ async function carregarPerfil(){
   dados[0];
 
 
+ const emailUsuario = String(
+  sessao && sessao.user && sessao.user.email
+   ? sessao.user.email
+   : ""
+ ).trim().toLowerCase();
+
+ const ehElisandra =
+  emailUsuario === "elisandra.borges@budny.com.br";
+
  if(
+  !ehElisandra &&
   ![
    "admin",
    "operador",
@@ -2173,6 +2183,23 @@ function configurarAcessoRafael(){
 
 function mostrarAplicacao(){
 
+ if(ehUsuarioSomenteHoraExtra()){
+  document.getElementById("telaLogin").style.display="none";
+  document.getElementById("appSistema").style.display="block";
+  const u=document.getElementById("usuarioAtual");
+  if(u) u.innerHTML=`${esc(perfil.nome || sessao.user.email)} <span class="perfil-badge">(hora extra)</span>`;
+  ["menuLancamento","menuCadastros","menuIndicadores","menuLubrificacao"].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display="none";});
+  const menuHoraExtra=document.getElementById("menuHoraExtra");
+  if(menuHoraExtra) menuHoraExtra.style.display="block";
+  const f1=document.getElementById("formCadastroHoraExtra");
+  const f2=document.getElementById("formCadastroHoraDescontar");
+  if(f1) f1.style.display="none";
+  if(f2) f2.style.display="none";
+  configurarVisualizacaoHorasIndicadores();
+  mostrarTela("horaextra");
+  return;
+ }
+
  document
   .getElementById(
    "telaLogin"
@@ -2197,7 +2224,7 @@ function mostrarAplicacao(){
      perfil.nome ||
      sessao.user.email
     )} <span class="perfil-badge">(${esc(
-     perfil.nivel
+     ehUsuarioSomenteHoraExtra() ? "hora extra" : perfil.nivel
     )})</span>`;
 
 
