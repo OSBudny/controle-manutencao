@@ -2181,7 +2181,7 @@ function configurarAcessoRafael(){
 }
 
 
-function mostrarAplicacao(){
+async function mostrarAplicacao(){
 
  if(ehUsuarioSomenteHoraExtra()){
   document.getElementById("telaLogin").style.display="none";
@@ -2196,7 +2196,15 @@ function mostrarAplicacao(){
   if(f1) f1.style.display="none";
   if(f2) f2.style.display="none";
   configurarVisualizacaoHorasIndicadores();
+
+  // Para a Elisandra, inicializa o mês e carrega os dados antes de encerrar
+  // este fluxo especial. Ela continua somente com permissão de visualização.
+  const hojeHoraExtra = obterDataLocalISO();
+  const mesHoraExtra = document.getElementById("mesHoraExtra");
+  if(mesHoraExtra) mesHoraExtra.value = hojeHoraExtra.slice(0,7);
+
   mostrarTela("horaextra");
+  await carregarTudo();
   return;
  }
 
