@@ -4711,7 +4711,12 @@ let mesHoraExtraCache="";
 
 function nomeFuncionarioRegistro(r){
  const f=r&&r.funcionarios;
- return f&&typeof f==="object"&&!Array.isArray(f)?String(f.nome||"Não identificado"):"Não identificado";
+ if(f&&typeof f==="object"&&!Array.isArray(f)&&f.nome){
+  return String(f.nome);
+ }
+ const id=String(r&&r.funcionario_id!=null?r.funcionario_id:"");
+ const local=funcionarios.find(x=>String(x.id)===id);
+ return local&&local.nome?String(local.nome):"Não identificado";
 }
 
 function abrirJanelaFuncionario(funcionarioId,nome,elemento){
@@ -4784,8 +4789,8 @@ async function carregarHorasExtras(){
  try{
   const inicioMes=mesEl.value+'-01';
   const fimMes=proximoMes(mesEl.value);
-  const dados=await supabaseRequest(`horas_extras?select=*,funcionarios(nome)&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora_inicial.asc,id.asc`);
-  const descontos=await supabaseRequest(`horas_descontar?select=*,funcionarios(nome)&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora.asc,id.asc`);
+  const dados=await supabaseRequest(`horas_extras?select=*&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora_inicial.asc,id.asc`);
+  const descontos=await supabaseRequest(`horas_descontar?select=*&data=gte.${inicioMes}&data=lt.${fimMes}&order=data.asc,hora.asc,id.asc`);
   horasExtrasMesCache=dados;
   horasDescontosMesCache=descontos;
   mesHoraExtraCache=mesEl.value;
@@ -4794,7 +4799,7 @@ async function carregarHorasExtras(){
   dados.forEach(r=>{
    const id=String(r.funcionario_id||"");
    if(!porFuncionario[id]){
-    const nome=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
+    const nome=nomeFuncionarioRegistro(r);
     porFuncionario[id]={id:id,nome:nome,extra:0,desconto:0};
    }
    porFuncionario[id].extra+=(Number(r.minutos_total)||0);
@@ -4802,7 +4807,7 @@ async function carregarHorasExtras(){
   descontos.forEach(r=>{
    const id=String(r.funcionario_id||"");
    if(!porFuncionario[id]){
-    const nome=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
+    const nome=nomeFuncionarioRegistro(r);
     porFuncionario[id]={id:id,nome:nome,extra:0,desconto:0};
    }
    porFuncionario[id].desconto+=(Number(r.minutos_total)||0);
@@ -4830,7 +4835,7 @@ async function carregarHorasExtras(){
    tabelaExtras.innerHTML="";
    dados.forEach(r=>{
     const tr=document.createElement("tr");
-    const funcionario=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
+    const funcionario=nomeFuncionarioRegistro(r);
     const acao=ehAdministradorKelvin()?`<button class="botao vermelho pequeno" onclick="excluirHoraExtra(${Number(r.id)})">X</button>`:"—";
     tr.innerHTML=`<td>${esc(formatarData(r.data))}</td><td>${esc(funcionario)}</td><td>${esc(String(r.hora_inicial||"").slice(0,5))}</td><td>${esc(String(r.hora_final||"").slice(0,5))}</td><td><strong>${formatarTempo(r.minutos_total)}</strong></td><td>${esc(r.tipo||"—")}</td><td>${esc(r.descricao||"—")}</td><td>${acao}</td>`;
     tabelaExtras.appendChild(tr);
@@ -4843,7 +4848,7 @@ async function carregarHorasExtras(){
    tabelaDescontos.innerHTML="";
    descontos.forEach(r=>{
     const tr=document.createElement("tr");
-    const funcionario=r.funcionarios&&typeof r.funcionarios==="object"&&!Array.isArray(r.funcionarios)?r.funcionarios.nome:"Não identificado";
+    const funcionario=nomeFuncionarioRegistro(r);
     const acao=ehAdministradorKelvin()?`<button class="botao vermelho pequeno" onclick="excluirHoraDescontar(${Number(r.id)})">X</button>`:"—";
     tr.innerHTML=`<td>${esc(formatarData(r.data))}</td><td>${esc(funcionario)}</td><td><strong>${formatarTempo(r.minutos_total)}</strong></td><td>${esc(r.motivo||"—")}</td><td>${acao}</td>`;
     tabelaDescontos.appendChild(tr);
@@ -4852,7 +4857,7 @@ async function carregarHorasExtras(){
  }catch(erro){
   console.error(erro);
   resumo.className="status erro";
-  resumo.innerText="Não foi possível carregar o controle de horas.";
+  resumo.innerText="Não foi possível carregar o controle de horas. Verifique a permissão SELECT no Supabase para horas_extras e horas_descontar.";
   tabelaExtras.innerHTML='<tr><td colspan="8" class="lista-vazia">Erro ao carregar as horas extras.</td></tr>';
   tabelaDescontos.innerHTML='<tr><td colspan="5" class="lista-vazia">Erro ao carregar os descontos.</td></tr>';
  }
@@ -6204,11 +6209,15 @@ async function carregarTudo(){
  await testarConexao();
 
  if(ehUsuarioSomenteHoraExtra()){
+  // Elisandra: somente leitura do Controle mensal de Hora extra.
+  // Funcionários são carregados apenas para exibir os nomes; os registros de
+  // horas são consultados diretamente nas tabelas horas_extras/horas_descontar.
   await carregarFuncionarios();
   const hojeHoraExtra=obterDataLocalISO();
-  document.getElementById("dataHoraExtra").value=hojeHoraExtra;
-  document.getElementById("dataHoraDescontar").value=hojeHoraExtra;
-  document.getElementById("mesHoraExtra").value=hojeHoraExtra.slice(0,7);
+  const mesHoraExtra=document.getElementById("mesHoraExtra");
+  if(mesHoraExtra&&!mesHoraExtra.value){
+   mesHoraExtra.value=hojeHoraExtra.slice(0,7);
+  }
   await carregarHorasExtras();
   return;
  }
