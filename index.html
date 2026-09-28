@@ -743,6 +743,7 @@ Sair
 
 <button
  id="menuIndicadores"
+ style="display:none"
  onclick="mostrarTela('indicadores')">
 
 📊 Indicadores
@@ -2094,8 +2095,7 @@ async function carregarPerfil(){
   ![
    "admin",
    "operador",
-   "indicadores",
-   "horas_extras"
+   "indicadores"
   ].includes(
    perfil.nivel
   )
@@ -2132,6 +2132,11 @@ function configurarAcessosPreventivaHoras(){
  if(formLub) formLub.style.display = podeEditar ? "block" : "none";
  if(formExtra) formExtra.style.display = podeEditar ? "block" : "none";
  if(formDesc) formDesc.style.display = podeEditar ? "block" : "none";
+}
+
+function ehUsuarioSomenteHoraExtra(){
+ const email = String(sessao && sessao.user && sessao.user.email ? sessao.user.email : "").trim().toLowerCase();
+ return email === "elisandra.borges@budny.com.br";
 }
 
 function ehRafaelSomenteVisualizacao(){
@@ -2237,6 +2242,13 @@ function mostrarAplicacao(){
 
  document.getElementById("menuHoraExtra").style.display = "block";
 
+ if(ehUsuarioSomenteHoraExtra()){
+  document.getElementById("menuLancamento").style.display="none";
+  document.getElementById("menuCadastros").style.display="none";
+  document.getElementById("menuIndicadores").style.display="none";
+  document.getElementById("menuLubrificacao").style.display="none";
+ }
+
  configurarAcessosPreventivaHoras();
  configurarAcessoRafael();
  configurarVisualizacaoHorasIndicadores();
@@ -2264,10 +2276,11 @@ function mostrarAplicacao(){
 
 
  const primeira =
-  ehRafaelSomenteVisualizacao()
+  ehUsuarioSomenteHoraExtra()
+   ? "horaextra"
+   : ehRafaelSomenteVisualizacao()
    ? "indicadores"
-   : perfil.nivel ===
-  "indicadores"
+   : perfil.nivel === "indicadores"
    ? "indicadores"
    : "lancamento";
 
@@ -2428,11 +2441,25 @@ async function testarConexao(){
    TELAS
 ===================================================== */
 
+function bloquearIndicadoresElisandra(){
+ if(!ehUsuarioSomenteHoraExtra()) return;
+ const menu=document.getElementById("menuIndicadores");
+ if(menu) menu.style.display="none";
+ const tela=document.getElementById("indicadores");
+ if(tela) tela.classList.remove("ativa");
+}
+
 function mostrarTela(tela){
  configurarVisualizacaoHorasIndicadores();
+ bloquearIndicadoresElisandra();
 
  if(!perfil)
   return;
+
+ if(ehUsuarioSomenteHoraExtra() && tela !== "horaextra"){
+  alert("Seu acesso permite apenas visualizar Hora extra.");
+  return;
+ }
 
  if(
   ehRafaelSomenteVisualizacao() &&
@@ -3297,6 +3324,7 @@ function atualizarSelectSetores(){
 ===================================================== */
 
 async function registrar(){
+ if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização de Hora extra.");return;}
  if(ehRafaelSomenteVisualizacao()){alert("Seu acesso é somente para visualização. Você não pode cadastrar OS.");return;}
 
  if(
@@ -4013,6 +4041,7 @@ function limparPesquisaOS(){
 async function excluirRegistro(
  id
 ){
+ if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização de Hora extra.");return;}
 
  if(
   !perfil ||
@@ -4079,6 +4108,7 @@ async function excluirRegistro(
 async function excluirFuncionario(
  id
 ){
+ if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização de Hora extra.");return;}
 
  if(
   !perfil ||
@@ -4166,6 +4196,7 @@ async function excluirFuncionario(
 async function excluirSetor(
  id
 ){
+ if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização de Hora extra.");return;}
 
  if(
   !perfil ||
@@ -4616,6 +4647,7 @@ function preencherSelectHoraExtra(){
 }
 
 async function registrarHoraExtra(){
+ if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização. Você não pode registrar horas extras.");return;}
  if(ehRafaelSomenteVisualizacao()){alert("Seu acesso é somente para visualização. Você não pode registrar horas extras.");return;}
  if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode registrar horas extras.");return;}
  const data=document.getElementById("dataHoraExtra").value;
@@ -4793,6 +4825,7 @@ async function carregarHorasExtras(){
 
 
 async function excluirHoraExtra(id){
+ if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização. Você não pode excluir horas extras.");return;}
  if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode excluir horas extras.");return;}
  if(!confirm("Excluir este registro de hora extra?"))return;
  try{await supabaseRequest(`horas_extras?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});await carregarHorasExtras();}catch(erro){console.error(erro);alert("Erro ao excluir hora extra:\n"+erro.message);}
@@ -4811,6 +4844,7 @@ function preencherSelectHoraDescontar(){
 }
 
 async function registrarHoraDescontar(){
+ if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização. Você não pode registrar descontos.");return;}
  if(ehRafaelSomenteVisualizacao()){alert("Seu acesso é somente para visualização. Você não pode registrar horas a descontar.");return;}
  if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode registrar horas a descontar.");return;}
  const data=document.getElementById("dataHoraDescontar").value;
@@ -4834,6 +4868,7 @@ async function registrarHoraDescontar(){
 
 
 async function excluirHoraDescontar(id){
+ if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização. Você não pode excluir descontos.");return;}
  if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode excluir descontos.");return;}
  if(!confirm("Excluir este desconto?"))return;
  try{await supabaseRequest(`horas_descontar?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});await carregarHorasExtras();}catch(erro){console.error(erro);alert("Erro ao excluir desconto:\n"+erro.message);}
@@ -6132,6 +6167,16 @@ function montarTabelaTipos(
 async function carregarTudo(){
 
  await testarConexao();
+
+ if(ehUsuarioSomenteHoraExtra()){
+  await carregarFuncionarios();
+  const hojeHoraExtra=obterDataLocalISO();
+  document.getElementById("dataHoraExtra").value=hojeHoraExtra;
+  document.getElementById("dataHoraDescontar").value=hojeHoraExtra;
+  document.getElementById("mesHoraExtra").value=hojeHoraExtra.slice(0,7);
+  await carregarHorasExtras();
+  return;
+ }
 
  await carregarFuncionarios();
 
