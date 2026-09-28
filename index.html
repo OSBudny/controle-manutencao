@@ -2159,7 +2159,12 @@ function configurarVisualizacaoHorasIndicadores(){
  if(!detalhes)return;
  const somenteIndicadores=!!(perfil&&perfil.nivel==="indicadores");
  const somenteRafael=typeof ehRafaelSomenteVisualizacao==="function"&&ehRafaelSomenteVisualizacao();
- if(somenteIndicadores||somenteRafael){
+ const somenteElisandra=typeof ehUsuarioSomenteHoraExtra==="function"&&ehUsuarioSomenteHoraExtra();
+
+ // Para Elisandra, Rafael e perfil "indicadores", o Controle mensal mostra
+ // somente o resumo por funcionário. Os detalhes continuam disponíveis ao
+ // clicar no nome do funcionário, através da janela flutuante já existente.
+ if(somenteIndicadores||somenteRafael||somenteElisandra){
   detalhes.classList.add("ocultar-para-indicadores");
  }else{
   detalhes.classList.remove("ocultar-para-indicadores");
