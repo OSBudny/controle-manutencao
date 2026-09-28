@@ -2202,14 +2202,30 @@ async function mostrarAplicacao(){
   if(f2) f2.style.display="none";
   configurarVisualizacaoHorasIndicadores();
 
-  // Para a Elisandra, inicializa o mês e carrega os dados antes de encerrar
-  // este fluxo especial. Ela continua somente com permissão de visualização.
+  // Elisandra: força a tela inicial diretamente em Hora extra antes de
+  // qualquer consulta ao banco. Isso impede "Lançar serviço" de permanecer
+  // visível durante ou após o login.
+  document.querySelectorAll(".tela").forEach(el=>el.classList.remove("ativa"));
+  const telaHoraExtra=document.getElementById("horaextra");
+  if(telaHoraExtra) telaHoraExtra.classList.add("ativa");
+
+  document.querySelectorAll("nav button").forEach(btn=>btn.classList.remove("ativo"));
+  if(menuHoraExtra) menuHoraExtra.classList.add("ativo");
+
+  // Inicializa o mês atual e carrega somente os dados necessários para
+  // o Controle mensal da Elisandra.
   const hojeHoraExtra = obterDataLocalISO();
   const mesHoraExtra = document.getElementById("mesHoraExtra");
   if(mesHoraExtra) mesHoraExtra.value = hojeHoraExtra.slice(0,7);
 
-  mostrarTela("horaextra");
   await carregarTudo();
+
+  // Reforça a tela correta após o carregamento, caso alguma rotina tenha
+  // alterado classes de navegação durante as consultas.
+  document.querySelectorAll(".tela").forEach(el=>el.classList.remove("ativa"));
+  if(telaHoraExtra) telaHoraExtra.classList.add("ativa");
+  document.querySelectorAll("nav button").forEach(btn=>btn.classList.remove("ativo"));
+  if(menuHoraExtra) menuHoraExtra.classList.add("ativo");
   return;
  }
 
