@@ -1334,6 +1334,9 @@ Tipos de manutenção
 <div class="card">
 <h2>❄️ PMOC — Plano de Manutenção, Operação e Controle</h2>
 <div id="pmocStatus" class="status">Carregando dados do PMOC...</div>
+<div id="pmocBTUTopo" style="margin-top:10px;padding:10px 14px;border:1px solid var(--laranja);border-radius:7px;background:#25272a;font-weight:800;color:var(--laranja);font-size:18px;">
+ BTU TOTAL INSTALADO: <span id="pmocTotalBTUTopo" style="color:#fff">0 BTU/h</span>
+</div>
 <div class="pmoc-indicadores">
  <div class="pmoc-kpi"><small>Equipamentos cadastrados</small><strong id="pmocTotalEquip">0</strong></div>
  <div class="pmoc-kpi pmoc-kpi-btu"><small>BTU TOTAL INSTALADO</small><strong id="pmocTotalBTU">0 BTU/h</strong></div>
@@ -4910,7 +4913,7 @@ function renderPMOC(){
  let em=0,prox=0,venc=0; tb.innerHTML='';
  pmocEquipamentos.forEach(eq=>{const st=statusEquipPMOC(eq);if(st.nivel===1)em++;else if(st.nivel===2)prox++;else if(st.nivel===3)venc++;const tr=document.createElement('tr');tr.className='pmoc-linha-clicavel';tr.title='Clique para abrir as manutenções deste aparelho';tr.onclick=()=>abrirInspecaoPMOC(Number(eq.id));tr.innerHTML=`<td><strong class="pmoc-tag-link" onclick="event.stopPropagation();abrirInspecaoPMOC(Number('${Number(eq.id)}'))">${esc(eq.tag||'—')}</strong></td><td>${esc(eq.setor||'—')}</td><td>${eq.capacidade_btu?Number(eq.capacidade_btu).toLocaleString('pt-BR')+' BTU/h':'—'}</td><td>${dataBRPMOC(st.ultima)}</td><td><span class="pmoc-status ${st.classe}">${st.texto}</span></td><td>🔧 Abrir manutenções</td>`;tb.appendChild(tr);});
  if(!pmocEquipamentos.length)tb.innerHTML='<tr><td colspan="6" class="lista-vazia">Nenhum equipamento cadastrado.</td></tr>';
- document.getElementById('pmocTotalEquip').textContent=pmocEquipamentos.length;const totalBTU=pmocEquipamentos.reduce((s,e)=>s+(Number(e.capacidade_btu)||0),0);const elTotalBTU=document.getElementById('pmocTotalBTU');if(elTotalBTU)elTotalBTU.textContent=totalBTU.toLocaleString('pt-BR')+' BTU/h';document.getElementById('pmocEmDia').textContent=em;document.getElementById('pmocProximos').textContent=prox;document.getElementById('pmocVencidos').textContent=venc;
+ document.getElementById('pmocTotalEquip').textContent=pmocEquipamentos.length;const totalBTU=pmocEquipamentos.reduce((s,e)=>s+(Number(e.capacidade_btu)||0),0);const elTotalBTU=document.getElementById('pmocTotalBTU');if(elTotalBTU)elTotalBTU.textContent=totalBTU.toLocaleString('pt-BR')+' BTU/h';const elTotalBTUTopo=document.getElementById('pmocTotalBTUTopo');if(elTotalBTUTopo)elTotalBTUTopo.textContent=totalBTU.toLocaleString('pt-BR')+' BTU/h';document.getElementById('pmocEmDia').textContent=em;document.getElementById('pmocProximos').textContent=prox;document.getElementById('pmocVencidos').textContent=venc;
  hist.innerHTML='';pmocExecucoes.slice(0,100).forEach(r=>{const eq=pmocEquipamentos.find(e=>String(e.id)===String(r.equipamento_id))||{};let itens=[];try{itens=typeof r.checklist==='string'?JSON.parse(r.checklist):r.checklist||[]}catch(_e){}const nc=itens.filter(i=>i.status==='Não conforme').length;const resultado=nc?`${nc} não conformidade(s)`:'Conforme';const tr=document.createElement('tr');tr.innerHTML=`<td>${dataBRPMOC(r.data)}</td><td>${esc(eq.tag||'—')}</td><td>${esc(eq.setor||'—')}</td><td>${esc(r.periodo||'—')}</td><td>${esc(r.responsavel||'—')}</td><td>${esc(resultado)}</td><td>${esc(r.observacoes||'—')}</td>`;hist.appendChild(tr);});if(!pmocExecucoes.length)hist.innerHTML='<tr><td colspan="7" class="lista-vazia">Nenhuma inspeção registrada.</td></tr>';
 renderHistoricoPMOCPorMaquina();
 }
