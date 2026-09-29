@@ -637,7 +637,7 @@ tr:hover{
 #detalhesHorasExtrasIndicadores.ocultar-para-indicadores{display:none !important;}
 
 /* ================= PMOC ================= */
-.pmoc-indicadores{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:16px 0}.pmoc-kpi{background:#2c2e31;border:1px solid #444;border-radius:10px;padding:16px}.pmoc-kpi small{display:block;color:#bbb;margin-bottom:6px}.pmoc-kpi strong{font-size:26px}.pmoc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.pmoc-acoes{display:flex;gap:8px;flex-wrap:wrap}.pmoc-status{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700}.pmoc-em-dia{background:#174d2b;color:#baf2c9}.pmoc-proximo{background:#594a13;color:#ffe69a}.pmoc-vencido{background:#5b2020;color:#ffc5c5}.pmoc-sem-registro{background:#414141;color:#eee}.pmoc-check{display:grid;grid-template-columns:minmax(260px,1fr) 150px 180px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #444}.pmoc-check select{width:100%}.pmoc-linha-clicavel{cursor:pointer}.pmoc-linha-clicavel:hover{background:#333}.pmoc-detalhes{background:#242629;border:1px solid #4a4a4a;border-radius:10px;padding:14px;margin-bottom:14px}.pmoc-detalhes strong{font-size:18px}@media(max-width:760px){.pmoc-check{grid-template-columns:1fr}.pmoc-acoes .botao{width:100%}}
+.pmoc-indicadores{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:16px 0}.pmoc-kpi{background:#2c2e31;border:1px solid #444;border-radius:10px;padding:16px}.pmoc-kpi small{display:block;color:#bbb;margin-bottom:6px}.pmoc-kpi strong{font-size:26px}.pmoc-kpi-btu{border:2px solid var(--laranja)}.pmoc-kpi-btu small{color:var(--laranja);font-weight:800}.pmoc-kpi-btu strong{font-size:28px}.pmoc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.pmoc-acoes{display:flex;gap:8px;flex-wrap:wrap}.pmoc-status{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700}.pmoc-em-dia{background:#174d2b;color:#baf2c9}.pmoc-proximo{background:#594a13;color:#ffe69a}.pmoc-vencido{background:#5b2020;color:#ffc5c5}.pmoc-sem-registro{background:#414141;color:#eee}.pmoc-check{display:grid;grid-template-columns:minmax(260px,1fr) 150px 180px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #444}.pmoc-check select{width:100%}.pmoc-linha-clicavel{cursor:pointer}.pmoc-linha-clicavel:hover{background:#333}.pmoc-detalhes{background:#242629;border:1px solid #4a4a4a;border-radius:10px;padding:14px;margin-bottom:14px}.pmoc-detalhes strong{font-size:18px}@media(max-width:760px){.pmoc-check{grid-template-columns:1fr}.pmoc-acoes .botao{width:100%}}
 
 /* ===== MODAL FLUTUANTE PMOC ===== */
 #pmocModalOverlay{
@@ -1336,7 +1336,7 @@ Tipos de manutenção
 <div id="pmocStatus" class="status">Carregando dados do PMOC...</div>
 <div class="pmoc-indicadores">
  <div class="pmoc-kpi"><small>Equipamentos cadastrados</small><strong id="pmocTotalEquip">0</strong></div>
- <div class="pmoc-kpi"><small>Capacidade total</small><strong id="pmocTotalBTU">0 BTU/h</strong></div>
+ <div class="pmoc-kpi pmoc-kpi-btu"><small>BTU TOTAL INSTALADO</small><strong id="pmocTotalBTU">0 BTU/h</strong></div>
  <div class="pmoc-kpi"><small>Em dia</small><strong id="pmocEmDia">0</strong></div>
  <div class="pmoc-kpi"><small>Próximos / atenção</small><strong id="pmocProximos">0</strong></div>
  <div class="pmoc-kpi"><small>Vencidos</small><strong id="pmocVencidos">0</strong></div>
