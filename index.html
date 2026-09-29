@@ -1,4 +1,12 @@
 <!DOCTYPE html>
+<!--
+  Gestão de Manutenção - versão para publicação no GitHub Pages.
+  Arquivo principal: index.html
+  Backend: Supabase
+  IMPORTANTE: mantenha RLS habilitado no Supabase. A chave anon/publishable
+  usada no frontend pode ser pública; nunca coloque service_role neste arquivo.
+-->
+
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -627,6 +635,53 @@ tr:hover{
 
 /* Usuário Indicadores: mostra apenas os cards superiores. Os detalhes completos continuam na janela do funcionário. */
 #detalhesHorasExtrasIndicadores.ocultar-para-indicadores{display:none !important;}
+
+/* ================= PMOC ================= */
+.pmoc-indicadores{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin:16px 0}.pmoc-kpi{background:#2c2e31;border:1px solid #444;border-radius:10px;padding:16px}.pmoc-kpi small{display:block;color:#bbb;margin-bottom:6px}.pmoc-kpi strong{font-size:26px}.pmoc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.pmoc-acoes{display:flex;gap:8px;flex-wrap:wrap}.pmoc-status{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:700}.pmoc-em-dia{background:#174d2b;color:#baf2c9}.pmoc-proximo{background:#594a13;color:#ffe69a}.pmoc-vencido{background:#5b2020;color:#ffc5c5}.pmoc-sem-registro{background:#414141;color:#eee}.pmoc-check{display:grid;grid-template-columns:minmax(260px,1fr) 150px 180px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #444}.pmoc-check select{width:100%}.pmoc-linha-clicavel{cursor:pointer}.pmoc-linha-clicavel:hover{background:#333}.pmoc-detalhes{background:#242629;border:1px solid #4a4a4a;border-radius:10px;padding:14px;margin-bottom:14px}.pmoc-detalhes strong{font-size:18px}@media(max-width:760px){.pmoc-check{grid-template-columns:1fr}.pmoc-acoes .botao{width:100%}}
+
+/* ===== MODAL FLUTUANTE PMOC ===== */
+#pmocModalOverlay{
+ display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);
+ z-index:9998;align-items:center;justify-content:center;padding:24px;
+}
+#pmocModalOverlay.ativo{display:flex;}
+#pmocModal{
+ width:min(1100px,96vw);max-height:92vh;overflow:auto;
+ background:var(--cinza-card,#292b2e);border:1px solid #555;border-radius:12px;
+ box-shadow:0 18px 60px rgba(0,0,0,.55);padding:20px;position:relative;
+}
+#pmocModalFechar{
+ position:sticky;top:0;float:right;z-index:3;border:0;border-radius:7px;
+ background:#b3261e;color:white;font-weight:700;font-size:18px;padding:7px 12px;cursor:pointer;
+}
+#pmocModalConteudo #pmocExecucaoCard{display:block!important;margin:0;box-shadow:none;}
+.pmoc-tag-link{cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+
+
+.pmoc-rotulo{color:var(--laranja);font-weight:700;}
+.pmoc-valor{color:#f2f2f2;font-weight:500;}
+.pmoc-separador{color:#777;margin:0 8px;}
+.pmoc-titulo-historico{color:var(--laranja);font-weight:800;}
+
+
+.pmoc-data-manut{color:var(--laranja);font-weight:800;}
+.pmoc-periodo-manut{color:#ffb35c;font-weight:800;}
+.pmoc-realizada{color:#5fd38d;font-weight:800;}
+.pmoc-atividade{color:#f2f2f2;}
+.pmoc-status-conforme{color:#5fd38d;font-weight:700;}
+.pmoc-status-nao-conforme{color:#ff6b6b;font-weight:700;}
+.pmoc-status-na{color:#c7c7c7;font-weight:700;}
+
+
+.pmoc-hist-maquina{border:1px solid #4a4c4f;border-radius:9px;margin:12px 0;overflow:hidden;background:#25272a;}
+.pmoc-hist-maquina summary{cursor:pointer;padding:13px 15px;font-weight:800;color:var(--laranja);background:#202225;list-style:none;}
+.pmoc-hist-maquina summary::-webkit-details-marker{display:none;}
+.pmoc-hist-maquina summary:before{content:'▶';display:inline-block;margin-right:9px;font-size:11px;transition:transform .15s;}
+.pmoc-hist-maquina[open] summary:before{transform:rotate(90deg);}
+.pmoc-hist-conteudo{padding:8px 14px 14px;}
+.pmoc-hist-reg{padding:10px 0;border-bottom:1px solid #444;}
+.pmoc-hist-reg:last-child{border-bottom:0;}
+
 </style>
 </head>
 
@@ -757,6 +812,9 @@ Sair
 🛢️ Lubrificação
 
 </button>
+
+
+<button id="menuPMOC" style="display:none" onclick="mostrarTela('pmoc')">❄️ PMOC</button>
 
 <button
  id="menuHoraExtra"
@@ -1269,6 +1327,62 @@ Tipos de manutenção
 
 </section>
 
+
+
+<!-- ================= PMOC ================= -->
+<section id="pmoc" class="tela">
+<div class="card">
+<h2>❄️ PMOC — Plano de Manutenção, Operação e Controle</h2>
+<div id="pmocStatus" class="status">Carregando dados do PMOC...</div>
+<div class="pmoc-indicadores">
+ <div class="pmoc-kpi"><small>Equipamentos cadastrados</small><strong id="pmocTotalEquip">0</strong></div>
+ <div class="pmoc-kpi"><small>Em dia</small><strong id="pmocEmDia">0</strong></div>
+ <div class="pmoc-kpi"><small>Próximos / atenção</small><strong id="pmocProximos">0</strong></div>
+ <div class="pmoc-kpi"><small>Vencidos</small><strong id="pmocVencidos">0</strong></div>
+</div>
+</div>
+
+<div class="card" id="pmocCadastroEquipamento">
+<h2>Cadastrar aparelho / ambiente</h2>
+<div class="pmoc-grid">
+ <div class="campo"><label>TAG</label><input id="pmocTag" placeholder="Ex.: AC-001"></div>
+ <div class="campo"><label>Setor / ambiente</label><input id="pmocSetor" placeholder="Ex.: Manutenção"></div>
+ <div class="campo"><label>Tipo / modelo</label><input id="pmocModelo" placeholder="Ex.: Split"></div>
+ <div class="campo"><label>Capacidade (BTU/h)</label><input id="pmocBtu" type="number" min="0" placeholder="12000"></div>
+ <div class="campo"><label>Nº de série</label><input id="pmocSerie"></div>
+ <div class="campo"><label>Área climatizada (m²)</label><input id="pmocArea" type="number" min="0" step="0.01"></div>
+ <div class="campo"><label>Ocupantes fixos</label><input id="pmocFixos" type="number" min="0" value="0"></div>
+ <div class="campo"><label>Ocupantes flutuantes</label><input id="pmocFlutuantes" type="number" min="0" value="0"></div>
+</div>
+<div class="pmoc-acoes" style="margin-top:14px"><button class="botao pequeno" onclick="salvarEquipamentoPMOC()">+ Cadastrar equipamento</button></div>
+<div id="pmocMensagem" class="mensagem"></div>
+</div>
+
+<div class="card">
+<h2>Aparelhos / ambientes do PMOC</h2><p style="color:#bbb;margin-top:-6px">Clique em qualquer aparelho para abrir suas manutenções.</p>
+<div class="tabela"><table><thead><tr><th>TAG</th><th>Setor</th><th>Capacidade</th><th>Última inspeção</th><th>Situação</th><th>Ação</th></tr></thead><tbody id="pmocTabelaEquip"><tr><td colspan="6" class="lista-vazia">Nenhum equipamento carregado.</td></tr></tbody></table></div>
+</div>
+
+<div class="card" id="pmocExecucaoCard" style="display:none">
+<h2 id="pmocTituloExecucao">Ficha do aparelho</h2><div id="pmocDetalhesEquip" class="pmoc-detalhes"></div><div id="pmocFormularioManutencao" style="display:none"><h3 style="margin-top:8px">Registrar nova manutenção</h3>
+<input type="hidden" id="pmocEquipId">
+<div class="pmoc-grid">
+ <div class="campo"><label>Data da inspeção</label><input type="date" id="pmocData"></div>
+ <div class="campo"><label>Responsável / técnico</label><select id="pmocResponsavel"><option value="">Selecione o técnico</option></select></div>
+ <div class="campo"><label>Periodicidade do checklist</label><select id="pmocPeriodo" onchange="montarChecklistPMOC()"><option value="Mensal">Mensal</option><option value="Bimestral">Bimestral</option><option value="Semestral">Semestral</option><option value="Anual">Anual</option></select></div>
+</div>
+<div id="pmocChecklist" style="margin-top:16px"></div>
+<div class="campo" style="margin-top:14px"><label>Observações gerais / peças necessárias</label><textarea id="pmocObservacoes" maxlength="1000" placeholder="Registre anomalias, peças necessárias e providências..."></textarea></div>
+<div class="pmoc-acoes" style="margin-top:14px"><button class="botao pequeno" onclick="salvarInspecaoPMOC()">✓ Salvar inspeção</button><button class="botao pequeno" type="button" onclick="cancelarNovaManutencaoPMOC()">Cancelar</button></div></div><div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap"><button class="botao pequeno" id="btnNovaManutencaoPMOC" type="button" onclick="mostrarNovaManutencaoPMOC()">+ Registrar nova manutenção</button><button class="botao pequeno" type="button" onclick="fecharInspecaoPMOC()">Fechar ficha</button></div>
+</div>
+
+<div class="card" id="pmocHistoricoGeralCard">
+<h2>Histórico de manutenções por máquina</h2>
+<p style="color:#bbb;margin-top:-4px">Clique em uma máquina para abrir somente o histórico dela.</p>
+<div id="pmocHistoricoPorMaquina"><div class="lista-vazia">Nenhuma manutenção registrada.</div></div>
+<table style="display:none"><tbody id="pmocTabelaHistorico"></tbody></table>
+</div>
+</section>
 
 <!-- ================= HORA EXTRA ================= -->
 
@@ -2133,15 +2247,42 @@ function ehAdministradorKelvin(){
   String(sessao.user.email || "").toLowerCase() === "kelvin.batista@budny.com.br"
  );
 }
+function emailAtual(){
+ return String(sessao&&sessao.user&&sessao.user.email?sessao.user.email:"").trim().toLowerCase();
+}
+function podeVisualizarPMOC(){
+ return [
+  "kelvin.batista@budny.com.br",
+  "rafael.zaccaron@budny.com.br",
+  "mariane.souza@budny.com.br"
+ ].includes(emailAtual());
+}
+function podeEditarPMOC(){
+ return emailAtual()==="kelvin.batista@budny.com.br";
+}
+function configurarAcessoPMOC(){
+ const menu=document.getElementById("menuPMOC");
+ const permitido=podeVisualizarPMOC();
+ if(menu) menu.style.display=permitido?"block":"none";
+ const form=document.getElementById("pmocCadastroEquipamento");
+ if(form) form.style.display=podeEditarPMOC()?"block":"none";
+ if(!permitido){
+  const tela=document.getElementById("pmoc");
+  if(tela) tela.classList.remove("ativa");
+ }
+}
+
 
 function configurarAcessosPreventivaHoras(){
  const podeEditar = ehAdministradorKelvin();
  const formLub = document.getElementById("formCadastroLubrificacao");
  const formExtra = document.getElementById("formCadastroHoraExtra");
  const formDesc = document.getElementById("formCadastroHoraDescontar");
+ const formPMOC = document.getElementById("pmocCadastroEquipamento");
  if(formLub) formLub.style.display = podeEditar ? "block" : "none";
  if(formExtra) formExtra.style.display = podeEditar ? "block" : "none";
  if(formDesc) formDesc.style.display = podeEditar ? "block" : "none";
+ if(formPMOC) formPMOC.style.display = podeEditar ? "block" : "none";
 }
 
 function ehUsuarioSomenteHoraExtra(){
@@ -2177,8 +2318,10 @@ function configurarAcessoRafael(){
  idsOcultar.forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display="none"; });
  const menuIndicadores=document.getElementById("menuIndicadores");
  const menuHoraExtra=document.getElementById("menuHoraExtra");
+ const menuPMOC=document.getElementById("menuPMOC");
  if(menuIndicadores) menuIndicadores.style.display="block";
  if(menuHoraExtra) menuHoraExtra.style.display="block";
+ if(menuPMOC) menuPMOC.style.display="block";
  const formExtra=document.getElementById("formCadastroHoraExtra");
  const formDesc=document.getElementById("formCadastroHoraDescontar");
  if(formExtra) formExtra.style.display="none";
@@ -2193,7 +2336,7 @@ async function mostrarAplicacao(){
   document.getElementById("appSistema").style.display="block";
   const u=document.getElementById("usuarioAtual");
   if(u) u.innerHTML=`${esc(perfil.nome || sessao.user.email)} <span class="perfil-badge">(hora extra)</span>`;
-  ["menuLancamento","menuCadastros","menuIndicadores","menuLubrificacao"].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display="none";});
+  ["menuLancamento","menuCadastros","menuIndicadores","menuLubrificacao","menuPMOC"].forEach(id=>{const el=document.getElementById(id); if(el) el.style.display="none";});
   const menuHoraExtra=document.getElementById("menuHoraExtra");
   if(menuHoraExtra) menuHoraExtra.style.display="block";
   const f1=document.getElementById("formCadastroHoraExtra");
@@ -2308,6 +2451,7 @@ async function mostrarAplicacao(){
  configurarAcessosPreventivaHoras();
  configurarAcessoRafael();
  configurarVisualizacaoHorasIndicadores();
+ configurarAcessoPMOC();
 
 
  document
@@ -2512,6 +2656,10 @@ function mostrarTela(tela){
  if(!perfil)
   return;
 
+ if(tela==="pmoc" && !podeVisualizarPMOC()){
+  return;
+ }
+
  if(ehUsuarioSomenteHoraExtra() && tela !== "horaextra"){
   alert("Seu acesso permite apenas visualizar Hora extra.");
   return;
@@ -2519,9 +2667,9 @@ function mostrarTela(tela){
 
  if(
   ehRafaelSomenteVisualizacao() &&
-  !["indicadores","horaextra"].includes(tela)
+  !["indicadores","horaextra","pmoc"].includes(tela)
  ){
-  alert("Seu acesso permite apenas visualizar Indicadores e Hora extra.");
+  alert("Seu acesso permite visualizar Indicadores, Hora extra e PMOC.");
   return;
  }
 
@@ -2546,10 +2694,9 @@ function mostrarTela(tela){
   perfil.nivel ===
    "indicadores" &&
   (
-   tela ===
-    "lancamento" ||
-   tela ===
-    "cadastros"
+   tela === "lancamento" ||
+   tela === "cadastros" ||
+   (tela === "pmoc" && !podeVisualizarPMOC())
   )
  ){
 
@@ -2659,6 +2806,11 @@ function mostrarTela(tela){
 
   carregarLubrificacoes();
 
+ }
+
+ if(tela === "pmoc"){
+  document.getElementById("menuPMOC").classList.add("ativo");
+  carregarPMOC();
  }
 
  if(tela === "horaextra"){
@@ -2946,6 +3098,7 @@ async function carregarFuncionarios(){
 
 
  atualizarSelectTecnicos();
+ preencherTecnicosPMOC();
 
 }
 
@@ -4685,6 +4838,140 @@ async function marcarLubrificacaoRealizada(id){
 }
 
 
+
+/* =====================================================
+   PMOC
+===================================================== */
+const PMOC_ATIVIDADES=[
+ {periodo:'Mensal',descricao:'Verificar tomadas elétricas, botoeiras etc.'},
+ {periodo:'Bimestral',descricao:'Verificar os filtros de ar e fazer a limpeza, se necessário, com água e sabão'},
+ {periodo:'Semestral',descricao:'Verificar e eliminar sujeira/corrosão na bandeja'},
+ {periodo:'Semestral',descricao:'Verificar e eliminar possíveis frestas dos filtros'},
+ {periodo:'Semestral',descricao:'Verificar fixação do aparelho e corrigir ajuste da moldura do filtro na estrutura'},
+ {periodo:'Semestral',descricao:'Lavagem das bandejas com uso de detergente'},
+ {periodo:'Semestral',descricao:'Verificar drenagem da água da bandeja'},
+ {periodo:'Semestral',descricao:'Verificar danos e corrosão'},
+ {periodo:'Semestral',descricao:'Verificar aterramento elétrico'},
+ {periodo:'Semestral',descricao:'Verificar estado do isolamento termoacústico e substituir se necessário'},
+ {periodo:'Semestral',descricao:'Verificar vedação/fixação dos painéis de fechamento e danos no gabinete'},
+ {periodo:'Semestral',descricao:'Verificar e eliminar danos/corrosão do gabinete'},
+ {periodo:'Semestral',descricao:'Verificar mecanismo de renovação de ar'},
+ {periodo:'Semestral',descricao:'Eliminar sujeiras e danos/corrosão do ventilador'},
+ {periodo:'Semestral',descricao:'Verificar amortecedor para vibração e ruídos anormais'},
+ {periodo:'Semestral',descricao:'Eliminar sujeiras e danos/corrosão do compressor'},
+ {periodo:'Semestral',descricao:'Verificar e corrigir corrosão nas tubulações'},
+ {periodo:'Semestral',descricao:'Verificar/corrigir fixação e amortecedores de vibração dos motores'},
+ {periodo:'Semestral',descricao:'Verificar fixação e ruídos anormais do compressor'},
+ {periodo:'Semestral',descricao:'Verificar e eliminar danos/corrosão dos motores'},
+ {periodo:'Semestral',descricao:'Verificar possível vazamento de gás'},
+ {periodo:'Anual',descricao:'Lavar e remover biofilme da serpentina com produto biodegradável'},
+ {periodo:'Anual',descricao:'Lavar e remover incrustações da serpentina da condensadora'},
+ {periodo:'Anual',descricao:'Lavar o evaporador com produto biodegradável'},
+ {periodo:'Anual',descricao:'Lavar interna e externamente gabinetes, entradas e saídas de ar'},
+ {periodo:'Anual',descricao:'Limpar o elemento filtrante'}
+];
+let pmocEquipamentos=[]; let pmocExecucoes=[];
+function mesesPeriodoPMOC(p){return ({Mensal:1,Bimestral:2,Semestral:6,Anual:12})[p]||0;}
+function addMesesPMOC(data,meses){const d=new Date(data+'T12:00:00');d.setMonth(d.getMonth()+meses);return d;}
+function dataBRPMOC(v){if(!v)return '—';const p=String(v).slice(0,10).split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:v;}function preencherTecnicosPMOC(){
+ const sel=document.getElementById('pmocResponsavel');if(!sel)return;
+ const atual=sel.value;
+ sel.innerHTML='<option value="">Selecione o técnico</option>';
+ (Array.isArray(funcionarios)?funcionarios:[]).forEach(f=>{sel.innerHTML+=`<option value="${esc(f.nome)}">${esc(f.nome)}</option>`;});
+ if([...sel.options].some(o=>o.value===atual))sel.value=atual;
+}
+function statusEquipPMOC(eq){
+ const regs=pmocExecucoes.filter(r=>String(r.equipamento_id)===String(eq.id));
+ if(!regs.length)return {texto:'Sem registro',classe:'pmoc-sem-registro',nivel:0,ultima:null};
+ const hoje=new Date(); hoje.setHours(0,0,0,0);
+ let pior=1, ultima=null;
+ regs.forEach(r=>{
+   if(!ultima||String(r.data)>String(ultima))ultima=r.data;
+ });
+ ['Mensal','Bimestral','Semestral','Anual'].forEach(periodo=>{
+   const rs=regs.filter(r=>r.periodo===periodo).sort((a,b)=>String(b.data).localeCompare(String(a.data)));
+   if(!rs.length)return; // periodicidade nunca iniciada: não é vencida
+   const r=rs[0];
+   const prox=addMesesPMOC(String(r.data).slice(0,10),mesesPeriodoPMOC(periodo));
+   const dias=Math.ceil((prox-hoje)/86400000);
+   if(dias<0)pior=Math.max(pior,3);
+   else if(dias<=15)pior=Math.max(pior,2);
+ });
+ return pior===3?{texto:'Vencido',classe:'pmoc-vencido',nivel:3,ultima}:pior===2?{texto:'Próximo',classe:'pmoc-proximo',nivel:2,ultima}:{texto:'Em dia',classe:'pmoc-em-dia',nivel:1,ultima};
+}
+async function carregarPMOC(){if(!podeVisualizarPMOC())return;
+ const st=document.getElementById('pmocStatus'); if(!st)return; st.textContent='Carregando PMOC...';
+ try{pmocEquipamentos=await supabaseRequest('pmoc_equipamentos?select=*&ativo=eq.true&order=setor.asc,tag.asc');pmocExecucoes=await supabaseRequest('pmoc_execucoes?select=*&order=data.desc,id.desc');renderPMOC();st.textContent='✓ PMOC conectado ao banco de dados.';st.style.color='var(--verde)';}
+ catch(e){console.error('PMOC:',e);pmocEquipamentos=[];pmocExecucoes=[];renderPMOC();st.textContent='PMOC ainda não configurado no Supabase. Execute o arquivo SQL fornecido junto com esta versão do site.';st.style.color='var(--vermelho)';}
+}
+function renderPMOC(){
+ const tb=document.getElementById('pmocTabelaEquip'), hist=document.getElementById('pmocTabelaHistorico'); if(!tb||!hist)return;
+ let em=0,prox=0,venc=0; tb.innerHTML='';
+ pmocEquipamentos.forEach(eq=>{const st=statusEquipPMOC(eq);if(st.nivel===1)em++;else if(st.nivel===2)prox++;else if(st.nivel===3)venc++;const tr=document.createElement('tr');tr.className='pmoc-linha-clicavel';tr.title='Clique para abrir as manutenções deste aparelho';tr.onclick=()=>abrirInspecaoPMOC(Number(eq.id));tr.innerHTML=`<td><strong class="pmoc-tag-link" onclick="event.stopPropagation();abrirInspecaoPMOC(Number('${Number(eq.id)}'))">${esc(eq.tag||'—')}</strong></td><td>${esc(eq.setor||'—')}</td><td>${eq.capacidade_btu?Number(eq.capacidade_btu).toLocaleString('pt-BR')+' BTU/h':'—'}</td><td>${dataBRPMOC(st.ultima)}</td><td><span class="pmoc-status ${st.classe}">${st.texto}</span></td><td>🔧 Abrir manutenções</td>`;tb.appendChild(tr);});
+ if(!pmocEquipamentos.length)tb.innerHTML='<tr><td colspan="6" class="lista-vazia">Nenhum equipamento cadastrado.</td></tr>';
+ document.getElementById('pmocTotalEquip').textContent=pmocEquipamentos.length;document.getElementById('pmocEmDia').textContent=em;document.getElementById('pmocProximos').textContent=prox;document.getElementById('pmocVencidos').textContent=venc;
+ hist.innerHTML='';pmocExecucoes.slice(0,100).forEach(r=>{const eq=pmocEquipamentos.find(e=>String(e.id)===String(r.equipamento_id))||{};let itens=[];try{itens=typeof r.checklist==='string'?JSON.parse(r.checklist):r.checklist||[]}catch(_e){}const nc=itens.filter(i=>i.status==='Não conforme').length;const resultado=nc?`${nc} não conformidade(s)`:'Conforme';const tr=document.createElement('tr');tr.innerHTML=`<td>${dataBRPMOC(r.data)}</td><td>${esc(eq.tag||'—')}</td><td>${esc(eq.setor||'—')}</td><td>${esc(r.periodo||'—')}</td><td>${esc(r.responsavel||'—')}</td><td>${esc(resultado)}</td><td>${esc(r.observacoes||'—')}</td>`;hist.appendChild(tr);});if(!pmocExecucoes.length)hist.innerHTML='<tr><td colspan="7" class="lista-vazia">Nenhuma inspeção registrada.</td></tr>';
+renderHistoricoPMOCPorMaquina();
+}
+
+function renderHistoricoPMOCPorMaquina(){
+ const box=document.getElementById('pmocHistoricoPorMaquina');if(!box)return;
+ const grupos={};pmocExecucoes.forEach(r=>{const k=String(r.equipamento_id);(grupos[k]||(grupos[k]=[])).push(r);});
+ const ids=Object.keys(grupos);
+ if(!ids.length){box.innerHTML='<div class="lista-vazia">Nenhuma manutenção registrada.</div>';return;}
+ ids.sort((a,b)=>{const ea=pmocEquipamentos.find(e=>String(e.id)===a)||{},eb=pmocEquipamentos.find(e=>String(e.id)===b)||{};return String(ea.tag||'').localeCompare(String(eb.tag||''),'pt-BR',{numeric:true});});
+ box.innerHTML=ids.map(id=>{
+  const eq=pmocEquipamentos.find(e=>String(e.id)===id)||{},regs=grupos[id].sort((a,b)=>String(b.data).localeCompare(String(a.data)));
+  const rows=regs.map(r=>{let itens=[];try{itens=typeof r.checklist==='string'?JSON.parse(r.checklist):(r.checklist||[])}catch(_e){}const nc=itens.filter(i=>i.status==='Não conforme').length;const res=nc?`<span class="pmoc-status-nao-conforme">${nc} não conformidade(s)</span>`:`<span class="pmoc-status-conforme">Conforme</span>`;const responsavel=(!nc&&r.responsavel)?` <span class="pmoc-separador">—</span> <span class="pmoc-rotulo">Responsável:</span> <span class="pmoc-valor">${esc(r.responsavel)}</span>`:'';return `<div class="pmoc-hist-reg"><span class="pmoc-data-manut">${dataBRPMOC(r.data)}</span> <span class="pmoc-separador">—</span> <span class="pmoc-periodo-manut">${esc(r.periodo||'—')}</span> <span class="pmoc-separador">—</span> ${res}${responsavel}${r.observacoes?`<div style="margin-top:4px"><span class="pmoc-rotulo">Observação:</span> ${esc(r.observacoes)}</div>`:''}</div>`}).join('');
+  return `<details class="pmoc-hist-maquina"><summary>${esc(eq.tag||'Equipamento')} — ${esc(eq.setor||'Sem setor')} <span style="color:#aaa;font-weight:500">(${regs.length})</span></summary><div class="pmoc-hist-conteudo">${rows}</div></details>`;
+ }).join('');
+}
+
+async function salvarEquipamentoPMOC(){if(!podeEditarPMOC()){alert('Seu acesso ao PMOC é somente para visualização.');return;}if(!ehAdministradorKelvin()){alert('Somente o administrador pode cadastrar equipamentos do PMOC.');return;}const tag=document.getElementById('pmocTag').value.trim(),setor=document.getElementById('pmocSetor').value.trim();if(!tag||!setor){alert('Informe TAG e setor/ambiente.');return;}const body={tag,setor,modelo:document.getElementById('pmocModelo').value.trim()||null,capacidade_btu:Number(document.getElementById('pmocBtu').value)||null,numero_serie:document.getElementById('pmocSerie').value.trim()||null,area_m2:Number(document.getElementById('pmocArea').value)||null,ocupantes_fixos:Number(document.getElementById('pmocFixos').value)||0,ocupantes_flutuantes:Number(document.getElementById('pmocFlutuantes').value)||0,ativo:true};try{await supabaseRequest('pmoc_equipamentos',{method:'POST',body,prefer:'return=minimal'});['pmocTag','pmocSetor','pmocModelo','pmocBtu','pmocSerie','pmocArea'].forEach(id=>document.getElementById(id).value='');document.getElementById('pmocFixos').value=0;document.getElementById('pmocFlutuantes').value=0;await carregarPMOC();}catch(e){alert('Erro ao cadastrar equipamento: '+e.message);}}
+function obterDataLocalISO(){const d=new Date();const y=d.getFullYear();const m=String(d.getMonth()+1).padStart(2,'0');const dia=String(d.getDate()).padStart(2,'0');return `${y}-${m}-${dia}`;}
+function abrirInspecaoPMOC(id){const eq=pmocEquipamentos.find(e=>String(e.id)===String(id));if(!eq)return;const card=document.getElementById('pmocExecucaoCard');const conteudo=document.getElementById('pmocModalConteudo');if(card&&conteudo&&!conteudo.contains(card)){conteudo.appendChild(card);}document.getElementById('pmocEquipId').value=id;document.getElementById('pmocTituloExecucao').textContent=`🔧 ${eq.tag} — ${eq.setor}`;const regs=pmocExecucoes.filter(r=>String(r.equipamento_id)===String(id)).sort((a,b)=>String(b.data).localeCompare(String(a.data)));document.getElementById('pmocDetalhesEquip').innerHTML=`<strong>${esc(eq.atividade||eq.setor||'Aparelho')}</strong><br><span class="pmoc-rotulo">Ambiente:</span> <span class="pmoc-valor">${esc(eq.ambiente||eq.setor||'—')}</span><span class="pmoc-separador">|</span><span class="pmoc-rotulo">BTU:</span> <span class="pmoc-valor">${eq.capacidade_btu?Number(eq.capacidade_btu).toLocaleString('pt-BR')+' BTU/h':'—'}</span><span class="pmoc-separador">|</span><span class="pmoc-rotulo">Área:</span> <span class="pmoc-valor">${eq.area_m2?String(eq.area_m2).replace('.',',')+' m²':'—'}</span><br><span class="pmoc-rotulo">Ocupantes:</span> <span class="pmoc-valor">${Number(eq.ocupantes_fixos||0)} fixo(s) + ${Number(eq.ocupantes_flutuantes||0)} flutuante(s)</span><div style="margin-top:14px"><span class="pmoc-titulo-historico">Manutenções realizadas:</span>${regs.length?'<div style="margin-top:8px">'+regs.map(r=>{let itens=[];try{itens=typeof r.checklist==='string'?JSON.parse(r.checklist):(r.checklist||[])}catch(_e){}const resumo=itens.map(i=>`${esc(i.atividade||'Item')}: ${esc(i.status||'—')}${i.observacao?' ('+esc(i.observacao)+')':''}`).join('<br>');const resumoColorido=itens.map(i=>{const st=String(i.status||'—');const cls=st==='Conforme'?'pmoc-status-conforme':st==='Não conforme'?'pmoc-status-nao-conforme':'pmoc-status-na';return `<div><span class="pmoc-atividade">${esc(i.atividade||'Item')}:</span> <span class="${cls}">${esc(st)}</span>${i.observacao?' <span style="color:#bbb">('+esc(i.observacao)+')</span>':''}</div>`}).join('');return `<div style="padding:10px 0;border-bottom:1px solid #4a4c4f"><div><span class="pmoc-data-manut">${dataBRPMOC(r.data)}</span> <span class="pmoc-separador">—</span> <span class="pmoc-periodo-manut">${esc(r.periodo)}</span> <span class="pmoc-separador">—</span> <span class="pmoc-realizada">Realizada</span></div>${resumoColorido?'<div style="margin-top:5px">'+resumoColorido+'</div>':''}${r.observacoes?'<div style="margin-top:5px"><span class="pmoc-rotulo">Observação:</span> <span class="pmoc-valor">'+esc(r.observacoes)+'</span></div>':''}</div>`}).join('')+'</div>':' <span style="color:#bbb">nenhuma manutenção registrada.</span>'}</div>${podeEditarPMOC()?`<div class="pmoc-acoes" style="margin-top:14px"><button class="botao pequeno" type="button" onclick="event.stopPropagation();editarEquipamentoPMOC(${Number(eq.id)})">✏️ Editar cadastro</button><button class="botao pequeno" type="button" style="background:#b3261e" onclick="event.stopPropagation();excluirEquipamentoPMOC(${Number(eq.id)})">🗑️ Excluir cadastro</button></div>`:''}`;document.getElementById('pmocData').value=obterDataLocalISO();preencherTecnicosPMOC();document.getElementById('pmocResponsavel').value='';document.getElementById('pmocObservacoes').value='';const formPMOC=document.getElementById('pmocFormularioManutencao');if(formPMOC)formPMOC.style.display='none';document.getElementById('pmocExecucaoCard').style.display='block';montarChecklistPMOC();const btnNova=document.getElementById('btnNovaManutencaoPMOC');if(btnNova)btnNova.style.display=podeEditarPMOC()?'inline-block':'none';const overlay=document.getElementById('pmocModalOverlay');if(overlay)overlay.classList.add('ativo');document.body.style.overflow='hidden';}
+function fecharInspecaoPMOC(){const c=document.getElementById('pmocExecucaoCard');if(c)c.style.display='none';const o=document.getElementById('pmocModalOverlay');if(o)o.classList.remove('ativo');document.body.style.overflow='';}
+function fecharModalPMOC(ev){if(ev&&ev.target&&ev.target.id!=='pmocModalOverlay')return;fecharInspecaoPMOC();}function mostrarNovaManutencaoPMOC(){if(!podeEditarPMOC()){alert('Seu acesso ao PMOC é somente para visualização.');return;}const f=document.getElementById('pmocFormularioManutencao');if(f){f.style.display='block';preencherTecnicosPMOC();}}function cancelarNovaManutencaoPMOC(){const f=document.getElementById('pmocFormularioManutencao');if(f)f.style.display='none';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const o=document.getElementById('pmocModalOverlay');if(o&&o.classList.contains('ativo'))fecharInspecaoPMOC();}});
+async function editarEquipamentoPMOC(id){if(!podeEditarPMOC()){alert('Seu acesso ao PMOC é somente para visualização.');return;}
+ if(!ehAdministradorKelvin()){alert('Somente o administrador pode editar equipamentos do PMOC.');return;}
+ const eq=pmocEquipamentos.find(e=>String(e.id)===String(id)); if(!eq)return;
+ const tag=prompt('TAG do equipamento:',eq.tag||''); if(tag===null)return;
+ const setor=prompt('Setor / ambiente:',eq.setor||''); if(setor===null)return;
+ const atividade=prompt('Atividade / identificação:',eq.atividade||''); if(atividade===null)return;
+ const ambiente=prompt('Ambiente:',eq.ambiente||eq.setor||''); if(ambiente===null)return;
+ const btu=prompt('Capacidade em BTU/h:',eq.capacidade_btu??''); if(btu===null)return;
+ const area=prompt('Área climatizada (m²):',eq.area_m2??''); if(area===null)return;
+ const fixos=prompt('Ocupantes fixos:',eq.ocupantes_fixos??0); if(fixos===null)return;
+ const flutuantes=prompt('Ocupantes flutuantes:',eq.ocupantes_flutuantes??0); if(flutuantes===null)return;
+ const modelo=prompt('Modelo (opcional):',eq.modelo||''); if(modelo===null)return;
+ const serie=prompt('Número de série (opcional):',eq.numero_serie||''); if(serie===null)return;
+ if(!tag.trim()||!setor.trim()){alert('TAG e setor/ambiente são obrigatórios.');return;}
+ const body={
+   tag:tag.trim(), setor:setor.trim(), atividade:atividade.trim()||null,
+   ambiente:ambiente.trim()||setor.trim(), capacidade_btu:Number(String(btu).replace(/\D/g,''))||null,
+   area_m2:Number(String(area).replace(',','.'))||null,
+   ocupantes_fixos:Number(fixos)||0, ocupantes_flutuantes:Number(flutuantes)||0,
+   modelo:modelo.trim()||null, numero_serie:serie.trim()||null
+ };
+ try{
+   await supabaseRequest(`pmoc_equipamentos?id=eq.${encodeURIComponent(id)}`,{method:'PATCH',body,prefer:'return=minimal'});
+   fecharInspecaoPMOC(); await carregarPMOC(); alert('Cadastro do equipamento atualizado.');
+ }catch(e){alert('Erro ao editar equipamento: '+e.message);}
+}
+async function excluirEquipamentoPMOC(id){if(!podeEditarPMOC()){alert('Seu acesso ao PMOC é somente para visualização.');return;}
+ if(!ehAdministradorKelvin()){alert('Somente o administrador pode excluir equipamentos do PMOC.');return;}
+ const eq=pmocEquipamentos.find(e=>String(e.id)===String(id)); if(!eq)return;
+ if(!confirm(`Excluir ${eq.tag||'este equipamento'} — ${eq.setor||''}?\n\nO equipamento sairá da lista, mas o histórico de manutenções será preservado.`))return;
+ try{
+   await supabaseRequest(`pmoc_equipamentos?id=eq.${encodeURIComponent(id)}`,{method:'PATCH',body:{ativo:false},prefer:'return=minimal'});
+   fecharInspecaoPMOC(); await carregarPMOC(); alert('Equipamento excluído da lista. O histórico foi preservado.');
+ }catch(e){alert('Erro ao excluir equipamento: '+e.message);}
+}
+
+function montarChecklistPMOC(){const periodo=document.getElementById('pmocPeriodo').value,box=document.getElementById('pmocChecklist');const itens=PMOC_ATIVIDADES.filter(a=>a.periodo===periodo);box.innerHTML='<h3>Checklist '+esc(periodo)+'</h3>'+itens.map((a,i)=>`<div class="pmoc-check"><div><strong>${i+1}.</strong> ${esc(a.descricao)}</div><select class="pmoc-item-status" data-desc="${esc(a.descricao)}"><option value="">Selecione...</option><option value="Conforme">Conforme</option><option value="Não conforme">Não conforme</option><option value="Não se aplica">Não se aplica</option></select><input class="pmoc-item-obs" placeholder="Observação do item"></div>`).join('');}
+async function salvarInspecaoPMOC(){if(!podeEditarPMOC()){alert('Seu acesso ao PMOC é somente para visualização.');return;}if(!ehAdministradorKelvin()){alert('Somente o administrador pode registrar inspeções do PMOC.');return;}const equipamento_id=Number(document.getElementById('pmocEquipId').value),data=document.getElementById('pmocData').value,responsavel=document.getElementById('pmocResponsavel').value.trim(),periodo=document.getElementById('pmocPeriodo').value;if(!equipamento_id||!data||!responsavel){alert('Informe data e responsável.');return;}const sts=[...document.querySelectorAll('.pmoc-item-status')],obs=[...document.querySelectorAll('.pmoc-item-obs')];if(sts.some(el=>!el.value)){alert('Marque Conforme, Não conforme ou Não se aplica em todos os itens do checklist.');return;}const checklist=sts.map((el,i)=>({atividade:el.dataset.desc,status:el.value,observacao:obs[i].value.trim()}));const body={equipamento_id,data,responsavel,periodo,checklist,observacoes:document.getElementById('pmocObservacoes').value.trim()||null};try{await supabaseRequest('pmoc_execucoes',{method:'POST',body,prefer:'return=minimal'});document.getElementById('pmocObservacoes').value='';fecharInspecaoPMOC();await carregarPMOC();if(document.getElementById('indicadores')&&document.getElementById('indicadores').classList.contains('ativa'))await atualizarDashboard();alert('Inspeção PMOC registrada com sucesso.');}catch(e){alert('Erro ao salvar inspeção: '+e.message);}}
+
 /* =====================================================
    CONTROLE DE HORA EXTRA
 ===================================================== */
@@ -4980,6 +5267,10 @@ async function atualizarDashboard(){
    ? lubrificacoesRealizadas.filter(r => String(r.status || '').toLowerCase().trim() === 'realizada')
    : [];
 
+  const pmocPreventivas =
+   await supabaseRequest(
+    `pmoc_execucoes?select=id,data,responsavel,periodo&data=gte.${mes}-01&data=lt.${proximoMes(mes)}&order=data.asc`
+   );
 
   registros =
    dados;
@@ -5173,7 +5464,8 @@ async function atualizarDashboard(){
 
   montarTabelaTipos(
    dados,
-   lubrificacoesPreventivas
+   lubrificacoesPreventivas,
+   pmocPreventivas
   );
 
 
@@ -6080,7 +6372,8 @@ document.addEventListener(
 
 function montarTabelaTipos(
  dados,
- lubrificacoesRealizadas = []
+ lubrificacoesRealizadas = [],
+ pmocRealizados = []
 ){
 
  const tabela =
@@ -6134,10 +6427,21 @@ function montarTabelaTipos(
 
  }
 
+ const quantidadePMOC =
+  Array.isArray(pmocRealizados)
+   ? pmocRealizados.length
+   : 0;
+
+ if(quantidadePMOC > 0){
+  tipos["Preventiva"] =
+   (tipos["Preventiva"] || 0) +
+   quantidadePMOC;
+ }
 
  const total =
   dados.length +
-  quantidadeLubrificacoes;
+  quantidadeLubrificacoes +
+  quantidadePMOC;
 
 
  const nomes =
@@ -6236,6 +6540,7 @@ function montarTabelaTipos(
 
 async function carregarTudo(){
 
+ configurarAcessoPMOC();
  await testarConexao();
 
  if(ehUsuarioSomenteHoraExtra()){
@@ -6432,5 +6737,13 @@ restaurarSessao();
   <div id="conteudoJanelaFuncionario"></div>
   <div class="janela-flutuante-rodape">Clique novamente no nome ou no × para fechar.</div>
 </div>
+
+<div id="pmocModalOverlay" onclick="fecharModalPMOC(event)">
+ <div id="pmocModal" role="dialog" aria-modal="true" aria-label="Informações e manutenções do ar-condicionado">
+  <button id="pmocModalFechar" type="button" onclick="fecharModalPMOC()">✕</button>
+  <div id="pmocModalConteudo"></div>
+ </div>
+</div>
+
 </body>
 </html>
