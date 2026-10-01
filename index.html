@@ -1432,6 +1432,16 @@ Tipos de manutenção
 </div>
 </div>
 
+<div class="card">
+<h2>Fechamento de horas</h2>
+<div class="campo" style="max-width:220px;margin-bottom:8px">
+<label>Mês do fechamento</label>
+<input type="month" id="mesFechamentoHoras" onchange="carregarFechamentoHoras()">
+</div>
+<div id="periodoFechamentoHoras" style="color:#bbb;margin-bottom:18px"></div>
+<div id="resumoFechamentoHoras" class="resumo-horas-extra">Carregando...</div>
+</div>
+
 </section>
 
 <!-- ================= CADASTROS ================= -->
@@ -2364,6 +2374,8 @@ async function mostrarAplicacao(){
   const hojeHoraExtra = obterDataLocalISO();
   const mesHoraExtra = document.getElementById("mesHoraExtra");
   if(mesHoraExtra) mesHoraExtra.value = hojeHoraExtra.slice(0,7);
+  const mesFechamentoHoras=document.getElementById("mesFechamentoHoras");
+  if(mesFechamentoHoras) mesFechamentoHoras.value=hojeHoraExtra.slice(0,7);
 
   await carregarTudo();
 
@@ -5018,6 +5030,7 @@ async function registrarHoraExtra(){
   document.getElementById("mesHoraExtra").value=data.slice(0,7);
   document.getElementById("horaInicialExtra").value="";document.getElementById("horaFinalExtra").value="";document.getElementById("descricaoHoraExtra").value="";
   await carregarHorasExtras();
+ await carregarFechamentoHoras();
  }catch(erro){console.error(erro);mensagem.textContent="✗ Erro ao registrar hora extra: "+erro.message;mensagem.style.color="var(--vermelho)";}
 }
 
@@ -5189,11 +5202,50 @@ async function carregarHorasExtras(){
 }
 
 
+
+function periodoFechamento26a25(mes){
+ const [ano,mesNum]=String(mes).split("-").map(Number);
+ const fim=`${ano}-${String(mesNum).padStart(2,"0")}-25`;
+ const anterior=new Date(ano,mesNum-2,1);
+ const inicio=`${anterior.getFullYear()}-${String(anterior.getMonth()+1).padStart(2,"0")}-26`;
+ const diaDepoisFim=new Date(ano,mesNum-1,26);
+ const fimExclusivo=`${diaDepoisFim.getFullYear()}-${String(diaDepoisFim.getMonth()+1).padStart(2,"0")}-${String(diaDepoisFim.getDate()).padStart(2,"0")}`;
+ return {inicio,fim,fimExclusivo};
+}
+
+async function carregarFechamentoHoras(){
+ const mesEl=document.getElementById("mesFechamentoHoras");
+ const resumo=document.getElementById("resumoFechamentoHoras");
+ const periodoEl=document.getElementById("periodoFechamentoHoras");
+ if(!mesEl||!resumo||!mesEl.value)return;
+ const p=periodoFechamento26a25(mesEl.value);
+ if(periodoEl)periodoEl.textContent=`Período: ${formatarData(p.inicio)} a ${formatarData(p.fim)}`;
+ resumo.className="resumo-horas-extra";
+ resumo.innerHTML="Carregando...";
+ try{
+  const dados=await supabaseRequest(`horas_extras?select=*,funcionarios(id,nome)&data=gte.${p.inicio}&data=lt.${p.fimExclusivo}&order=data.asc,hora_inicial.asc,id.asc`);
+  const descontos=await supabaseRequest(`horas_descontar?select=*,funcionarios(id,nome)&data=gte.${p.inicio}&data=lt.${p.fimExclusivo}&order=data.asc,hora.asc,id.asc`);
+  const porFuncionario={};
+  funcionarios.forEach(f=>{porFuncionario[String(f.id)]={id:String(f.id),nome:f.nome,extra:0,desconto:0};});
+  dados.forEach(r=>{const id=String(r.funcionario_id||"");if(!porFuncionario[id])porFuncionario[id]={id,nome:nomeFuncionarioRegistro(r),extra:0,desconto:0};porFuncionario[id].extra+=Number(r.minutos_total)||0;});
+  descontos.forEach(r=>{const id=String(r.funcionario_id||"");if(!porFuncionario[id])porFuncionario[id]={id,nome:nomeFuncionarioRegistro(r),extra:0,desconto:0};porFuncionario[id].desconto+=Number(r.minutos_total)||0;});
+  const lista=Object.values(porFuncionario).filter(f=>f.extra>0||f.desconto>0).sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
+  if(!lista.length){resumo.innerHTML='<div class="lista-vazia" style="grid-column:1/-1">Nenhuma hora registrada neste fechamento.</div>';return;}
+  resumo.innerHTML=`<div class="resumo-funcionarios" style="grid-column:1/-1"><div class="resumo-funcionario-container" style="grid-column:1/-1"><h3 class="subtitulo-horas" style="margin-top:0">Horas por funcionário</h3><div class="resumo-funcionarios">${lista.map(f=>{
+   const saldo=f.extra-f.desconto, saldoTexto=saldo<0?`Deve ${formatarTempo(Math.abs(saldo))}`:formatarTempo(saldo), saldoClasse=saldo<0?"devedor":"liquido";
+   return `<div class="resumo-funcionario"><h4>${esc(f.nome)}</h4><div class="resumo-funcionario-grid"><div class="resumo-funcionario-item extra"><span>Hora extra</span><strong>${formatarTempo(f.extra)}</strong></div><div class="resumo-funcionario-item desconto"><span>Descontado</span><strong>${formatarTempo(f.desconto)}</strong></div><div class="resumo-funcionario-item ${saldoClasse}"><span>${saldo<0?"Saldo devedor":"Líquido"}</span><strong>${saldoTexto}</strong></div></div></div>`;
+  }).join("")}</div></div></div>`;
+ }catch(erro){
+  console.error(erro);resumo.className="status erro";resumo.innerText="Não foi possível carregar o fechamento de horas.";
+ }
+}
+
 async function excluirHoraExtra(id){
  if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização. Você não pode excluir horas extras.");return;}
  if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode excluir horas extras.");return;}
  if(!confirm("Excluir este registro de hora extra?"))return;
- try{await supabaseRequest(`horas_extras?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});await carregarHorasExtras();}catch(erro){console.error(erro);alert("Erro ao excluir hora extra:\n"+erro.message);}
+ try{await supabaseRequest(`horas_extras?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});await carregarHorasExtras();
+ await carregarFechamentoHoras();}catch(erro){console.error(erro);alert("Erro ao excluir hora extra:\n"+erro.message);}
 }
 
 
@@ -5227,6 +5279,7 @@ async function registrarHoraDescontar(){
   mensagem.textContent="✓ Desconto registrado com sucesso.";mensagem.style.color="var(--verde)";
   document.getElementById("tempoDescontar").value="";document.getElementById("motivoHoraDescontar").value="";
   await carregarHorasExtras();
+ await carregarFechamentoHoras();
  }catch(erro){console.error(erro);mensagem.textContent="✗ Erro ao registrar desconto: "+erro.message;mensagem.style.color="var(--vermelho)";}
 }
 
@@ -5236,7 +5289,8 @@ async function excluirHoraDescontar(id){
  if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização. Você não pode excluir descontos.");return;}
  if(!ehAdministradorKelvin()){alert("Somente o administrador Kelvin pode excluir descontos.");return;}
  if(!confirm("Excluir este desconto?"))return;
- try{await supabaseRequest(`horas_descontar?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});await carregarHorasExtras();}catch(erro){console.error(erro);alert("Erro ao excluir desconto:\n"+erro.message);}
+ try{await supabaseRequest(`horas_descontar?id=eq.${id}`,{method:"DELETE",prefer:"return=minimal"});await carregarHorasExtras();
+ await carregarFechamentoHoras();}catch(erro){console.error(erro);alert("Erro ao excluir desconto:\n"+erro.message);}
 }
 
 
@@ -6562,6 +6616,7 @@ async function carregarTudo(){
    mesHoraExtra.value=hojeHoraExtra.slice(0,7);
   }
   await carregarHorasExtras();
+ await carregarFechamentoHoras();
   return;
  }
 
@@ -6601,6 +6656,7 @@ async function carregarTudo(){
  document.getElementById("dataHoraDescontar").value=hojeHoraExtra;
  document.getElementById("mesHoraExtra").value=hojeHoraExtra.slice(0,7);
  await carregarHorasExtras();
+ await carregarFechamentoHoras();
 
  await mostrarLancamentos();
 
