@@ -2233,7 +2233,8 @@ async function carregarPerfil(){
   ![
    "admin",
    "operador",
-   "indicadores"
+   "indicadores",
+   "pmoc_visualizacao"
   ].includes(
    perfil.nivel
   )
@@ -2265,13 +2266,14 @@ function emailAtual(){
  return String(sessao&&sessao.user&&sessao.user.email?sessao.user.email:"").trim().toLowerCase();
 }
 function podeVisualizarPMOC(){
- return [
+ return ehUsuarioSomentePMOC() || [
   "kelvin.batista@budny.com.br",
   "rafael.zaccaron@budny.com.br",
   "mariane.souza@budny.com.br"
  ].includes(emailAtual());
 }
 function podeEditarPMOC(){
+ if(ehUsuarioSomentePMOC()) return false;
  return emailAtual()==="kelvin.batista@budny.com.br";
 }
 function configurarAcessoPMOC(){
@@ -2302,6 +2304,10 @@ function configurarAcessosPreventivaHoras(){
 function ehUsuarioSomenteHoraExtra(){
  const email = String(sessao && sessao.user && sessao.user.email ? sessao.user.email : "").trim().toLowerCase();
  return email === "elisandra.borges@budny.com.br";
+}
+
+function ehUsuarioSomentePMOC(){
+ return !!(perfil && perfil.nivel === "pmoc_visualizacao");
 }
 
 function ehRafaelSomenteVisualizacao(){
@@ -2344,6 +2350,44 @@ function configurarAcessoRafael(){
 
 
 async function mostrarAplicacao(){
+
+ if(ehUsuarioSomentePMOC()){
+  document.getElementById("telaLogin").style.display="none";
+  document.getElementById("appSistema").style.display="block";
+
+  const u=document.getElementById("usuarioAtual");
+  if(u) u.innerHTML=`${esc(perfil.nome || sessao.user.email)} <span class="perfil-badge">(PMOC - visualização)</span>`;
+
+  ["menuLancamento","menuIndicadores","menuLubrificacao","menuHoraExtra","menuCadastros"].forEach(id=>{
+   const el=document.getElementById(id);
+   if(el) el.style.display="none";
+  });
+
+  const menuPMOC=document.getElementById("menuPMOC");
+  if(menuPMOC){
+   menuPMOC.style.display="block";
+   menuPMOC.classList.add("ativo");
+  }
+
+  const cadastro=document.getElementById("pmocCadastroEquipamento");
+  if(cadastro) cadastro.style.display="none";
+
+  const btnNova=document.getElementById("btnNovaManutencaoPMOC");
+  if(btnNova) btnNova.style.display="none";
+
+  const formulario=document.getElementById("pmocFormularioManutencao");
+  if(formulario) formulario.style.display="none";
+
+  document.querySelectorAll(".tela").forEach(el=>el.classList.remove("ativa"));
+  const telaPMOC=document.getElementById("pmoc");
+  if(telaPMOC) telaPMOC.classList.add("ativa");
+
+  document.querySelectorAll("nav button").forEach(btn=>btn.classList.remove("ativo"));
+  if(menuPMOC) menuPMOC.classList.add("ativo");
+
+  await carregarPMOC();
+  return;
+ }
 
  if(ehUsuarioSomenteHoraExtra()){
   document.getElementById("telaLogin").style.display="none";
@@ -2678,6 +2722,11 @@ function mostrarTela(tela){
 
  if(ehUsuarioSomenteHoraExtra() && tela !== "horaextra"){
   alert("Seu acesso permite apenas visualizar Hora extra.");
+  return;
+ }
+
+ if(ehUsuarioSomentePMOC() && tela !== "pmoc"){
+  alert("Seu acesso permite apenas visualizar o PMOC.");
   return;
  }
 
@@ -3965,7 +4014,10 @@ async function mostrarLancamentos(){
       "botao vermelho pequeno";
 
      botao.textContent =
-      "X";
+      "🗑️ Excluir";
+
+     botao.title =
+      "Excluir este lançamento";
 
      botao.onclick =
       () =>
@@ -4164,6 +4216,12 @@ async function pesquisarOS(){
         </strong>
        </td>
 
+       <td>
+        ${ehAdministradorKelvin()
+          ? `<button class="botao vermelho pequeno" type="button" onclick="excluirRegistroPesquisado(${Number(r.id)}, '${esc(String(r.os || "")).replace(/'/g,"&#39;")}')">🗑️ Excluir</button>`
+          : ""}
+       </td>
+
       </tr>
      `;
 
@@ -4202,6 +4260,7 @@ async function pesquisarOS(){
         <th>Início</th>
         <th>Fim</th>
         <th>Tempo</th>
+        <th>Ação</th>
 
        </tr>
 
@@ -4268,14 +4327,10 @@ async function excluirRegistro(
 ){
  if(ehUsuarioSomenteHoraExtra()){alert("Seu acesso é somente para visualização de Hora extra.");return;}
 
- if(
-  !perfil ||
-  perfil.nivel !==
-   "admin"
- ){
+ if(!ehAdministradorKelvin()){
 
   alert(
-   "Somente o Administrador pode excluir OS."
+   "Somente o administrador Kelvin pode excluir OS."
   );
 
   return;
@@ -4285,7 +4340,7 @@ async function excluirRegistro(
 
  if(
   !confirm(
-   "Deseja excluir este lançamento?"
+   "ATENÇÃO: deseja realmente excluir este lançamento de OS?\n\nEssa ação removerá o registro do sistema."
   )
  ){
 
@@ -4309,6 +4364,11 @@ async function excluirRegistro(
 
   await atualizarDashboard();
 
+  const campoPesquisa = document.getElementById("pesquisaOS");
+  if(campoPesquisa && campoPesquisa.value.trim()){
+   await pesquisarOS();
+  }
+
 
  }catch(erro){
 
@@ -4323,6 +4383,37 @@ async function excluirRegistro(
 
  }
 
+}
+
+
+async function excluirRegistroPesquisado(id, numeroOS){
+ if(!ehAdministradorKelvin()){
+  alert("Somente o administrador Kelvin pode excluir OS.");
+  return;
+ }
+
+ const ok = confirm(
+  "Excluir este lançamento da OS " + (numeroOS || "") + "?\n\n" +
+  "O registro será removido do sistema e os indicadores serão atualizados."
+ );
+
+ if(!ok) return;
+
+ try{
+  await supabaseRequest(
+   `registros?id=eq.${id}`,
+   {method:"DELETE", prefer:"return=minimal"}
+  );
+
+  await mostrarLancamentos();
+  await atualizarDashboard();
+  await pesquisarOS();
+
+  alert("Lançamento excluído com sucesso.");
+ }catch(erro){
+  console.error(erro);
+  alert("Erro ao excluir lançamento:\n" + erro.message);
+ }
 }
 
 
