@@ -7050,7 +7050,13 @@ crDetailOverlay.addEventListener('click',e=>{if(e.target===crDetailOverlay)crClo
 document.addEventListener('keydown',e=>{if(e.key==='Escape' && crDetailOverlay.classList.contains('aberto'))crCloseDetails()});
 
 // Rafael: consulta de prazos, sem alterações no cadastro.
-if(ehRafaelSomenteVisualizacao()){const b=sec.querySelector('#cr-new');if(b)b.style.display='none';const f=sec.querySelector('#cr-form-box');if(f)f.hidden=true;}
+const crPodeEditar=()=>ehAdministradorKelvin() && !ehRafaelSomenteVisualizacao();
+function crAplicarPermissoes(){
+ const autorizado=crPodeEditar();
+ const novo=$('cr-new');if(novo){novo.hidden=!autorizado;novo.style.display=autorizado?'':'none';}
+ const formulario=$('cr-form-box');if(formulario&&!autorizado)formulario.hidden=true;
+}
+crAplicarPermissoes();
 
 const dateLocal=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const daysTo=s=>{if(!s)return 999999;const t=new Date(dateLocal()+'T12:00:00'),d=new Date(s+'T12:00:00');return Math.round((d-t)/86400000)};
@@ -7109,8 +7115,8 @@ function crRecalculate(){
  const f=$('cr-form'),period=Number(f.elements.namedItem('periodicidade_meses').value);
  if(period>0 && f.elements.namedItem('data_execucao').value){f.elements.namedItem('data_vencimento').value=crAddMonths(f.elements.namedItem('data_execucao').value,period)}
 }
-function showForm(r){$('cr-form-box').hidden=false;const f=$('cr-form');f.reset();f.elements.namedItem('id').value='';f.elements.namedItem('periodicidade_meses').value='12';delete f.dataset.renewOrigin;Object.keys(r||{}).forEach(k=>{if(f.elements.namedItem(k))f.elements.namedItem(k).value=r[k]??''});$('cr-form-title').textContent=r?.id?'Editar documento':'Novo controle de vencimento';if(!r?.id && r?.data_execucao && !r?.data_vencimento)crRecalculate();$('cr-form-box').scrollIntoView({behavior:'smooth',block:'start'})}
-function render(){const active=records.filter(r=>r.situacao!=='renovado');$('cr-total').textContent=active.length;$('cr-ok').textContent=active.filter(r=>state(r).key==='em-dia').length;$('cr-near').textContent=active.filter(r=>state(r).key==='proximos').length;$('cr-late').textContent=active.filter(r=>state(r).key==='vencidos').length;
+function showForm(r){if(!crPodeEditar()){alert('Somente o administrador pode cadastrar, editar ou renovar documentos.');return;}$('cr-form-box').hidden=false;const f=$('cr-form');f.reset();f.elements.namedItem('id').value='';f.elements.namedItem('periodicidade_meses').value='12';delete f.dataset.renewOrigin;Object.keys(r||{}).forEach(k=>{if(f.elements.namedItem(k))f.elements.namedItem(k).value=r[k]??''});$('cr-form-title').textContent=r?.id?'Editar documento':'Novo controle de vencimento';if(!r?.id && r?.data_execucao && !r?.data_vencimento)crRecalculate();$('cr-form-box').scrollIntoView({behavior:'smooth',block:'start'})}
+function render(){crAplicarPermissoes();const active=records.filter(r=>r.situacao!=='renovado');$('cr-total').textContent=active.length;$('cr-ok').textContent=active.filter(r=>state(r).key==='em-dia').length;$('cr-near').textContent=active.filter(r=>state(r).key==='proximos').length;$('cr-late').textContent=active.filter(r=>state(r).key==='vencidos').length;
  const q=$('cr-search').value.toLocaleLowerCase('pt-BR'),f=$('cr-filter').value;let view=records.filter(r=>(f==='todos'?r.situacao!=='renovado':state(r).key===f)&&[r.titulo,r.setor,r.equipamento,r.numero_art,r.responsavel].join(' ').toLocaleLowerCase('pt-BR').includes(q));view.sort((a,b)=>$('cr-sort').value==='nome'?a.titulo.localeCompare(b.titulo,'pt-BR'):String(a.data_vencimento).localeCompare(String(b.data_vencimento)));
  $('cr-rows').replaceChildren();if(!view.length){$('cr-rows').innerHTML='<tr><td colspan="6">Nenhum documento encontrado.</td></tr>';return}
  view.forEach(r=>{const st=state(r),tr=document.createElement('tr');tr.innerHTML='<td><button type="button" class="cr-document-link">'+esc(r.titulo)+'</button><div class="cr-small">'+esc(r.categoria||'')+(r.numero_art?' · ART '+esc(r.numero_art):'')+'</div></td><td>'+esc(r.setor||'—')+'<div class="cr-small">'+esc(r.equipamento||'')+'</div></td><td>'+format(r.data_execucao)+'</td><td><strong>'+format(r.data_vencimento)+'</strong></td><td><span class="cr-pill '+st.cls+'">'+st.label+'</span></td><td></td>';
@@ -7118,16 +7124,16 @@ function render(){const active=records.filter(r=>r.situacao!=='renovado');$('cr-
  if(nameButton)nameButton.onclick=()=>crShowDetails(r);
  const cell=tr.lastElementChild;
  const view=document.createElement('button');view.className='cr-link';view.textContent='Ver detalhes';view.onclick=()=>crShowDetails(r);cell.append(view);
- if(!ehRafaelSomenteVisualizacao()){const edit=document.createElement('button');edit.className='cr-link';edit.textContent='Editar';edit.onclick=()=>showForm(r);cell.append(edit);}
+ if(crPodeEditar()){const edit=document.createElement('button');edit.className='cr-link';edit.textContent='Editar';edit.onclick=()=>showForm(r);cell.append(edit);}
  if(r.documento_url){const a=document.createElement('a');a.href=r.documento_url;a.target='_blank';a.rel='noopener noreferrer';a.className='cr-link';a.textContent='PDF';cell.append(a)}
- if(r.situacao!=='renovado' && !ehRafaelSomenteVisualizacao()){const renew=document.createElement('button');renew.className='cr-link';renew.textContent='Renovar';renew.onclick=()=>{const copy={...r,id:'',data_execucao:dateLocal(),data_vencimento:'',observacoes:(r.observacoes||'')+'\nRenovação do cadastro anterior: '+r.data_vencimento};showForm(copy);$('cr-form').dataset.renewOrigin=String(r.id)};cell.append(renew)}$('cr-rows').appendChild(tr)});
+ if(r.situacao!=='renovado' && crPodeEditar()){const renew=document.createElement('button');renew.className='cr-link';renew.textContent='Renovar';renew.onclick=()=>{const copy={...r,id:'',data_execucao:dateLocal(),data_vencimento:'',observacoes:(r.observacoes||'')+'\nRenovação do cadastro anterior: '+r.data_vencimento};showForm(copy);$('cr-form').dataset.renewOrigin=String(r.id)};cell.append(renew)}$('cr-rows').appendChild(tr)});
 }
 async function load(){if(busy)return;busy=true;$('cr-status').textContent='Consultando Supabase...';try{const result=await supabaseRequest('cronogramas_documentos?select=*&order=data_vencimento.asc');records=Array.isArray(result)?result:[];$('cr-status').textContent=records.length+' registro(s) consultado(s) no Supabase.';render()}catch(e){console.error('Cronogramas:',e);$('cr-status').textContent='Não foi possível carregar. É necessário criar a tabela cronogramas_documentos no Supabase e liberar a leitura para seu perfil.'}finally{busy=false}}
-$('cr-form').elements.namedItem('data_execucao').addEventListener('change',crRecalculate);$('cr-form').elements.namedItem('periodicidade_meses').addEventListener('change',crRecalculate);$('cr-new').onclick=()=>showForm(null);$('cr-cancel').onclick=()=>{$('cr-form-box').hidden=true};$('cr-search').oninput=render;$('cr-filter').onchange=render;$('cr-sort').onchange=render;
+$('cr-form').elements.namedItem('data_execucao').addEventListener('change',crRecalculate);$('cr-form').elements.namedItem('periodicidade_meses').addEventListener('change',crRecalculate);$('cr-new').onclick=()=>{if(!crPodeEditar())return;showForm(null)};$('cr-cancel').onclick=()=>{$('cr-form-box').hidden=true};$('cr-search').oninput=render;$('cr-filter').onchange=render;$('cr-sort').onchange=render;
 let crSalvando=false;
 $('cr-form').onsubmit=async e=>{
  e.preventDefault();
- if(!ehAdministradorKelvin()){alert('Somente o administrador pode alterar cronogramas.');return;}
+ if(!crPodeEditar()){alert('Somente o administrador pode alterar cronogramas.');return;}
  if(crSalvando)return;
  const f=e.currentTarget,fd=new FormData(f),id=String(fd.get('id')||'').trim(),body={};
  ['titulo','categoria','setor','equipamento','data_execucao','data_vencimento','periodicidade_meses','numero_art','responsavel','documento_url','observacoes'].forEach(k=>{body[k]=String(fd.get(k)||'').trim()||null});
