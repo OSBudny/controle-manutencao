@@ -7000,7 +7000,7 @@ restaurarSessao();
 const nav=document.querySelector('nav');if(!nav||document.getElementById('menuCronogramas'))return;
 const button=document.createElement('button');button.id='menuCronogramas';button.type='button';button.textContent='📅 Cronogramas';button.style.display='none';
 button.onclick=()=>{
- if(!ehAdministradorKelvin()){alert('Acesso permitido somente ao administrador.');return;}
+ if(!(ehAdministradorKelvin() || ehRafaelSomenteVisualizacao())){alert('Acesso não autorizado.');return;}
  document.querySelectorAll('.tela').forEach(e=>e.classList.remove('ativa'));
  document.querySelectorAll('nav button').forEach(e=>e.classList.remove('ativo'));
  document.getElementById('crono-tela').classList.add('ativa');button.classList.add('ativo');load();
@@ -7008,7 +7008,7 @@ button.onclick=()=>{
 nav.appendChild(button);
 // Exibe somente ao administrador autenticado; acompanha login e logout.
 const app=document.getElementById('appSistema');
-const updateAccess=()=>{const allowed=!!(app && app.style.display!=='none' && ehAdministradorKelvin());button.style.display=allowed?'block':'none';if(!allowed){const sec=document.getElementById('crono-tela');if(sec)sec.classList.remove('ativa');}};
+const updateAccess=()=>{const allowed=!!(app && app.style.display!=='none' && (ehAdministradorKelvin() || ehRafaelSomenteVisualizacao()));button.style.display=allowed?'block':'none';if(!allowed){const sec=document.getElementById('crono-tela');if(sec)sec.classList.remove('ativa');}};
 if(app){new MutationObserver(updateAccess).observe(app,{attributes:true,attributeFilter:['style']});}
 setTimeout(updateAccess,0);
 const sec=document.createElement('section');sec.id='crono-tela';sec.className='tela';
@@ -7020,6 +7020,9 @@ sec.innerHTML=`
  <div class="cr-card"><h3>Alertas automáticos</h3><p class="cr-small">Os registros são classificados automaticamente ao abrir esta aba: vencido, até 7, 15, 30, 60, 90 ou 180 dias ou em dia. Os avisos aparecem dentro do site, não por e-mail.</p></div>`;
 const main=document.querySelector('main');(main||nav.parentElement||document.body).appendChild(sec);
 const $=id=>sec.querySelector('#'+id);let records=[],busy=false;
+// Rafael: consulta de prazos, sem alterações no cadastro.
+if(ehRafaelSomenteVisualizacao()){const b=sec.querySelector('#cr-new');if(b)b.style.display='none';const f=sec.querySelector('#cr-form-box');if(f)f.hidden=true;}
+
 const dateLocal=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const daysTo=s=>{if(!s)return 999999;const t=new Date(dateLocal()+'T12:00:00'),d=new Date(s+'T12:00:00');return Math.round((d-t)/86400000)};
 const format=s=>s?String(s).slice(0,10).split('-').reverse().join('/'):'—';
@@ -7036,19 +7039,50 @@ function crRecalculate(){
  const f=$('cr-form'),period=Number(f.elements.namedItem('periodicidade_meses').value);
  if(period>0 && f.elements.namedItem('data_execucao').value){f.elements.namedItem('data_vencimento').value=crAddMonths(f.elements.namedItem('data_execucao').value,period)}
 }
-function showForm(r){$('cr-form-box').hidden=false;const f=$('cr-form');f.reset();f.elements.namedItem('periodicidade_meses').value='12';delete f.dataset.renewOrigin;Object.keys(r||{}).forEach(k=>{if(f.elements.namedItem(k))f.elements.namedItem(k).value=r[k]??''});$('cr-form-title').textContent=r?.id?'Editar documento':'Novo controle de vencimento';if(!r?.id && r?.data_execucao && !r?.data_vencimento)crRecalculate();$('cr-form-box').scrollIntoView({behavior:'smooth',block:'start'})}
+function showForm(r){$('cr-form-box').hidden=false;const f=$('cr-form');f.reset();f.elements.namedItem('id').value='';f.elements.namedItem('periodicidade_meses').value='12';delete f.dataset.renewOrigin;Object.keys(r||{}).forEach(k=>{if(f.elements.namedItem(k))f.elements.namedItem(k).value=r[k]??''});$('cr-form-title').textContent=r?.id?'Editar documento':'Novo controle de vencimento';if(!r?.id && r?.data_execucao && !r?.data_vencimento)crRecalculate();$('cr-form-box').scrollIntoView({behavior:'smooth',block:'start'})}
 function render(){const active=records.filter(r=>r.situacao!=='renovado');$('cr-total').textContent=active.length;$('cr-ok').textContent=active.filter(r=>state(r).key==='em-dia').length;$('cr-near').textContent=active.filter(r=>state(r).key==='proximos').length;$('cr-late').textContent=active.filter(r=>state(r).key==='vencidos').length;
  const q=$('cr-search').value.toLocaleLowerCase('pt-BR'),f=$('cr-filter').value;let view=records.filter(r=>(f==='todos'?r.situacao!=='renovado':state(r).key===f)&&[r.titulo,r.setor,r.equipamento,r.numero_art,r.responsavel].join(' ').toLocaleLowerCase('pt-BR').includes(q));view.sort((a,b)=>$('cr-sort').value==='nome'?a.titulo.localeCompare(b.titulo,'pt-BR'):String(a.data_vencimento).localeCompare(String(b.data_vencimento)));
  $('cr-rows').replaceChildren();if(!view.length){$('cr-rows').innerHTML='<tr><td colspan="6">Nenhum documento encontrado.</td></tr>';return}
  view.forEach(r=>{const st=state(r),tr=document.createElement('tr');tr.innerHTML='<td><strong>'+esc(r.titulo)+'</strong><div class="cr-small">'+esc(r.categoria||'')+(r.numero_art?' · ART '+esc(r.numero_art):'')+'</div></td><td>'+esc(r.setor||'—')+'<div class="cr-small">'+esc(r.equipamento||'')+'</div></td><td>'+format(r.data_execucao)+'</td><td><strong>'+format(r.data_vencimento)+'</strong></td><td><span class="cr-pill '+st.cls+'">'+st.label+'</span></td><td></td>';
- const cell=tr.lastElementChild;const edit=document.createElement('button');edit.className='cr-link';edit.textContent='Editar';edit.onclick=()=>showForm(r);cell.append(edit);
+ const cell=tr.lastElementChild;if(!ehRafaelSomenteVisualizacao()){const edit=document.createElement('button');edit.className='cr-link';edit.textContent='Editar';edit.onclick=()=>showForm(r);cell.append(edit);}
  if(r.documento_url){const a=document.createElement('a');a.href=r.documento_url;a.target='_blank';a.rel='noopener noreferrer';a.className='cr-link';a.textContent='PDF';cell.append(a)}
- if(r.situacao!=='renovado'){const renew=document.createElement('button');renew.className='cr-link';renew.textContent='Renovar';renew.onclick=()=>{const copy={...r,id:'',data_execucao:dateLocal(),data_vencimento:'',observacoes:(r.observacoes||'')+'\nRenovação do cadastro anterior: '+r.data_vencimento};showForm(copy);$('cr-form').dataset.renewOrigin=String(r.id)};cell.append(renew)}$('cr-rows').appendChild(tr)});
+ if(r.situacao!=='renovado' && !ehRafaelSomenteVisualizacao()){const renew=document.createElement('button');renew.className='cr-link';renew.textContent='Renovar';renew.onclick=()=>{const copy={...r,id:'',data_execucao:dateLocal(),data_vencimento:'',observacoes:(r.observacoes||'')+'\nRenovação do cadastro anterior: '+r.data_vencimento};showForm(copy);$('cr-form').dataset.renewOrigin=String(r.id)};cell.append(renew)}$('cr-rows').appendChild(tr)});
 }
 async function load(){if(busy)return;busy=true;$('cr-status').textContent='Consultando Supabase...';try{const result=await supabaseRequest('cronogramas_documentos?select=*&order=data_vencimento.asc');records=Array.isArray(result)?result:[];$('cr-status').textContent=records.length+' registro(s) consultado(s) no Supabase.';render()}catch(e){console.error('Cronogramas:',e);$('cr-status').textContent='Não foi possível carregar. É necessário criar a tabela cronogramas_documentos no Supabase e liberar a leitura para seu perfil.'}finally{busy=false}}
 $('cr-form').elements.namedItem('data_execucao').addEventListener('change',crRecalculate);$('cr-form').elements.namedItem('periodicidade_meses').addEventListener('change',crRecalculate);$('cr-new').onclick=()=>showForm(null);$('cr-cancel').onclick=()=>{$('cr-form-box').hidden=true};$('cr-search').oninput=render;$('cr-filter').onchange=render;$('cr-sort').onchange=render;
-$('cr-form').onsubmit=async e=>{e.preventDefault();const f=e.currentTarget,fd=new FormData(f);const id=String(fd.get('id')||'').trim();const body={};['titulo','categoria','setor','equipamento','data_execucao','data_vencimento','periodicidade_meses','numero_art','responsavel','documento_url','observacoes'].forEach(k=>{body[k]=String(fd.get(k)||'').trim()||null});body.periodicidade_meses=Number(body.periodicidade_meses||0);if(!body.titulo||!body.data_execucao||!body.data_vencimento){alert('Informe nome e datas.');return}if(body.data_vencimento<body.data_execucao){alert('O vencimento não pode ser anterior à execução.');return}
- try{if(id)await supabaseRequest('cronogramas_documentos?id=eq.'+encodeURIComponent(id),{method:'PATCH',body,prefer:'return=minimal'});else {await supabaseRequest('cronogramas_documentos',{method:'POST',body,prefer:'return=minimal'});if(f.dataset.renewOrigin)await supabaseRequest('cronogramas_documentos?id=eq.'+encodeURIComponent(f.dataset.renewOrigin),{method:'PATCH',body:{situacao:'renovado'},prefer:'return=minimal'})} $('cr-form-box').hidden=true;await load()}catch(err){alert('Não foi possível salvar: '+err.message)}};
+let crSalvando=false;
+$('cr-form').onsubmit=async e=>{
+ e.preventDefault();
+ if(!ehAdministradorKelvin()){alert('Somente o administrador pode alterar cronogramas.');return;}
+ if(crSalvando)return;
+ const f=e.currentTarget,fd=new FormData(f),id=String(fd.get('id')||'').trim(),body={};
+ ['titulo','categoria','setor','equipamento','data_execucao','data_vencimento','periodicidade_meses','numero_art','responsavel','documento_url','observacoes'].forEach(k=>{body[k]=String(fd.get(k)||'').trim()||null});
+ body.periodicidade_meses=Number(body.periodicidade_meses||0);
+ if(!body.titulo||!body.data_execucao||!body.data_vencimento){alert('Informe nome e datas.');return;}
+ if(body.data_vencimento<body.data_execucao){alert('O vencimento não pode ser anterior à execução.');return;}
+ const salvar=f.querySelector('button[type="submit"]');crSalvando=true;salvar.disabled=true;salvar.textContent='Salvando...';
+ try{
+  if(id){
+   const changed=await supabaseRequest('cronogramas_documentos?id=eq.'+encodeURIComponent(id)+'&select=id',{method:'PATCH',body,prefer:'return=representation'});
+   if(!Array.isArray(changed)||changed.length!==1)throw new Error('O registro não foi atualizado. Confira sua permissão no Supabase.');
+  }else{
+   const created=await supabaseRequest('cronogramas_documentos?select=id',{method:'POST',body,prefer:'return=representation'});
+   if(!Array.isArray(created)||created.length!==1||!created[0].id)throw new Error('O Supabase não confirmou a criação do novo registro.');
+   if(f.dataset.renewOrigin){
+    const previous=await supabaseRequest('cronogramas_documentos?id=eq.'+encodeURIComponent(f.dataset.renewOrigin)+'&select=id',{method:'PATCH',body:{situacao:'renovado'},prefer:'return=representation'});
+    if(!Array.isArray(previous)||previous.length!==1)throw new Error('Novo registro criado, mas a marcação do documento anterior como renovado falhou. Verifique o histórico antes de tentar novamente.');
+   }
+  }
+  $('cr-form-box').hidden=true;
+  await load();
+  $('cr-status').textContent+=' Cadastro salvo com sucesso.';
+ }catch(err){
+  console.error('Falha ao salvar cronograma',err);
+  const msg=String(err?.message||err);
+  $('cr-status').textContent='Erro ao salvar cronograma: '+msg;
+  alert('O cadastro não foi confirmado.\n\n'+msg+'\n\nEnvie uma foto desta mensagem se persistir.');
+ }finally{crSalvando=false;salvar.disabled=false;salvar.textContent='Salvar registro';}
+};
 })();
 </script>
 
