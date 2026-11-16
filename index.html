@@ -2268,8 +2268,7 @@ function emailAtual(){
 function podeVisualizarPMOC(){
  return ehUsuarioSomentePMOC() || [
   "kelvin.batista@budny.com.br",
-  "rafael.zaccaron@budny.com.br",
-  "mariane.souza@budny.com.br"
+  "rafael.zaccaron@budny.com.br"
  ].includes(emailAtual());
 }
 function podeEditarPMOC(){
@@ -2301,6 +2300,17 @@ function configurarAcessosPreventivaHoras(){
  if(formPMOC) formPMOC.style.display = podeEditar ? "block" : "none";
 }
 
+function ehMarianeCadastroOS(){
+ return emailAtual()==="mariane.souza@budny.com.br";
+}
+function configurarAcessoMariane(){
+ if(!ehMarianeCadastroOS()) return;
+ ["menuIndicadores","menuLubrificacao","menuHoraExtra","menuPMOC","menuCronogramas"]
+ .forEach(id=>{const el=document.getElementById(id);if(el)el.style.display="none";});
+ ["menuLancamento","menuCadastros"].forEach(id=>{
+  const el=document.getElementById(id);if(el)el.style.display="block";
+ });
+}
 function ehUsuarioSomenteHoraExtra(){
  const email = String(sessao && sessao.user && sessao.user.email ? sessao.user.email : "").trim().toLowerCase();
  return email === "elisandra.borges@budny.com.br";
@@ -2512,6 +2522,7 @@ async function mostrarAplicacao(){
  configurarAcessoRafael();
  configurarVisualizacaoHorasIndicadores();
  configurarAcessoPMOC();
+ configurarAcessoMariane();
 
 
  document
@@ -2715,6 +2726,11 @@ function mostrarTela(tela){
 
  if(!perfil)
   return;
+
+ if(ehMarianeCadastroOS() && !["lancamento","cadastros"].includes(tela)){
+  alert("Seu acesso permite somente Lançar OS e Cadastros.");
+  return;
+ }
 
  if(tela==="pmoc" && !podeVisualizarPMOC()){
   return;
