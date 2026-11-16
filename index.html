@@ -2344,12 +2344,14 @@ function configurarVisualizacaoHorasIndicadores(){
 
 function configurarAcessoRafael(){
  if(!ehRafaelSomenteVisualizacao()) return;
- const idsOcultar=["menuLancamento","menuCadastros","menuLubrificacao"];
+ const idsOcultar=["menuLancamento","menuCadastros"];
  idsOcultar.forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display="none"; });
+ const menuLubrificacao=document.getElementById("menuLubrificacao");
  const menuIndicadores=document.getElementById("menuIndicadores");
  const menuHoraExtra=document.getElementById("menuHoraExtra");
  const menuPMOC=document.getElementById("menuPMOC");
  if(menuIndicadores) menuIndicadores.style.display="block";
+ if(menuLubrificacao) menuLubrificacao.style.display="block";
  if(menuHoraExtra) menuHoraExtra.style.display="block";
  if(menuPMOC) menuPMOC.style.display="block";
  const formExtra=document.getElementById("formCadastroHoraExtra");
@@ -2748,9 +2750,9 @@ function mostrarTela(tela){
 
  if(
   ehRafaelSomenteVisualizacao() &&
-  !["indicadores","horaextra","pmoc"].includes(tela)
+  !["indicadores","horaextra","pmoc","lubrificacao"].includes(tela)
  ){
-  alert("Seu acesso permite visualizar Indicadores, Hora extra e PMOC.");
+  alert("Seu acesso permite visualizar Indicadores, Hora extra, PMOC e Lubrificação.");
   return;
  }
 
@@ -6991,6 +6993,21 @@ restaurarSessao();
 #crono-tela .cr-done{background:#3e4044;color:#d6d6d6}
 #crono-tela .cr-small{font-size:12px;color:#b5b8bc}
 #crono-tela .cr-link{border:0;background:none;color:#ffa12c;cursor:pointer;margin-right:8px;text-decoration:underline}
+#cr-detail-overlay{position:fixed;inset:0;z-index:100025;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.78)}
+#cr-detail-overlay.aberto{display:flex}
+#cr-detail-dialog{width:min(850px,100%);max-height:88vh;overflow:auto;background:#2d2f31;border:1px solid #606267;border-top:5px solid #f57c00;border-radius:12px;box-shadow:0 20px 65px #000a;padding:20px;color:#fff}
+#cr-detail-dialog h2{font-size:21px;margin:0;border-left:4px solid #f57c00;padding-left:12px}
+#cr-detail-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}
+#cr-detail-close{background:#414348;border:1px solid #6a6b70;border-radius:7px;color:#fff;font-size:20px;cursor:pointer;padding:5px 12px}
+#cr-detail-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.cr-detail-field{min-width:0;background:#242629;border:1px solid #47494d;border-radius:8px;padding:12px;overflow-wrap:anywhere}
+.cr-detail-field.wide{grid-column:1/-1}
+.cr-detail-field small{display:block;color:#bfc2c7;margin-bottom:6px}
+.cr-detail-field strong{display:block;font-size:14px;white-space:pre-wrap;font-weight:600}
+.cr-detail-field a{color:#ffa73c;text-decoration:underline}
+.cr-document-link{background:none;border:0;padding:0;color:#ffae43;font:inherit;font-weight:bold;text-decoration:underline;text-underline-offset:3px;cursor:pointer;text-align:left}
+.cr-document-link:hover{color:#ffd18b}
+@media(max-width:640px){#cr-detail-fields{grid-template-columns:1fr}}
 #crono-tela #cr-form-box[hidden]{display:none}
 @media(max-width:760px){#crono-tela .cr-kpis{grid-template-columns:repeat(2,1fr)}#crono-tela .cr-grid{grid-template-columns:1fr}}
 </style>
@@ -7020,6 +7037,18 @@ sec.innerHTML=`
  <div class="cr-card"><h3>Alertas automáticos</h3><p class="cr-small">Os registros são classificados automaticamente ao abrir esta aba: vencido, até 7, 15, 30, 60, 90 ou 180 dias ou em dia. Os avisos aparecem dentro do site, não por e-mail.</p></div>`;
 const main=document.querySelector('main');(main||nav.parentElement||document.body).appendChild(sec);
 const $=id=>sec.querySelector('#'+id);let records=[],busy=false;
+const crDetailOverlay=document.createElement('div');
+crDetailOverlay.id='cr-detail-overlay';
+crDetailOverlay.innerHTML='<div id="cr-detail-dialog" role="dialog" aria-modal="true" aria-labelledby="cr-detail-title"><div id="cr-detail-top"><h2 id="cr-detail-title">Informações do documento</h2><button id="cr-detail-close" type="button" aria-label="Fechar detalhes">×</button></div><div id="cr-detail-fields"></div></div>';
+document.body.appendChild(crDetailOverlay);
+const crCloseDetails=()=>{
+ crDetailOverlay.classList.remove('aberto');
+ document.body.style.overflow='';
+};
+crDetailOverlay.querySelector('#cr-detail-close').onclick=crCloseDetails;
+crDetailOverlay.addEventListener('click',e=>{if(e.target===crDetailOverlay)crCloseDetails()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape' && crDetailOverlay.classList.contains('aberto'))crCloseDetails()});
+
 // Rafael: consulta de prazos, sem alterações no cadastro.
 if(ehRafaelSomenteVisualizacao()){const b=sec.querySelector('#cr-new');if(b)b.style.display='none';const f=sec.querySelector('#cr-form-box');if(f)f.hidden=true;}
 
@@ -7028,6 +7057,47 @@ const daysTo=s=>{if(!s)return 999999;const t=new Date(dateLocal()+'T12:00:00'),d
 const format=s=>s?String(s).slice(0,10).split('-').reverse().join('/'):'—';
 const state=r=>{if(r.situacao==='renovado')return {key:'renovados',label:'Renovado',cls:'cr-done'};const n=daysTo(r.data_vencimento);if(n<0)return {key:'vencidos',label:'Vencido há '+Math.abs(n)+' dia(s)',cls:'cr-late'};if(n<=7)return {key:'proximos',label:'Até 7 dias',cls:'cr-late'};if(n<=15)return {key:'proximos',label:'Até 15 dias',cls:'cr-near'};if(n<=30)return {key:'proximos',label:'Até 30 dias',cls:'cr-near'};if(n<=60)return {key:'proximos',label:'Até 60 dias',cls:'cr-near'};if(n<=90)return {key:'proximos',label:'Até 90 dias',cls:'cr-near'};if(n<=180)return {key:'proximos',label:'Até 180 dias',cls:'cr-near'};return {key:'em-dia',label:'Em dia',cls:'cr-ok'}};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function crShowDetails(r){
+ const box=crDetailOverlay.querySelector('#cr-detail-fields');
+ const st=state(r);
+ const period=Number(r.periodicidade_meses||0);
+ const labelPeriod=period===0?'Manual / sem periodicidade fixa':period===1?'Mensal':period===3?'Trimestral':period===6?'Semestral':period===12?'Anual':period===24?'A cada 2 anos':period===36?'A cada 3 anos':period===60?'A cada 5 anos':period+' mês(es)';
+ const fields=[
+  ['Documento / serviço',r.titulo],
+  ['Categoria',r.categoria],
+  ['Setor / local',r.setor],
+  ['Equipamento / instalação',r.equipamento],
+  ['Data da execução',format(r.data_execucao)],
+  ['Próxima renovação',format(r.data_vencimento)],
+  ['Periodicidade',labelPeriod],
+  ['Situação atual',st.label],
+  ['Nº da ART',r.numero_art],
+  ['Responsável técnico / empresa',r.responsavel],
+  ['Observações / exigências',r.observacoes,true],
+  ['Número do registro',r.id]
+ ];
+ box.replaceChildren();
+ for(const [label,value,wide] of fields){
+  const item=document.createElement('div');item.className='cr-detail-field'+(wide?' wide':'');
+  const small=document.createElement('small');small.textContent=label;
+  const strong=document.createElement('strong');strong.textContent=String(value??'').trim()||'Não informado';
+  item.append(small,strong);box.appendChild(item);
+ }
+ const documentField=document.createElement('div');documentField.className='cr-detail-field wide';
+ const docLabel=document.createElement('small');docLabel.textContent='Documento / arquivo PDF';
+ documentField.append(docLabel);
+ const docUrl=String(r.documento_url||'').trim();
+ if(/^https?:\/\//i.test(docUrl)){
+  const a=document.createElement('a');a.href=docUrl;a.target='_blank';a.rel='noopener noreferrer';a.textContent='Abrir documento anexo';
+  documentField.appendChild(a);
+ }else{
+  const v=document.createElement('strong');v.textContent=docUrl||'Nenhum link cadastrado';documentField.appendChild(v);
+ }
+ box.appendChild(documentField);
+ crDetailOverlay.classList.add('aberto');
+ document.body.style.overflow='hidden';
+ crDetailOverlay.querySelector('#cr-detail-close').focus();
+}
 function crAddMonths(date,months){
  if(!date||!months)return '';
  const [y,m,d]=String(date).slice(0,10).split('-').map(Number);
@@ -7043,8 +7113,12 @@ function showForm(r){$('cr-form-box').hidden=false;const f=$('cr-form');f.reset(
 function render(){const active=records.filter(r=>r.situacao!=='renovado');$('cr-total').textContent=active.length;$('cr-ok').textContent=active.filter(r=>state(r).key==='em-dia').length;$('cr-near').textContent=active.filter(r=>state(r).key==='proximos').length;$('cr-late').textContent=active.filter(r=>state(r).key==='vencidos').length;
  const q=$('cr-search').value.toLocaleLowerCase('pt-BR'),f=$('cr-filter').value;let view=records.filter(r=>(f==='todos'?r.situacao!=='renovado':state(r).key===f)&&[r.titulo,r.setor,r.equipamento,r.numero_art,r.responsavel].join(' ').toLocaleLowerCase('pt-BR').includes(q));view.sort((a,b)=>$('cr-sort').value==='nome'?a.titulo.localeCompare(b.titulo,'pt-BR'):String(a.data_vencimento).localeCompare(String(b.data_vencimento)));
  $('cr-rows').replaceChildren();if(!view.length){$('cr-rows').innerHTML='<tr><td colspan="6">Nenhum documento encontrado.</td></tr>';return}
- view.forEach(r=>{const st=state(r),tr=document.createElement('tr');tr.innerHTML='<td><strong>'+esc(r.titulo)+'</strong><div class="cr-small">'+esc(r.categoria||'')+(r.numero_art?' · ART '+esc(r.numero_art):'')+'</div></td><td>'+esc(r.setor||'—')+'<div class="cr-small">'+esc(r.equipamento||'')+'</div></td><td>'+format(r.data_execucao)+'</td><td><strong>'+format(r.data_vencimento)+'</strong></td><td><span class="cr-pill '+st.cls+'">'+st.label+'</span></td><td></td>';
- const cell=tr.lastElementChild;if(!ehRafaelSomenteVisualizacao()){const edit=document.createElement('button');edit.className='cr-link';edit.textContent='Editar';edit.onclick=()=>showForm(r);cell.append(edit);}
+ view.forEach(r=>{const st=state(r),tr=document.createElement('tr');tr.innerHTML='<td><button type="button" class="cr-document-link">'+esc(r.titulo)+'</button><div class="cr-small">'+esc(r.categoria||'')+(r.numero_art?' · ART '+esc(r.numero_art):'')+'</div></td><td>'+esc(r.setor||'—')+'<div class="cr-small">'+esc(r.equipamento||'')+'</div></td><td>'+format(r.data_execucao)+'</td><td><strong>'+format(r.data_vencimento)+'</strong></td><td><span class="cr-pill '+st.cls+'">'+st.label+'</span></td><td></td>';
+ const nameButton=tr.querySelector('.cr-document-link');
+ if(nameButton)nameButton.onclick=()=>crShowDetails(r);
+ const cell=tr.lastElementChild;
+ const view=document.createElement('button');view.className='cr-link';view.textContent='Ver detalhes';view.onclick=()=>crShowDetails(r);cell.append(view);
+ if(!ehRafaelSomenteVisualizacao()){const edit=document.createElement('button');edit.className='cr-link';edit.textContent='Editar';edit.onclick=()=>showForm(r);cell.append(edit);}
  if(r.documento_url){const a=document.createElement('a');a.href=r.documento_url;a.target='_blank';a.rel='noopener noreferrer';a.className='cr-link';a.textContent='PDF';cell.append(a)}
  if(r.situacao!=='renovado' && !ehRafaelSomenteVisualizacao()){const renew=document.createElement('button');renew.className='cr-link';renew.textContent='Renovar';renew.onclick=()=>{const copy={...r,id:'',data_execucao:dateLocal(),data_vencimento:'',observacoes:(r.observacoes||'')+'\nRenovação do cadastro anterior: '+r.data_vencimento};showForm(copy);$('cr-form').dataset.renewOrigin=String(r.id)};cell.append(renew)}$('cr-rows').appendChild(tr)});
 }
