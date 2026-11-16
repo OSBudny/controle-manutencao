@@ -6946,5 +6946,95 @@ restaurarSessao();
  </div>
 </div>
 
+<!-- ABA CRONOGRAMAS - INTEGRADA AO SISTEMA -->
+<!-- MÓDULO CRONOGRAMAS: cole antes de </body> no index.html do sistema -->
+<style>
+#crono-tela{max-width:1100px;margin:20px auto;color:#fff}
+#crono-tela *{box-sizing:border-box}
+#crono-tela .cr-card{background:#2d2f31;border:1px solid #424447;border-radius:10px;padding:17px;margin:13px 0}
+#crono-tela h2,#crono-tela h3{margin:0 0 13px;border-left:4px solid #f57c00;padding-left:10px}
+#crono-tela .cr-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+#crono-tela .cr-kpi{background:#27292b;border-top:3px solid #f57c00;border-radius:8px;padding:15px}
+#crono-tela .cr-kpi b{font-size:27px;display:block;margin:6px 0}
+#crono-tela .cr-kpi small{color:#c4c5c8}
+#crono-tela .cr-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#crono-tela label{display:block;font-size:13px;color:#dedede;margin:0 0 5px}
+#crono-tela input,#crono-tela select,#crono-tela textarea{width:100%;background:#393c3f;border:1px solid #5b5d60;border-radius:6px;padding:10px;color:white;color-scheme:dark;font-size:14px}
+#crono-tela textarea{min-height:70px;resize:vertical}
+#crono-tela .cr-btn{background:#f57c00;border:0;padding:10px 16px;color:#111;font-weight:bold;border-radius:6px;cursor:pointer}
+#crono-tela .cr-btn.alt{background:#42464a;color:#fff}
+#crono-tela .cr-actions{display:flex;gap:8px;flex-wrap:wrap}
+#crono-tela table{width:100%;border-collapse:collapse;min-width:750px}
+#crono-tela th{text-align:left;color:#ff9800;background:#1c1d1e;padding:11px}
+#crono-tela td{padding:10px;border-bottom:1px solid #434548;font-size:13px;vertical-align:middle}
+#crono-tela .cr-table{overflow-x:auto}
+#crono-tela .cr-pill{display:inline-block;border-radius:20px;padding:5px 9px;font-size:12px;font-weight:bold}
+#crono-tela .cr-ok{background:#194a34;color:#bdf5d6}
+#crono-tela .cr-near{background:#574016;color:#ffe0a0}
+#crono-tela .cr-late{background:#632322;color:#ffc1c1}
+#crono-tela .cr-done{background:#3e4044;color:#d6d6d6}
+#crono-tela .cr-small{font-size:12px;color:#b5b8bc}
+#crono-tela .cr-link{border:0;background:none;color:#ffa12c;cursor:pointer;margin-right:8px;text-decoration:underline}
+#crono-tela #cr-form-box[hidden]{display:none}
+@media(max-width:760px){#crono-tela .cr-kpis{grid-template-columns:repeat(2,1fr)}#crono-tela .cr-grid{grid-template-columns:1fr}}
+</style>
+<script>
+(function(){
+'use strict';
+const nav=document.querySelector('nav');if(!nav||document.getElementById('menuCronogramas'))return;
+const button=document.createElement('button');button.id='menuCronogramas';button.type='button';button.textContent='📅 Cronogramas';button.style.display='none';
+button.onclick=()=>{
+ if(!ehAdministradorKelvin()){alert('Acesso permitido somente ao administrador.');return;}
+ document.querySelectorAll('.tela').forEach(e=>e.classList.remove('ativa'));
+ document.querySelectorAll('nav button').forEach(e=>e.classList.remove('ativo'));
+ document.getElementById('crono-tela').classList.add('ativa');button.classList.add('ativo');load();
+};
+nav.appendChild(button);
+// Exibe somente ao administrador autenticado; acompanha login e logout.
+const app=document.getElementById('appSistema');
+const updateAccess=()=>{const allowed=!!(app && app.style.display!=='none' && ehAdministradorKelvin());button.style.display=allowed?'block':'none';if(!allowed){const sec=document.getElementById('crono-tela');if(sec)sec.classList.remove('ativa');}};
+if(app){new MutationObserver(updateAccess).observe(app,{attributes:true,attributeFilter:['style']});}
+setTimeout(updateAccess,0);
+const sec=document.createElement('section');sec.id='crono-tela';sec.className='tela';
+sec.innerHTML=`
+ <div class="cr-card"><h2>📅 Cronogramas e Vencimentos</h2><p class="cr-small">Controle de laudos, inspeções, certificados, ARTs vinculadas e obrigações técnicas. O vencimento se refere à próxima execução ou renovação do serviço, não à expiração da ART.</p></div>
+ <div class="cr-kpis"><div class="cr-kpi"><small>Documentos ativos</small><b id="cr-total">—</b></div><div class="cr-kpi"><small>Em dia (mais de 180 dias)</small><b id="cr-ok">—</b></div><div class="cr-kpi"><small>A vencer (até 180 dias)</small><b id="cr-near">—</b></div><div class="cr-kpi"><small>Vencidos</small><b id="cr-late">—</b></div></div>
+ <div class="cr-card"><div class="cr-actions" style="justify-content:space-between;align-items:center"><h3 style="margin:0">Controle de prazos</h3><button id="cr-new" class="cr-btn" type="button">+ Novo cadastro</button></div><div class="cr-grid" style="margin-top:14px"><div><label>Pesquisar</label><input id="cr-search" placeholder="Documento, setor, equipamento..."></div><div><label>Situação</label><select id="cr-filter"><option value="todos">Todos</option><option value="vencidos">Vencidos</option><option value="proximos">Próximos 180 dias</option><option value="em-dia">Em dia</option><option value="renovados">Histórico de renovados</option></select></div><div><label>Ordenação</label><select id="cr-sort"><option value="vencimento">Vencimento mais próximo</option><option value="nome">Nome do documento</option></select></div></div><p class="cr-small" id="cr-status" aria-live="polite">Abra a aba para carregar os registros.</p><div class="cr-table"><table><thead><tr><th>Documento / serviço</th><th>Setor / equipamento</th><th>Realização</th><th>Próxima renovação</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="cr-rows"></tbody></table></div></div>
+ <div id="cr-form-box" class="cr-card" hidden><h3 id="cr-form-title">Novo controle de vencimento</h3><form id="cr-form"><input type="hidden" name="id"><div class="cr-grid"><div><label>Nome do documento / serviço *</label><input name="titulo" required placeholder="Teste de estanqueidade de gás"></div><div><label>Categoria *</label><select name="categoria" required><option>Laudo / Inspeção</option><option>ART vinculada</option><option>Calibração</option><option>Certificação</option><option>Treinamento</option><option>Outro</option></select></div><div><label>Setor / local</label><input name="setor" placeholder="Central de GLP"></div><div><label>Equipamento / instalação</label><input name="equipamento" placeholder="Rede de gás"></div><div><label>Data da execução *</label><input name="data_execucao" type="date" required></div><div><label>Periodicidade *</label><select name="periodicidade_meses" id="cr-periodo"><option value="0">Data manual / sem periodicidade fixa</option><option value="1">Mensal (1 mês)</option><option value="3">Trimestral (3 meses)</option><option value="6">Semestral (6 meses)</option><option value="12" selected>Anual (1 ano)</option><option value="24">Bienal (2 anos)</option><option value="36">Trienal (3 anos)</option><option value="60">Quinquenal (5 anos)</option></select></div><div><label>Próximo vencimento *</label><input name="data_vencimento" type="date" required><small class="cr-small">Calculado pela periodicidade; ajuste manualmente quando necessário.</small></div><div><label>Número da ART</label><input name="numero_art"></div><div><label>Responsável técnico / empresa</label><input name="responsavel"></div><div><label>Link para documento PDF</label><input name="documento_url" type="url" placeholder="https://..."></div></div><div style="margin-top:12px"><label>Observações / exigência de renovação</label><textarea name="observacoes" placeholder="Descreva o prazo exigido pelo responsável técnico, norma ou contrato"></textarea></div><div class="cr-actions" style="margin-top:13px"><button class="cr-btn" type="submit">Salvar registro</button><button id="cr-cancel" class="cr-btn alt" type="button">Cancelar</button></div></form></div>
+ <div class="cr-card"><h3>Alertas automáticos</h3><p class="cr-small">Os registros são classificados automaticamente ao abrir esta aba: vencido, até 7, 15, 30, 60, 90 ou 180 dias ou em dia. Os avisos aparecem dentro do site, não por e-mail.</p></div>`;
+const main=document.querySelector('main');(main||nav.parentElement||document.body).appendChild(sec);
+const $=id=>sec.querySelector('#'+id);let records=[],busy=false;
+const dateLocal=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+const daysTo=s=>{if(!s)return 999999;const t=new Date(dateLocal()+'T12:00:00'),d=new Date(s+'T12:00:00');return Math.round((d-t)/86400000)};
+const format=s=>s?String(s).slice(0,10).split('-').reverse().join('/'):'—';
+const state=r=>{if(r.situacao==='renovado')return {key:'renovados',label:'Renovado',cls:'cr-done'};const n=daysTo(r.data_vencimento);if(n<0)return {key:'vencidos',label:'Vencido há '+Math.abs(n)+' dia(s)',cls:'cr-late'};if(n<=7)return {key:'proximos',label:'Até 7 dias',cls:'cr-late'};if(n<=15)return {key:'proximos',label:'Até 15 dias',cls:'cr-near'};if(n<=30)return {key:'proximos',label:'Até 30 dias',cls:'cr-near'};if(n<=60)return {key:'proximos',label:'Até 60 dias',cls:'cr-near'};if(n<=90)return {key:'proximos',label:'Até 90 dias',cls:'cr-near'};if(n<=180)return {key:'proximos',label:'Até 180 dias',cls:'cr-near'};return {key:'em-dia',label:'Em dia',cls:'cr-ok'}};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function crAddMonths(date,months){
+ if(!date||!months)return '';
+ const [y,m,d]=String(date).slice(0,10).split('-').map(Number);
+ const target=y*12+(m-1)+Number(months);const yy=Math.floor(target/12),mm=target%12+1;
+ const last=new Date(Date.UTC(yy,mm,0)).getUTCDate();
+ return yy+'-'+String(mm).padStart(2,'0')+'-'+String(Math.min(d,last)).padStart(2,'0');
+}
+function crRecalculate(){
+ const f=$('cr-form'),period=Number(f.elements.namedItem('periodicidade_meses').value);
+ if(period>0 && f.elements.namedItem('data_execucao').value){f.elements.namedItem('data_vencimento').value=crAddMonths(f.elements.namedItem('data_execucao').value,period)}
+}
+function showForm(r){$('cr-form-box').hidden=false;const f=$('cr-form');f.reset();f.elements.namedItem('periodicidade_meses').value='12';delete f.dataset.renewOrigin;Object.keys(r||{}).forEach(k=>{if(f.elements.namedItem(k))f.elements.namedItem(k).value=r[k]??''});$('cr-form-title').textContent=r?.id?'Editar documento':'Novo controle de vencimento';if(!r?.id && r?.data_execucao && !r?.data_vencimento)crRecalculate();$('cr-form-box').scrollIntoView({behavior:'smooth',block:'start'})}
+function render(){const active=records.filter(r=>r.situacao!=='renovado');$('cr-total').textContent=active.length;$('cr-ok').textContent=active.filter(r=>state(r).key==='em-dia').length;$('cr-near').textContent=active.filter(r=>state(r).key==='proximos').length;$('cr-late').textContent=active.filter(r=>state(r).key==='vencidos').length;
+ const q=$('cr-search').value.toLocaleLowerCase('pt-BR'),f=$('cr-filter').value;let view=records.filter(r=>(f==='todos'?r.situacao!=='renovado':state(r).key===f)&&[r.titulo,r.setor,r.equipamento,r.numero_art,r.responsavel].join(' ').toLocaleLowerCase('pt-BR').includes(q));view.sort((a,b)=>$('cr-sort').value==='nome'?a.titulo.localeCompare(b.titulo,'pt-BR'):String(a.data_vencimento).localeCompare(String(b.data_vencimento)));
+ $('cr-rows').replaceChildren();if(!view.length){$('cr-rows').innerHTML='<tr><td colspan="6">Nenhum documento encontrado.</td></tr>';return}
+ view.forEach(r=>{const st=state(r),tr=document.createElement('tr');tr.innerHTML='<td><strong>'+esc(r.titulo)+'</strong><div class="cr-small">'+esc(r.categoria||'')+(r.numero_art?' · ART '+esc(r.numero_art):'')+'</div></td><td>'+esc(r.setor||'—')+'<div class="cr-small">'+esc(r.equipamento||'')+'</div></td><td>'+format(r.data_execucao)+'</td><td><strong>'+format(r.data_vencimento)+'</strong></td><td><span class="cr-pill '+st.cls+'">'+st.label+'</span></td><td></td>';
+ const cell=tr.lastElementChild;const edit=document.createElement('button');edit.className='cr-link';edit.textContent='Editar';edit.onclick=()=>showForm(r);cell.append(edit);
+ if(r.documento_url){const a=document.createElement('a');a.href=r.documento_url;a.target='_blank';a.rel='noopener noreferrer';a.className='cr-link';a.textContent='PDF';cell.append(a)}
+ if(r.situacao!=='renovado'){const renew=document.createElement('button');renew.className='cr-link';renew.textContent='Renovar';renew.onclick=()=>{const copy={...r,id:'',data_execucao:dateLocal(),data_vencimento:'',observacoes:(r.observacoes||'')+'\nRenovação do cadastro anterior: '+r.data_vencimento};showForm(copy);$('cr-form').dataset.renewOrigin=String(r.id)};cell.append(renew)}$('cr-rows').appendChild(tr)});
+}
+async function load(){if(busy)return;busy=true;$('cr-status').textContent='Consultando Supabase...';try{const result=await supabaseRequest('cronogramas_documentos?select=*&order=data_vencimento.asc');records=Array.isArray(result)?result:[];$('cr-status').textContent=records.length+' registro(s) consultado(s) no Supabase.';render()}catch(e){console.error('Cronogramas:',e);$('cr-status').textContent='Não foi possível carregar. É necessário criar a tabela cronogramas_documentos no Supabase e liberar a leitura para seu perfil.'}finally{busy=false}}
+$('cr-form').elements.namedItem('data_execucao').addEventListener('change',crRecalculate);$('cr-form').elements.namedItem('periodicidade_meses').addEventListener('change',crRecalculate);$('cr-new').onclick=()=>showForm(null);$('cr-cancel').onclick=()=>{$('cr-form-box').hidden=true};$('cr-search').oninput=render;$('cr-filter').onchange=render;$('cr-sort').onchange=render;
+$('cr-form').onsubmit=async e=>{e.preventDefault();const f=e.currentTarget,fd=new FormData(f);const id=String(fd.get('id')||'').trim();const body={};['titulo','categoria','setor','equipamento','data_execucao','data_vencimento','periodicidade_meses','numero_art','responsavel','documento_url','observacoes'].forEach(k=>{body[k]=String(fd.get(k)||'').trim()||null});body.periodicidade_meses=Number(body.periodicidade_meses||0);if(!body.titulo||!body.data_execucao||!body.data_vencimento){alert('Informe nome e datas.');return}if(body.data_vencimento<body.data_execucao){alert('O vencimento não pode ser anterior à execução.');return}
+ try{if(id)await supabaseRequest('cronogramas_documentos?id=eq.'+encodeURIComponent(id),{method:'PATCH',body,prefer:'return=minimal'});else {await supabaseRequest('cronogramas_documentos',{method:'POST',body,prefer:'return=minimal'});if(f.dataset.renewOrigin)await supabaseRequest('cronogramas_documentos?id=eq.'+encodeURIComponent(f.dataset.renewOrigin),{method:'PATCH',body:{situacao:'renovado'},prefer:'return=minimal'})} $('cr-form-box').hidden=true;await load()}catch(err){alert('Não foi possível salvar: '+err.message)}};
+})();
+</script>
+
 </body>
 </html>
