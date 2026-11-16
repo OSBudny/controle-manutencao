@@ -7086,5 +7086,111 @@ $('cr-form').onsubmit=async e=>{
 })();
 </script>
 
+
+<!-- ===== Alertas de vencimento dos Cronogramas (admin e Rafael) ===== -->
+<style>
+#al-sino { position:relative; display:none; border:1px solid #68605a; background:#37393c; color:white; border-radius:9px; padding:9px 12px; cursor:pointer; font-weight:700; white-space:nowrap }
+#al-sino:hover,#al-sino:focus-visible {border-color:#ff9800;outline:none}
+#al-contador { position:absolute;top:-9px;right:-8px;min-width:21px;height:21px;padding:2px 5px;background:#e74c3c;color:white;border-radius:20px;font-size:12px;line-height:17px;text-align:center }
+#al-contador[hidden]{display:none}
+#al-overlay {position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:100015;display:none;align-items:center;justify-content:center;padding:16px}
+#al-overlay.aberto {display:flex}
+#al-dialogo {width:min(760px,100%);max-height:min(85vh,850px);overflow:auto;border:1px solid #606367;border-top:5px solid #f57c00;border-radius:13px;background:#292b2d;color:white;box-shadow:0 25px 70px #000a;padding:20px}
+#al-dialogo h2{margin:0;border-left:4px solid #f57c00;padding-left:12px;font-size:21px}
+#al-header{display:flex;align-items:flex-start;justify-content:space-between;gap:15px}
+#al-fechar {border:0;background:#4a4d50;color:white;border-radius:7px;padding:8px 12px;font-size:18px;cursor:pointer}
+#al-resumo{color:#bfc1c4;margin:12px 0}
+.al-registro{display:flex;gap:12px;align-items:center;justify-content:space-between;border:1px solid #494b4f;background:#222426;border-radius:9px;padding:12px;margin-top:9px}
+.al-registro strong{display:block;margin-bottom:3px}
+.al-registro small{display:block;color:#c0c2c5;margin-top:3px}
+.al-prazo{font-size:12px;font-weight:800;white-space:nowrap;padding:7px;border-radius:5px;background:#644b20;color:#ffdda0}
+.al-prazo.atrasado{background:#682727;color:#ffc3c3}
+#al-acoes{display:flex;justify-content:flex-end;gap:10px;margin-top:16px;flex-wrap:wrap}
+.al-acao{border:0;background:#f57c00;color:#1a1a1a;padding:10px 14px;font-weight:800;border-radius:7px;cursor:pointer}
+.al-acao.secundario{background:#45484b;color:#fff}
+#al-mensagem{color:#ffca80;font-size:13px;margin-top:10px}
+@media(max-width:650px){.al-registro{align-items:flex-start;flex-direction:column}#al-dialogo{padding:13px}}
+</style>
+<script>
+(function(){
+ 'use strict';
+ const app=document.getElementById('appSistema');
+ const header=document.querySelector('.usuario-cabecalho');
+ if(!app||!header||document.getElementById('al-sino'))return;
+ const b=document.createElement('button'); b.id='al-sino';b.type='button'; b.setAttribute('aria-label','Ver alertas de vencimento');
+ b.innerHTML='🔔 Vencimentos <span id="al-contador" hidden></span>';
+ header.insertBefore(b,header.firstChild);
+ const overlay=document.createElement('div');overlay.id='al-overlay';
+ overlay.innerHTML=`<div id="al-dialogo" role="dialog" aria-modal="true" aria-labelledby="al-titulo">
+   <div id="al-header"><h2 id="al-titulo">🔔 Alertas de vencimentos</h2><button id="al-fechar" type="button" aria-label="Fechar janela">✕</button></div>
+   <div id="al-resumo">Carregando vencimentos...</div><div id="al-lista"></div><div id="al-mensagem" aria-live="polite"></div>
+   <div id="al-acoes"><button id="al-dispensar" type="button" class="al-acao secundario">Fechar</button><button id="al-abrir-crono" type="button" class="al-acao">Abrir Cronogramas</button></div>
+   </div>`;
+ document.body.append(overlay);
+ const $=id=>document.getElementById(id);
+ let lista=[],usuarioAtivo='',ultimoCarregamento=0,consultaEmAndamento=false,contadorDeRequisicao=0;
+ const autorizado=()=>!!(window.sessao && window.perfil && (ehAdministradorKelvin()||ehRafaelSomenteVisualizacao()));
+ // As variáveis globais do site são 'let', não propriedades de window.
+ const usuario=()=>{try{return typeof emailAtual==='function'?emailAtual():''}catch{return ''}};
+ const temAcesso=()=>{try{return !!(typeof perfil!=='undefined'&&perfil&&(ehAdministradorKelvin()||ehRafaelSomenteVisualizacao()))}catch{return false}};
+ const dataHoje=()=>{const d=new Date();return Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())};
+ const diasAte=data=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(String(data||'').slice(0,10)))return null;const [y,m,d]=String(data).slice(0,10).split('-').map(Number);return Math.round((Date.UTC(y,m-1,d)-dataHoje())/86400000)};
+ const dataBR=d=>d?String(d).slice(0,10).split('-').reverse().join('/'):'—';
+ const criar=(tag,cls,valor)=>{const el=document.createElement(tag);if(cls)el.className=cls;el.textContent=String(valor??'');return el};
+ function mostrar(){overlay.classList.add('aberto');$('al-fechar').focus()}
+ function fechar(){overlay.classList.remove('aberto');b.focus()}
+ $('al-fechar').onclick=fechar;$('al-dispensar').onclick=fechar;
+ overlay.addEventListener('click',e=>{if(e.target===overlay)fechar()});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('aberto'))fechar()});
+ $('al-abrir-crono').onclick=()=>{fechar();const menu=$('menuCronogramas');if(menu&&menu.style.display!=='none')menu.click()};
+ b.onclick=()=>{if(!temAcesso())return;mostrar();carregar(true,false)};
+ function render(){
+  const badge=$('al-contador');const total=lista.length;
+  badge.hidden=total===0;badge.textContent=total>99?'99+':String(total);
+  b.title=total?total+' documento(s) com vencimento em até 180 dias ou vencidos':'Nenhum vencimento próximo';
+  const vencidos=lista.filter(r=>r.dias<0).length;
+  $('al-resumo').textContent=total?`${vencidos} vencido(s) e ${total-vencidos} a vencer nos próximos 180 dias.`:'Nenhum documento vencido ou com vencimento nos próximos 180 dias.';
+  $('al-lista').replaceChildren();
+  for(const r of lista.slice(0,30)){
+   const item=criar('div','al-registro','');const desc=criar('div','','');
+   desc.append(criar('strong','',r.titulo||'Documento sem título'));
+   desc.append(criar('small','',[r.setor,r.equipamento].filter(Boolean).join(' • ')||'Sem setor/equipamento'));
+   desc.append(criar('small','','Vencimento: '+dataBR(r.data_vencimento)));
+   const prazo=criar('span','al-prazo'+(r.dias<0?' atrasado':''),r.dias<0?`Vencido há ${-r.dias} dia(s)`:r.dias===0?'Vence hoje':`Faltam ${r.dias} dia(s)`);
+   item.append(desc,prazo);$('al-lista').append(item);
+  }
+  if(total>30)$('al-lista').append(criar('p','','Mostrando os 30 vencimentos mais próximos. Consulte os demais na aba Cronogramas.'));
+ }
+ async function carregar(forcar=false,automatico=false){
+  if(!temAcesso())return;
+  if(consultaEmAndamento)return;
+  if(!forcar&&Date.now()-ultimoCarregamento<60000)return;
+  consultaEmAndamento=true;const seq=++contadorDeRequisicao;const dono=usuario();$('al-mensagem').textContent='';
+  try{
+   const regs=await supabaseRequest('cronogramas_documentos?select=titulo,setor,equipamento,data_vencimento,situacao&order=data_vencimento.asc');
+   if(seq!==contadorDeRequisicao||usuario()!==dono||!temAcesso())return;
+   lista=(Array.isArray(regs)?regs:[]).filter(r=>r.situacao!=='renovado').map(r=>({...r,dias:diasAte(r.data_vencimento)})).filter(r=>r.dias!==null&&r.dias<=180).sort((a,b)=>a.dias-b.dias);
+   ultimoCarregamento=Date.now();render();
+   if(automatico&&lista.length)mostrar();
+  }catch(e){
+   console.error('Falha ao consultar vencimentos',e);
+   $('al-mensagem').textContent='Não foi possível consultar os vencimentos. Verifique a conexão ou as permissões do Supabase.';
+   if(automatico)mostrar();
+  }finally{consultaEmAndamento=false}
+ }
+ function sincronizar(){
+  const ativo=app.style.display!=='none'&&temAcesso();const atual=ativo?usuario():'';
+  b.style.display=ativo?'inline-block':'none';
+  if(!ativo){contadorDeRequisicao++;usuarioAtivo='';ultimoCarregamento=0;lista=[];$('al-contador').hidden=true;overlay.classList.remove('aberto');return}
+  if(usuarioAtivo!==atual){usuarioAtivo=atual;ultimoCarregamento=0;lista=[];render();carregar(true,true)}
+ }
+ new MutationObserver(sincronizar).observe(app,{attributes:true,attributeFilter:['style']});
+ // O site configura o perfil durante login/restauração; observar a conclusão da transição.
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&app.style.display!=='none')carregar(false,false)});
+ window.addEventListener('focus',()=>{if(app.style.display!=='none')carregar(false,false)});
+ sincronizar();
+})();
+</script>
+
 </body>
 </html>
